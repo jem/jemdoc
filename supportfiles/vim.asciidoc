@@ -1,0 +1,8 @@
+syntax on
+"filetype plugin on
+colorscheme fog
+set nonumber
+set t_Co=16
+let python_highlight_exceptions = 1
+let python_highlight_builtins = 1
+"let python_highlight_numbers = 1

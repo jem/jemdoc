@@ -1,0 +1,44 @@
+preproc = "import|from"
+
+comment start "#"
+
+command start ">>> "
+
+answer start '^<'
+
+include "number.lang"
+
+keyword = "and|assert|break|class|continue|def|del|elif|else|except|exec",
+           "finally|for|global|if|in|is|lambda|not|or|pass",
+           "print|raise|return|try|while"
+
+extkeyword="True|False|bool|enumerate|set|frozenset|help|reversed|sorted|sum",
+           "Ellipsis|None|NotImplemented|__import__|abs",
+           "apply|buffer|callable|chr|classmethod|cmp",
+           "coerce|compile|complex|delattr|dict|dir|divmod",
+           "eval|execfile|file|filter|float|getattr|globals",
+           "hasattr|hash|hex|id|input|int|intern|isinstance",
+           "issubclass|iter|len|list|locals|long|map|max",
+           "min|object|oct|open|ord|pow|property|range",
+           "raw_input|reduce|reload|repr|round|setattr",
+           "slice|staticmethod|str|super|tuple|type|unichr",
+           "unicode|vars|xrange|zip"
+
+comment delim "/*" "*/" multiline nested 
+
+comment delim '^([[:space:]]*\'{3})' '(\'{3})' multiline 
+comment delim '^([[:space:]]*\"{3})' '(\"{3})' multiline 
+
+comment = '^([[:space:]]*\'(?:[^\\\']|\\.)*\'[[:space:]]*|[[:space:]]*\"(?:[^\\\"]|\\.)*\"[[:space:]]*)$'
+
+string delim "\"" "\"" escape "\\" 
+string delim "'" "'"  escape "\\" 
+
+string delim '([[:space:]]*\'{3})' '(\'{3})' multiline 
+string delim '([[:space:]]*\"{3})' '(\"{3})' multiline 
+
+include "symbols.lang"
+symbol = "{|}"
+
+include "function.lang"
+

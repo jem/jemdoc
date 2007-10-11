@@ -1,0 +1,340 @@
+body {
+	background-color: white;
+	font-family: Georgia, serif;
+}
+
+h1 {
+	margin-top: 0.5em;
+}
+
+#layout-menu {
+	background-color: #f4f4f4;
+	border-right: 3px solid #eeeeee;
+	border-bottom: 3px solid #eeeeee;
+	padding-top: 0.5em;
+	padding-left: 10px;
+	padding-right: 0.2em;
+	font-size: 1.0em;
+	width: 150px;
+}
+#layout-menu a {
+	line-height: 1.5em;
+	margin-left: 0.5em;
+}
+
+a {
+	color: #224b8d;
+	text-decoration: none;
+}
+
+a:hover {
+	border-bottom: 1px gray dotted;
+}
+
+#layout-menu a.current:link, #layout-menu a.current:visited {
+	color: #022b6d;
+	border-bottom: 1px gray solid;
+}
+#layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
+	color: #527bbd;
+	text-decoration: none;
+}
+#layout-menu a:hover {
+	text-decoration: none;
+}
+
+div.menu-category {
+	border-bottom: 1px solid gray;
+	margin-top: 0.8em;
+	padding-top: 0.2em;
+	padding-bottom: 0.1em;
+	font-weight: bold;
+}
+
+#layout-content {
+	padding-top: 0.0em;
+	padding-left: 1.0em;
+	padding-right: 1.5em;
+}
+
+@media print {
+	#layout-menu { display: none; }
+}
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+	border: 1px solid red;
+*/
+}
+
+body {
+	margin: 0;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
+tt {
+	color: green;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #527bbd;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.1em;
+	line-height: 1.0;
+	padding-top: 0.5em;
+	border-bottom: 1px solid gray;
+}
+
+h1 {
+	padding-top: 0em;
+	font-size: 180%;
+	margin-bottom: 0.2em;
+}
+
+h2 {
+	padding-top: 1em;
+	font-size: 140%;
+}
+
+h3 {
+	font-size: 110%;
+	border-bottom: none;
+}
+
+div.sectionbody {
+	margin-left: 0;
+}
+
+hr {
+	border: 1px solid gray;
+}
+
+p {
+	margin-top: 0.0em;
+	margin-bottom: 0.8em;
+	padding: 0;
+	line-height: 1.3;
+}
+
+pre {
+	padding: 0;
+	margin: 0;
+}
+
+div#footer {
+	font-size: small;
+	border-top: 1px solid gray;
+	padding-top: 0.1em;
+	margin-top: 4.0em;
+}
+div#footer-text {
+	float: left;
+	padding-bottom: 0.5em;
+}
+
+div#preamble,
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+div.admonitionblock {
+	margin-top: 2.5em;
+	margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+	padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+	font-weight: bold;
+	text-align: left;
+	margin-top: 1.0em;
+	margin-bottom: 0.3em;
+}
+div.title + * {
+	margin-top: 0;
+}
+
+td div.title:first-child {
+	margin-top: 0.0em;
+}
+div.content div.title:first-child {
+	margin-top: 0.0em;
+}
+div.content + div.title {
+	margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+	background: #ffffee;
+	border: 1px solid silver;
+	padding: 0.5em;
+}
+
+div.listingblock {
+	margin-right: 0%;
+}
+div.listingblock > div.content {
+	border: 1px solid silver;
+	background: #f4f4f4;
+	padding: 0.5em;
+}
+
+div.quoteblock > div.content {
+	padding-left: 2.0em;
+}
+
+div.attribution {
+	text-align: right;
+}
+div.verseblock + div.attribution {
+	text-align: left;
+}
+
+pre > tt {
+	color: black;
+}
+
+div.admonitionblock .icon {
+	vertical-align: top;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #325b9d;
+	padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+	padding-left: 0.5em;
+	border-left: 1px solid silver;
+}
+
+div.exampleblock > div.content {
+	border-left: 1px solid silver;
+	padding: 0.5em;
+}
+
+div.verseblock div.content {
+	white-space: pre;
+}
+
+div.imageblock div.content { padding-left: 0; }
+div.imageblock img { border: 1px solid silver; }
+span.image img { border-style: none; }
+
+dl {
+	margin-top: 0.8em;
+	margin-bottom: 0.8em;
+}
+dt {
+	margin-top: 0.5em;
+	margin-bottom: 0;
+	font-style: italic;
+}
+dd > *:first-child {
+	margin-top: 0;
+}
+
+ul, ol {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+ul {
+	list-style-position: outside;
+	list-style-type: square;
+}
+
+p + ul, p + ol {
+	margin-top: -0.4em;
+}
+
+ol {
+	list-style-position: outside;
+	list-style-type: decimal;
+}
+
+li {
+	margin-bottom: 0.5em;
+}
+
+ol.olist2 {
+	list-style-type: lower-alpha;
+}
+
+ol.olist2 li {
+	margin-top: -0.5em;
+	margin-bottom: 1em;
+}
+
+div.tableblock > table {
+	border: 3px solid #527bbd;
+}
+thead {
+	font-weight: bold;
+}
+tfoot {
+	font-weight: bold;
+}
+
+div.hlist {
+	margin-top: 0.8em;
+	margin-bottom: 0.8em;
+}
+div.hlist td {
+	padding-bottom: 5px;
+}
+td.hlist1 {
+	vertical-align: top;
+	font-style: italic;
+	padding-right: 0.8em;
+}
+td.hlist2 {
+	vertical-align: top;
+}
+
+@media print {
+	div#footer-badges { display: none; }
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+  padding-bottom: 0em;
+}
+div.sidebar-title, div.image-title {
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-content {
+  padding-left: 2.0em;
+}
+
+div.exampleblock-content {
+  border-left: 2px solid silver;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
