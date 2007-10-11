@@ -1,0 +1,50 @@
+= Main heading at the top.
+link:http://stanford.edu/~jacobm/[Jacob Mattingley]
+(mailto:jacobm@stanford.edu[])
+and this trailing bit.
+# could have a comment immediately after.
+
+and then this text would still have to have a paragraph mark.
+
+This would be a new paragraph here.
+
+# this is a comment.
+
+== This is a heading two
+This is some text right under the heading.
+
+This should be /italics/ and *bold* and +monospace+.
+
+It should be possible to have +i+/th/*s*.
+
+- This is a list.
+
+This should also
+- be a list.
+
+These are `single quotes' and "double quotes".
+
+Jacob's apostrophe.
+"Let's go for a walk: `Jacob's keen', he said."
+
+Begin by writing the code +x = 'fish'+.
+
+Let us speak of dashes---they are of importance 2--3 said Mr Bong-bong.
+
+.This is a callout section.
+***********
+This is a warning.
+***********
+
+This.
+
+.Python code
+[pythoninteractive]
+source~~~~~~~~~~~~~~~~~~
+>>> m = parameter(name='m')
+>>> m
+<1x1 parameter m>
+
+>>> parameter(10, 5, name='A')
+<10x5 parameter A>
+source~~~~~~~~~~~~~~~~~~

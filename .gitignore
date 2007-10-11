@@ -1,0 +1,11 @@
+*.pyc
+otherstuff
+proctags.py
+*.swp
+tags.vim
+tags
+matlab
+build
+dist
+MANIFEST
+jo
