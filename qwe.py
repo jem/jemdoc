@@ -71,24 +71,76 @@ def nl():
     return readnoncomment(infile)
 
 def quote(s):
-    return re.sub(r'[\\*/+]', r'\\\g<0>', s)
+    return re.sub(r"""[\\*/+"']""", r'\\\g<0>', s)
+
+def replacelinks(b):
+    r = re.compile(r'([ \(]|^)([^ \n]+?)(?<!\\)\[(.*?)(?<!\\)\]', re.M)
+    m = r.search(b)
+    while m:
+        if '@' in m.group(2) and not m.group(2).startswith('mailto:'):
+            link = 'mailto:' + m.group(2)
+        else:
+            link = m.group(2)
+
+        link = quote(link)
+
+
+        if m.group(3):
+            linkname = m.group(3)
+        else:
+            linkname = re.sub('^mailto:', '', link)
+
+        b = b[:m.start()] + m.group(1) + \
+                '<a href=\\"%s\\">%s<\\/a>' % (link, linkname) + \
+                b[m.end():]
+
+        m = r.search(b, m.start())
+
+    return b
 
 def blockreplacements(b):
     """Does simple text replacements on a block of text."""
+    # First do the URL thing.
+    b = replacelinks(b)
+
     # First remove double backslashes.
     b = re.sub(r'\\\\', r'GONNABEBACKSLASH', b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
-    b = re.sub(r'(?M)(?<!\\)/(.*?)(?<!\\)/', r'<i>\1</i>', b)
+    r = re.compile(r'(?<!\\)/(.*?)(?<!\\)/', re.M)
+    b = re.sub(r, r'<i>\1</i>', b)
 
     # Deal with *bold*.
-    b = re.sub(r'(?M)(?<!\\)\*(.*?)(?<!\\)\*', r'<b>\1</b>', b)
+    r = re.compile(r'(?<!\\)\*(.*?)(?<!\\)\*', re.M)
+    b = re.sub(r, r'<b>\1</b>', b)
 
     # Deal with +monospace+.
-    b = re.sub(r'(?M)(?<!\\)\+(.*?)(?<!\\)\+', r'<tt>\1</tt>', b)
+    r = re.compile(r'(?<!\\)\+(.*?)(?<!\\)\+', re.M)
+    b = re.sub(r, r'<tt>\1</tt>', b)
+
+    # Deal with "double quotes".
+    r = re.compile(r'(?<!\\)"(.*?)(?<!\\)"', re.M)
+    b = re.sub(r, r'&#8220;\1&#8221;', b)
+
+    # Deal with left quote `.
+    r = re.compile(r"(?<!\\)`", re.M)
+    b = re.sub(r, r'&#8216;', b)
+
+    # Deal with apostrophe '.
+    r = re.compile(r"(?<!\\)'", re.M)
+    b = re.sub(r, r'&#8217;', b)
+
+    # Deal with em dash ---.
+    r = re.compile(r"(?<!\\)---", re.M)
+    b = re.sub(r, r'&mdash;', b)
+
+    # Deal with en dash --.
+    r = re.compile(r"(?<!\\)--", re.M)
+    b = re.sub(r, r'&ndash;', b)
 
     # Last remove any remaining backslashes, and replace GONNABEBACKSLASHes.
+    b = re.sub(r'\\', '', b)
     b = re.sub('GONNABEBACKSLASH', '\\\\', b)
 
     return b
@@ -108,21 +160,27 @@ def np():
 # load the grammar.
 s = parseconf('jemdoc.conf')
 
-## Get the file started with the firstbit.
-#out(s['firstbit'])
-#
-## Look for a title.
-#if pc() == '=':
-#    t = titletrim(nl())
-#    hb(s['windowtitle'], t)
-#    hb(s['doctitle'], t)
-#
-## Look for a subtitle.
-#if pc() != '\n':
-#    hb(s['subtitle'], np())
-#
-#out(s['endheader'])
-#
-#out(s['lastbit'])
-#if outfile is not sys.stdout:
-#    outfile.close()
+# Get the file started with the firstbit.
+out(s['firstbit'])
+
+# Look for a title.
+if pc() == '=':
+    t = blockreplacements(titletrim(nl()))
+    hb(s['windowtitle'], t)
+    hb(s['doctitle'], t)
+
+# Look for a subtitle.
+if pc() != '\n':
+    hb(s['subtitle'], blockreplacements(np()))
+
+# Now (just for the moment) do the rest of the in-text substitutions.
+p = np()
+while p:
+    out('<p>' + blockreplacements(p) + '</p>')
+    p = np()
+
+out(s['endheader'])
+
+out(s['lastbit'])
+if outfile is not sys.stdout:
+    outfile.close()
