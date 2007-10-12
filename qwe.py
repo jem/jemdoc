@@ -6,7 +6,7 @@ import re
 def parseconf(sname):
     syntax = {}
     f = open(sname)
-    while getnextchar(f) != '':
+    while pc(f) != '':
         l = readnoncomment(f)
         r = re.match(r'\[(.*)\]\n', l)
 
@@ -36,27 +36,33 @@ def readnoncomment(f):
     else:
         return l
 
-def halfblock(tag, content):
-    return re.sub(r'\|', content, tag)
-
 inname = 'test.jemdoc'
 outname = 'test.html'
 
 infile = open(inname)
-outfile = open(outname, 'w')
+outfile = sys.stdout # open(outname, 'w')
 
 def out(s):
     outfile.write(s)
+
+def hb(tag, content):
+    """Writes out a halfblock (hb)."""
+    out(re.sub(r'\|', content, tag))
 
 def titletrim(s):
     s = s.strip()
     return re.sub('=+ ', '', s)
 
-def pc():
+def pc(f = infile):
     """Peeks at next character in the file."""
-    c = infile.read(1)
+    # Should only be used to look at the first character of a new line.
+    c = f.read(1)
     if c: # only undo forward movement if we're not to the end.
-        infile.seek(-1, 1)
+        if c == '#':
+            f.readline() # burn comment line.
+            return pc(f)
+
+        f.seek(-1, 1)
 
     return c
 
@@ -64,30 +70,59 @@ def nl():
     """Get input file line which isn't a comment."""
     return readnoncomment(infile)
 
+def quote(s):
+    return re.sub(r'[\\*/+]', r'\\\g<0>', s)
+
+def blockreplacements(b):
+    """Does simple text replacements on a block of text."""
+    # First remove double backslashes.
+    b = re.sub(r'\\\\', r'GONNABEBACKSLASH', b)
+
+    # Deal with /italics/ first because the '/' in other tags would otherwise
+    # interfere.
+    b = re.sub(r'(?M)(?<!\\)/(.*?)(?<!\\)/', r'<i>\1</i>', b)
+
+    # Deal with *bold*.
+    b = re.sub(r'(?M)(?<!\\)\*(.*?)(?<!\\)\*', r'<b>\1</b>', b)
+
+    # Deal with +monospace+.
+    b = re.sub(r'(?M)(?<!\\)\+(.*?)(?<!\\)\+', r'<tt>\1</tt>', b)
+
+    # Last remove any remaining backslashes, and replace GONNABEBACKSLASHes.
+    b = re.sub('GONNABEBACKSLASH', '\\\\', b)
+
+    return b
+
 def np():
     """Gets the next paragraph from the input file."""
     # New paragraph markers signalled by characters in following tuple.
     s = ''
     while pc() not in ('\n', '-', '.', ''):
         s += nl()
-        while pc() == '\n':
-            nl() # burn blank line.
+
+    while pc() == '\n':
+        nl() # burn blank line.
 
     return s
 
 # load the grammar.
 s = parseconf('jemdoc.conf')
 
-# Get the file started with the firstbit.
-out(s['firstbit'])
-
-# Look for a title.
-if pc() == '=':
-    out(halfblock(s['title'], titletrim(l)))
-
-# Look for a subtitle.
-if pc() != '\n':
-    l.
-
-out(s['lastbit'])
-outfile.close()
+## Get the file started with the firstbit.
+#out(s['firstbit'])
+#
+## Look for a title.
+#if pc() == '=':
+#    t = titletrim(nl())
+#    hb(s['windowtitle'], t)
+#    hb(s['doctitle'], t)
+#
+## Look for a subtitle.
+#if pc() != '\n':
+#    hb(s['subtitle'], np())
+#
+#out(s['endheader'])
+#
+#out(s['lastbit'])
+#if outfile is not sys.stdout:
+#    outfile.close()
