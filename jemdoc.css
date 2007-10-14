@@ -62,9 +62,9 @@ div.menu-category {
 }
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
-/*
-	border: 1px solid red;
-*/
+
+	/*border: 1px solid red;*/
+
 }
 
 body {
@@ -87,7 +87,7 @@ h1, h2, h3, h4, h5, h6 {
 	color: #527bbd;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-	padding-bottom: 0.1em;
+	padding-bottom: 0.2em;
 	line-height: 1.0;
 	padding-top: 0.5em;
 	border-bottom: 1px solid gray;
@@ -107,11 +107,6 @@ h2 {
 h3 {
 	font-size: 110%;
 	border-bottom: none;
-}
-
-/* jem try and remove sectionbody.*/
-div.sectionbody {
-	margin-left: 0;
 }
 
 hr {
@@ -141,55 +136,6 @@ div#footer-text {
 	padding-bottom: 0.5em;
 }
 
-div.block, div.codeblock {
-	margin-top: 1.5em;
-	margin-bottom: 1.5em;
-}
-
-div.content { /* Block element content. */
-	padding: 0;
-}
-
-/* Block element titles. */
-div.title, caption.title {
-	font-weight: bold;
-	text-align: left;
-	margin-top: 1.0em;
-	margin-bottom: 0.3em;
-}
-div.title + * {
-	margin-top: 0;
-}
-
-td div.title:first-child {
-	margin-top: 0.0em;
-}
-div.content div.title:first-child {
-	margin-top: 0.0em;
-}
-div.content + div.title {
-	margin-top: 0.0em;
-}
-
-div.block > div.content {
-	background: #ffffee;
-	border: 1px solid silver;
-	padding: 0.5em;
-}
-
-div.codeblock {
-	margin-right: 0%;
-}
-div.codeblock > div.content {
-	border: 1px solid silver;
-	background: #f4f4f4;
-	padding: 0.5em;
-}
-
-dd > *:first-child {
-	margin-top: 0;
-}
-
 ul, ol {
 	margin-top: 0;
 	padding-top: 0;
@@ -204,6 +150,10 @@ p + ul, p + ol {
 	margin-top: -0.4em;
 }
 
+li ul, li ol {
+	margin-top: 0.4em;
+}
+
 ol {
 	list-style-position: outside;
 	list-style-type: decimal;
@@ -213,60 +163,57 @@ li {
 	margin-bottom: 0.5em;
 }
 
-ol.olist2 {
+ol ol {
 	list-style-type: lower-alpha;
 }
 
-ol.olist2 li {
-	margin-top: -0.5em;
-	margin-bottom: 1em;
+ol ol ol {
+	list-style-type: lower-roman;
 }
 
-div.tableblock > table {
-	border: 3px solid #527bbd;
-}
-thead {
-	font-weight: bold;
-}
-tfoot {
-	font-weight: bold;
-}
-
-div.hlist {
-	margin-top: 0.8em;
-	margin-bottom: 0.8em;
-}
-div.hlist td {
-	padding-bottom: 5px;
-}
-td.hlist1 {
-	vertical-align: top;
-	font-style: italic;
-	padding-right: 0.8em;
-}
-td.hlist2 {
-	vertical-align: top;
-}
-
-@media print {
-	div#footer-badges { display: none; }
-}
-/* Workarounds for IE6's broken and incomplete CSS2. */
-
-div.block-content {
+div.content {
   background: #ffffee;
   border: 1px solid silver;
   padding: 0.5em;
   padding-bottom: 0em;
 }
+
 div.block-title {
   font-weight: bold;
   margin-top: 0.0em;
   margin-bottom: 0.5em;
 }
 
-div.codeblock div.content {
-  border: 1px solid silver;
-  background: #f4f4f4;
-  padding: 0.5em;
+div.codeblock, div.infoblock {
+	margin-right: 0%;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+
+div.blocktitle {
+	font-weight: bold;
+	margin-top: 1.0em;
+	margin-bottom: 0.1em;
+}
+
+div.blockcontent {
+	border: 1px solid silver;
+	padding: 0.5em;
+}
+
+div.infoblock > div.blockcontent {
+	background: #ffffee;
+}
+
+div.codeblock > div.blockcontent {
+	background: #f4f4f4;
+}
+
+/* disable sidebar with this. */
+@media print {
+	div#footer-badges { display: none; }
+}
+
+span.pycommand {
+	color: #0000a0;
 }

@@ -58,6 +58,9 @@ def pc(f = infile):
         #if c == '#': # interpret comment lines as blank.
         #    return '\n'
 
+        if c in ' \t':
+            return pc()
+
         f.seek(-1, 1)
 
     return c
@@ -69,10 +72,10 @@ def nl(withcount=False):
     linenum += 1
     # remove any special characters - assume they were checked by pc() before
     # we got here.
-    toreturn = s.lstrip(' \t-.=')
+    s = s.lstrip(' \t')
 
     # remove any trailing comments.
-    toreturn = re.sub(r'\s*(?<!\\)#.*', '', toreturn)
+    s = re.sub(r'\s*(?<!\\)#.*', '', s)
 
     if withcount:
         if s[0] == '.':
@@ -82,11 +85,15 @@ def nl(withcount=False):
 
         r = re.match('(%s+) ' % m, s)
         if not r:
-            raise SyntaxError('error on line %d' % linenum)
+            raise SyntaxError('error (code 12039) on line %d' % linenum)
 
-        return (toreturn, len(r.group(1)))
+        s = s.lstrip('-.=')
+
+        return (s, len(r.group(1)))
     else:
-        return toreturn
+        s = s.lstrip('-.=')
+
+        return s
 
 
 
@@ -215,8 +222,14 @@ if pc() == '=': # don't check exact number of '=' here jem.
 else:
     out(grammar['bodystart'])
 
+def pyint(l):
+    l = l.rstrip()
+    if l.startswith('>>>'):
+        hb('<span class="pycommand">|</span>\n', allreplace(l))
+    else:
+        out(allreplace(l) + '\n')
+
 # Now (just for the moment) do the rest of the in-text substitutions.
-inblock = False
 while 1: # wait for EOF.
     p = pc()
 
@@ -225,18 +238,52 @@ while 1: # wait for EOF.
 
     # look for lists.
     elif p == '-':
-        out('<ul>\n')
-        while pc() == '-':
-            hb('<li>|</li>\n', br(np()))
+        level = 0
 
-        out('</ul>\n')
+        while pc() == '-':
+            (s, newlevel) = np(True)
+
+            # first adjust list number as appropriate.
+            if newlevel > level:
+                for i in range(newlevel - level):
+                    if newlevel > 1:
+                        out('\n')
+                    out('<ul>\n<li>')
+            elif newlevel < level:
+                for i in range(level - newlevel):
+                    out('</li>\n</ul>\n<li>')
+            else:
+                out('</li>\n<li>')
+
+            out(br(s))
+            level = newlevel
+
+        for i in range(level):
+            out('</li>\n</ul>\n')
 
     elif p == '.':
-        out('<ol>\n')
-        while pc() == '.':
-            hb('<li>|</li>\n', br(np()))
+        level = 0
 
-        out('</ol>\n')
+        while pc() == '.':
+            (s, newlevel) = np(True)
+
+            # first adjust list number as appropriate.
+            if newlevel > level:
+                for i in range(newlevel - level):
+                    if newlevel > 1:
+                        out('\n')
+                    out('<ol>\n<li>')
+            elif newlevel < level:
+                for i in range(level - newlevel):
+                    out('</li>\n</ol>\n<li>')
+            else:
+                out('</li>\n<li>')
+
+            out(br(s))
+            level = newlevel
+
+        for i in range(level):
+            out('</li>\n</ol>\n')
 
     # look for titles.
     elif p == '=':
@@ -249,8 +296,11 @@ while 1: # wait for EOF.
     elif p == '#':
         nl()
 
+    elif p == '\n':
+        nl()
+
     # look for blocks.
-    elif p == '~' and not inblock:
+    elif p == '~':
         # ignore the first line of separating ~(s).
         nl()
 
@@ -264,19 +314,36 @@ while 1: # wait for EOF.
         else:
             g = []
 
+        if len(g) in (0, 1): # info block.
+            out(grammar['infoblock'])
+            
+            if len(g) == 1: # info block.
+                hb(grammar['blocktitle'], g[0])
 
-        if len(g) == 0:
-            out(grammar['blockstart'])
-            inblock = True
-        elif len(g) == 1:
-            out(grammar['blockstart'])
-            hb(grammar['blocktitle'], g[0])
-            inblock = True
-        elif len(g) == 2:
-            out(grammar['codeblockstart'])
+            out(grammar['infoblockcontent'])
+
+            while 1: # wait for EOF.
+                if pc() == '~':
+                    out(grammar['infoblockend'])
+                    nl()
+                else:
+                    l = np()
+                    if not l:
+                        break
+                    elif l.startswith('\\~'):
+                        l = l[1:]
+
+                    out(br(l) + '\n')
+
+        elif len(g) == 2: # code block.
+            out(grammar['codeblock'])
             if len(g[0]):
-                hb(grammar['codetitle'], g[0])
-            out(grammar['codestart'])
+                hb(grammar['blocktitle'], g[0])
+            out(grammar['codeblockcontent'])
+
+            if g[1] not in ('', 'pyint'):
+                raise SyntaxError('unrecognised syntax '
+                                  'highlighting on line %d' % (linenum - 1))
 
             # Now we are handling code.
             # Handle \~ and ~ differently.
@@ -289,23 +356,19 @@ while 1: # wait for EOF.
                 elif l.startswith('\\~'):
                     l = l[1:]
 
-                out(allreplace(l))
+                if g[1] == 'pyint':
+                    pyint(l)
+                else:
+                    out(allreplace(l))
 
             out(grammar['codeblockend'])
         else:
-            raise SyntaxError('error on line %d' % linenum)
-
-
-    elif p == '~' and inblock:
-        # ditch this last line of separating ~(s).
-        nl()
-        inblock = False
-        out(grammar['blockend'])
+            raise SyntaxError('error (code 0192977) on line %d' % linenum)
 
     else:
         s = br(np())
         if s:
-            hb('<p>|</p>\n', br(np()))
+            hb('<p>|</p>\n', s)
 
 out(grammar['lastbit'])
 if outfile is not sys.stdout:
