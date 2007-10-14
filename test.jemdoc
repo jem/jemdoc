@@ -6,9 +6,29 @@ and this trailing bit.
 
 and then this text would still have to have a paragraph mark.
 
-This would be a new paragraph here.
+This would be a new paragraph here. This is a backslash \\ which is exciting.
 
 # this is a comment.
+
+~~~~~
+{This is a callout section}
+This is a warning about something not very exciting.
+~~~~~
+
+~~~~~
+{Example code}{python}
+This should try and do some code matching.
+~~~~~
+
+~~~~~
+{Python code}{pythoninteractive}
+>>> m = parameter(name='m')
+>>> m
+<1x1 parameter m>
+
+>>> parameter(10, 5, name='A')
+<10x5 parameter A>
+~~~~~
 
 == This is a heading two
 This is some text right under the heading.
@@ -36,23 +56,3 @@ Begin by writing the code +x = \'fish\'+.
 
 Let us speak of dashes---they are of importance 2--3 said Mr Bong-bong.
 
-~~~~~
-{This is a callout section}
-This is a warning about something not very exciting.
-~~~~~
-
-~~~~~
-{Example code}{python}
-This should try and do some code matching.
-~~~~~
-
-#.Python code
-#[pythoninteractive]
-#source~~~~~~~~~~~~~~~~~~
-#>>> m = parameter(name='m')
-#>>> m
-#<1x1 parameter m>
-#
-#>>> parameter(10, 5, name='A')
-#<10x5 parameter A>
-#source~~~~~~~~~~~~~~~~~~

@@ -15,3 +15,8 @@ make sure *everything* can be backslash quoted, including {} in code blocks.
 make sidebarblock etc better name.
 
 make infinite loop protection.
+
+learn proper difference between span and div.
+
+do at least some replacements in code - things like dashes, ampersands etc,
+that are required for html.
