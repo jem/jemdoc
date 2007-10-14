@@ -12,14 +12,20 @@ This would be a new paragraph here.
 
 == This is a heading two
 This is some text right under the heading.
-
 This should be /italics/ and *bold* and +monospace+.
 It should be possible to have +i+/th/*s*.
-
-#- This is a list.
+- This is a list.
+- Another item.
 
 This should also
-#- be a list.
+
+- be a list, though
+- there is a gap.
+
+. This should be a numbered
+. list
+. of
+. items
 
 These are `single quotes' and "double quotes".
 
@@ -30,10 +36,16 @@ Begin by writing the code +x = \'fish\'+.
 
 Let us speak of dashes---they are of importance 2--3 said Mr Bong-bong.
 
-#.This is a callout section.
-#***********
-#This is a warning.
-#***********
+~~~~~
+{This is a callout section}
+This is a warning about something not very exciting.
+~~~~~
+
+~~~~~
+{Example code}{python}
+This should try and do some code matching.
+~~~~~
+
 #.Python code
 #[pythoninteractive]
 #source~~~~~~~~~~~~~~~~~~
