@@ -1,1 +1,17 @@
 allow inline comments.
+
+normalize spacing (or rely on tidy?).
+
+grammar rules
+-------------
+- one line maximum for titles.
+
+handle # that has whitespace before it at the beginning of a line.
+
+a comment only line is thought of as a blank line, not a missing line.
+
+make sure *everything* can be backslash quoted, including {} in code blocks.
+
+make sidebarblock etc better name.
+
+make infinite loop protection.

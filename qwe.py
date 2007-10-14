@@ -3,6 +3,15 @@ import re
 
 #inname = sys.argv[1]
 #outname = sys.argv[2]
+def readnoncomment(f):
+    l = f.readline()
+    if l == '':
+        return l
+    elif l[0] == '#':
+        return readnoncomment(f)
+    else:
+        return l.strip() + '\n' # leave just one \n.
+
 def parseconf(sname):
     syntax = {}
     f = open(sname)
@@ -27,15 +36,6 @@ def parseconf(sname):
 
     return syntax
 
-def readnoncomment(f):
-    l = f.readline()
-    if l == '':
-        return l
-    elif l[0] == '#':
-        return readnoncomment(f)
-    else:
-        return l
-
 inname = 'test.jemdoc'
 outname = 'test.html'
 
@@ -49,26 +49,67 @@ def hb(tag, content):
     """Writes out a halfblock (hb)."""
     out(re.sub(r'\|', content, tag))
 
-def titletrim(s):
-    s = s.strip()
-    return re.sub('=+ ', '', s)
 
 def pc(f = infile):
     """Peeks at next character in the file."""
     # Should only be used to look at the first character of a new line.
     c = f.read(1)
     if c: # only undo forward movement if we're not to the end.
-        if c == '#':
-            f.readline() # burn comment line.
-            return pc(f)
+        if c == '#': # interpret comment lines as blank.
+            return '\n'
 
         f.seek(-1, 1)
 
     return c
 
-def nl():
-    """Get input file line which isn't a comment."""
-    return readnoncomment(infile)
+def nl(withcount=False):
+    global linenum
+    """Get input file line."""
+    s = infile.readline()
+    linenum += 1
+    # remove any special characters - assume they were checked by pc() before
+    # we got here.
+    toreturn = s.lstrip(' \t-.=')
+
+    # remove any trailing comments.
+    toreturn = re.sub(r'\s*(?<!\\)#.*', '', toreturn)
+
+    if withcount:
+        if s[0] == '.':
+            m = r'\.'
+        else:
+            m = s[0]
+
+        r = re.match('(%s+) ' % m, s)
+        if not r:
+            raise SyntaxError('error on line %d' % linenum)
+
+        return (toreturn, len(r.group(1)))
+    else:
+        return toreturn
+
+
+
+def np(withcount=False):
+    """Gets the next paragraph from the input file."""
+    # New paragraph markers signalled by characters in following tuple.
+    if withcount:
+        (s, c) = nl(withcount)
+    else:
+        s = nl()
+
+    while pc() not in ('\n', '-', '.', '', '=', '#', '~', '{'):
+        s += nl()
+
+    while pc() == '\n':
+        nl() # burn blank line.
+
+    # in both cases, ditch the trailing \n.
+    if withcount:
+        return (s[:-1], c)
+    else:
+        return s[:-1]
+
 
 def quote(s):
     return re.sub(r"""[\\*/+"']""", r'\\\g<0>', s)
@@ -91,16 +132,16 @@ def replacelinks(b):
             linkname = re.sub('^mailto:', '', link)
 
         b = b[:m.start()] + m.group(1) + \
-                '<a href=\\"%s\\">%s<\\/a>' % (link, linkname) + \
-                b[m.end():]
+                r'<a href=\"%s\">%s<\/a>' % (link, linkname) + b[m.end():]
 
         m = r.search(b, m.start())
 
     return b
 
-def blockreplacements(b):
-    """Does simple text replacements on a block of text."""
+def br(b):
+    """Does simple text replacements on a block of text. ('block replacements')"""
     # First do the URL thing.
+    b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replacelinks(b)
 
     # First remove double backslashes.
@@ -139,48 +180,98 @@ def blockreplacements(b):
     r = re.compile(r"(?<!\\)--", re.M)
     b = re.sub(r, r'&ndash;', b)
 
-    # Last remove any remaining backslashes, and replace GONNABEBACKSLASHes.
-    b = re.sub(r'\\', '', b)
-    b = re.sub('GONNABEBACKSLASH', '\\\\', b)
+    # Last remove any remaining quoting backslashes.
+    b = re.sub(r'\\([^\\])', r'\1', b)
 
     return b
 
-def np():
-    """Gets the next paragraph from the input file."""
-    # New paragraph markers signalled by characters in following tuple.
-    s = ''
-    while pc() not in ('\n', '-', '.', ''):
-        s += nl()
-
-    while pc() == '\n':
-        nl() # burn blank line.
-
-    return s
-
 # load the grammar.
-s = parseconf('jemdoc.conf')
+grammar = parseconf('jemdoc.conf')
 
 # Get the file started with the firstbit.
-out(s['firstbit'])
+out(grammar['firstbit'])
 
+linenum = 1
 # Look for a title.
-if pc() == '=':
-    t = blockreplacements(titletrim(nl()))
-    hb(s['windowtitle'], t)
-    hb(s['doctitle'], t)
+if pc() == '=': # don't check exact number of '=' here jem.
+    t = br(nl())[:-1]
+    hb(grammar['windowtitle'], t)
+    hb(grammar['doctitle'], t)
 
-# Look for a subtitle.
-if pc() != '\n':
-    hb(s['subtitle'], blockreplacements(np()))
+    # Look for a subtitle.
+    if pc() != '\n':
+        hb(grammar['subtitle'], br(np()))
 
 # Now (just for the moment) do the rest of the in-text substitutions.
-p = np()
-while p:
-    out('<p>' + blockreplacements(p) + '</p>')
-    p = np()
+inblock = False
+while 1: # wait for EOF.
+    p = pc()
 
-out(s['endheader'])
+    if p == '':
+        break
 
-out(s['lastbit'])
+    # look for lists.
+    elif p == '-':
+        out('<ul>\n')
+        while pc() == '-':
+            hb('<li>|</li>\n', br(np()))
+
+        out('</ul>\n')
+
+    elif p == '.':
+        out('<ol>\n')
+        while pc() == '.':
+            hb('<li>|</li>\n', br(np()))
+
+        out('</ol>\n')
+
+    # look for titles.
+    elif p == '=':
+        (s, c) = nl(True)
+        # trim trailing \n.
+        s = s[:-1]
+        hb('<h%d>|</h%d>\n' % (c, c), br(s))
+
+    # look for comments.
+    elif p == '#':
+        nl()
+
+    # look for blocks.
+    elif p == '~' and not inblock:
+        # ignore the first line of separating ~(s).
+        nl()
+
+        if pc() == '{':
+            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
+            g = re.findall(r, l)
+        else:
+            g = None
+
+        out(grammar['blockstart'])
+        inblock = True
+
+        if g is not None:
+            if len(g) == 1:
+                hb(grammar['blocktitle'], g[0])
+            elif len(g) == 2:
+                hb(grammar['blocktitle'], g[0])
+                out(br('<p>/jem differentiate for *%s* code<\/p>/' % g[1]))
+            else:
+                raise SyntaxError('error on line %d' % linenum)
+
+
+    elif p == '~' and inblock:
+        # ditch this last line of separating ~(s).
+        nl()
+
+        out(grammar['blockend'])
+        inblock = False
+
+    else:
+        hb('<p>|</p>\n', br(np()))
+
+out(grammar['headerend'])
+
+out(grammar['lastbit'])
 if outfile is not sys.stdout:
     outfile.close()
