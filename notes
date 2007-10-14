@@ -17,6 +17,7 @@ make sidebarblock etc better name.
 make infinite loop protection.
 
 learn proper difference between span and div.
+--> div includes paragraph breaks as well.
 
 do at least some replacements in code - things like dashes, ampersands etc,
 that are required for html.

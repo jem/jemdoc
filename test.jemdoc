@@ -1,6 +1,6 @@
 = Main heading at the top
-link:http://stanford.edu/~jacobm/[Jacob Mattingley]
-(mailto:jacobm@stanford.edu[])
+http://stanford.edu/~jacobm/[Jacob Mattingley]
+(jacobm@stanford.edu[])
 and this trailing bit.
 # could have a comment immediately after.
 
@@ -12,16 +12,22 @@ This would be a new paragraph here. This is a backslash \\ which is exciting.
 
 ~~~~~
 {This is a callout section}
-This is a warning about something not very exciting.
+This is a warning about something not very exciting. And I am writing text and
+really a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a
+trying to fill.
 ~~~~~
 
 ~~~~~
-{Example code}{python}
+This is a callout without a title.
+~~~~~
+
+~~~~~
+{Example code}{}
 This should try and do some code matching.
 ~~~~~
 
 ~~~~~
-{Python code}{pythoninteractive}
+{Python code}{pyint}
 >>> m = parameter(name='m')
 >>> m
 <1x1 parameter m>
@@ -41,11 +47,27 @@ This should also
 
 - be a list, though
 - there is a gap.
+-- this is a sublist
+-- with multiple
+-- items
+- this is back to level one
+--- and now we jump to level 3
+--- and stay here
+-- and drop to level two
+- and back to one
 
-. This should be a numbered
-. list
-. of
-. items
+. be a numbered list, though
+.. this is a sublist
+.. with multiple
+.. items
+. this is back to level one
+.. and now we jump to level 2
+... and to level three
+... and hold
+.. and drop to level two
+. and back to one
+. there is a gap.
+
 
 These are `single quotes' and "double quotes".
 
