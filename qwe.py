@@ -55,8 +55,8 @@ def pc(f = infile):
     # Should only be used to look at the first character of a new line.
     c = f.read(1)
     if c: # only undo forward movement if we're not to the end.
-        if c == '#': # interpret comment lines as blank.
-            return '\n'
+        #if c == '#': # interpret comment lines as blank.
+        #    return '\n'
 
         f.seek(-1, 1)
 
@@ -140,12 +140,11 @@ def replacelinks(b):
 
 def br(b):
     """Does simple text replacements on a block of text. ('block replacements')"""
+    b = allreplace(b)
+
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replacelinks(b)
-
-    # First remove double backslashes.
-    b = re.sub(r'\\\\', r'GONNABEBACKSLASH', b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -162,15 +161,15 @@ def br(b):
 
     # Deal with "double quotes".
     r = re.compile(r'(?<!\\)"(.*?)(?<!\\)"', re.M)
-    b = re.sub(r, r'&#8220;\1&#8221;', b)
+    b = re.sub(r, r'&ldquo;\1&rdquo;', b)
 
     # Deal with left quote `.
     r = re.compile(r"(?<!\\)`", re.M)
-    b = re.sub(r, r'&#8216;', b)
+    b = re.sub(r, r'&lsquo;', b)
 
     # Deal with apostrophe '.
     r = re.compile(r"(?<!\\)'", re.M)
-    b = re.sub(r, r'&#8217;', b)
+    b = re.sub(r, r'&rsquo;', b)
 
     # Deal with em dash ---.
     r = re.compile(r"(?<!\\)---", re.M)
@@ -185,6 +184,17 @@ def br(b):
 
     return b
 
+def allreplace(b):
+    """Replacements that should be done on everything."""
+    # Deal with left quote `.
+    r = re.compile(r">", re.M)
+    b = re.sub(r, r'&gt;', b)
+
+    r = re.compile(r"<", re.M)
+    b = re.sub(r, r'&lt;', b)
+
+    return b
+
 # load the grammar.
 grammar = parseconf('jemdoc.conf')
 
@@ -196,11 +206,14 @@ linenum = 1
 if pc() == '=': # don't check exact number of '=' here jem.
     t = br(nl())[:-1]
     hb(grammar['windowtitle'], t)
+    out(grammar['bodystart'])
     hb(grammar['doctitle'], t)
 
     # Look for a subtitle.
     if pc() != '\n':
         hb(grammar['subtitle'], br(np()))
+else:
+    out(grammar['bodystart'])
 
 # Now (just for the moment) do the rest of the in-text substitutions.
 inblock = False
@@ -242,35 +255,57 @@ while 1: # wait for EOF.
         nl()
 
         if pc() == '{':
+            l = br(nl())
             r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
             g = re.findall(r, l)
+        elif pc() == '~':
+            nl()
+            continue
         else:
-            g = None
+            g = []
 
-        out(grammar['blockstart'])
-        inblock = True
 
-        if g is not None:
-            if len(g) == 1:
-                hb(grammar['blocktitle'], g[0])
-            elif len(g) == 2:
-                hb(grammar['blocktitle'], g[0])
-                out(br('<p>/jem differentiate for *%s* code<\/p>/' % g[1]))
-            else:
-                raise SyntaxError('error on line %d' % linenum)
+        if len(g) == 0:
+            out(grammar['blockstart'])
+            inblock = True
+        elif len(g) == 1:
+            out(grammar['blockstart'])
+            hb(grammar['blocktitle'], g[0])
+            inblock = True
+        elif len(g) == 2:
+            out(grammar['codeblockstart'])
+            if len(g[0]):
+                hb(grammar['codetitle'], g[0])
+            out(grammar['codestart'])
+
+            # Now we are handling code.
+            # Handle \~ and ~ differently.
+            while 1: # wait for EOF.
+                l = nl()
+                if not l:
+                    break
+                elif l.startswith('~'):
+                    break
+                elif l.startswith('\\~'):
+                    l = l[1:]
+
+                out(allreplace(l))
+
+            out(grammar['codeblockend'])
+        else:
+            raise SyntaxError('error on line %d' % linenum)
 
 
     elif p == '~' and inblock:
         # ditch this last line of separating ~(s).
         nl()
-
-        out(grammar['blockend'])
         inblock = False
+        out(grammar['blockend'])
 
     else:
-        hb('<p>|</p>\n', br(np()))
-
-out(grammar['headerend'])
+        s = br(np())
+        if s:
+            hb('<p>|</p>\n', br(np()))
 
 out(grammar['lastbit'])
 if outfile is not sys.stdout:

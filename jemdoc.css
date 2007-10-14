@@ -141,16 +141,9 @@ div#footer-text {
 	padding-bottom: 0.5em;
 }
 
-div#preamble,
-div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
-div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
-div.admonitionblock {
+div.block, div.codeblock {
 	margin-top: 1.5em;
 	margin-bottom: 1.5em;
-}
-div.admonitionblock {
-	margin-top: 2.5em;
-	margin-bottom: 2.5em;
 }
 
 div.content { /* Block element content. */
@@ -178,71 +171,21 @@ div.content + div.title {
 	margin-top: 0.0em;
 }
 
-div.sidebarblock > div.content {
+div.block > div.content {
 	background: #ffffee;
 	border: 1px solid silver;
 	padding: 0.5em;
 }
 
-div.listingblock {
+div.codeblock {
 	margin-right: 0%;
 }
-div.listingblock > div.content {
+div.codeblock > div.content {
 	border: 1px solid silver;
 	background: #f4f4f4;
 	padding: 0.5em;
 }
 
-div.quoteblock > div.content {
-	padding-left: 2.0em;
-}
-
-div.attribution {
-	text-align: right;
-}
-div.verseblock + div.attribution {
-	text-align: left;
-}
-
-pre > tt {
-	color: black;
-}
-
-div.admonitionblock .icon {
-	vertical-align: top;
-	font-size: 1.1em;
-	font-weight: bold;
-	text-decoration: underline;
-	color: #325b9d;
-	padding-right: 0.5em;
-}
-div.admonitionblock td.content {
-	padding-left: 0.5em;
-	border-left: 1px solid silver;
-}
-
-div.exampleblock > div.content {
-	border-left: 1px solid silver;
-	padding: 0.5em;
-}
-
-div.verseblock div.content {
-	white-space: pre;
-}
-
-div.imageblock div.content { padding-left: 0; }
-div.imageblock img { border: 1px solid silver; }
-span.image img { border-style: none; }
-
-dl {
-	margin-top: 0.8em;
-	margin-bottom: 0.8em;
-}
-dt {
-	margin-top: 0.5em;
-	margin-bottom: 0;
-	font-style: italic;
-}
 dd > *:first-child {
 	margin-top: 0;
 }
@@ -310,32 +253,20 @@ td.hlist2 {
 }
 /* Workarounds for IE6's broken and incomplete CSS2. */
 
-div.sidebar-content {
+div.block-content {
   background: #ffffee;
   border: 1px solid silver;
   padding: 0.5em;
   padding-bottom: 0em;
 }
-div.sidebar-title, div.image-title {
+div.block-title {
   font-weight: bold;
   margin-top: 0.0em;
   margin-bottom: 0.5em;
 }
 
-div.listingblock div.content {
+div.codeblock div.content {
   border: 1px solid silver;
   background: #f4f4f4;
   padding: 0.5em;
 }
-
-div.quoteblock-content {
-  padding-left: 2.0em;
-}
-
-div.exampleblock-content {
-  border-left: 2px solid silver;
-  padding-left: 0.5em;
-}
-
-/* IE6 sets dynamically generated links as visited. */
-div#toc a:visited { color: blue; }
