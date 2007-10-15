@@ -1,12 +1,25 @@
+# jemdoc: sidemenu{MENU}{/}
 = Main heading at the top
 http://stanford.edu/~jacobm/[Jacob Mattingley]
 (jacobm@stanford.edu[])
 and this trailing bit.
 # could have a comment immediately after.
 
-and then this text would still have to have a paragraph mark.
+and then this text would still have to have a paragraph mark. # say, this is fun.
+This is another line \# with a quoted comment.
+I'm going to go ahead and quote some symbols: \", \+, \*, \=, \-.
+
+You should email jem@jaboc.net[me] or someone@somewhere.com[]. You should visit
+here.html[that site] or http://othersite.com[this site].
+
+\. This is not a list.
+
+\- And this isn't either. And this isn\'t a proper quote mark.
 
 This would be a new paragraph here. This is a backslash \\ which is exciting.
+
+=== Let's have some heading three action.
+Here is heading three's magical text.
 
 # this is a comment.
 
