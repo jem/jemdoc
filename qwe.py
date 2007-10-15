@@ -7,10 +7,10 @@ def readnoncomment(f):
     l = f.readline()
     if l == '':
         return l
-    elif l[0] == '#':
+    elif l[0] == '#': # jem: be a little more generous with the comments we accept?
         return readnoncomment(f)
     else:
-        return l.strip() + '\n' # leave just one \n.
+        return l.rstrip() + '\n' # leave just one \n and no spaces etc.
 
 def parseconf(sname):
     syntax = {}
@@ -30,11 +30,33 @@ def parseconf(sname):
             while l not in ('\n', ''):
                 s += l
                 l = readnoncomment(f)
+
             syntax[tag] = s
 
     f.close()
 
     return syntax
+
+def insertmenuitems(mname, current):
+    f = open(mname)
+    while pc(f) != '':
+        l = readnoncomment(f)
+        l = l.strip()
+        if l == '':
+            continue
+
+        r = re.match(r'\s*(.*?)\s*\[(.*)\]', l)
+
+        if r: # then we have a link.
+            if r.group(2) == current: 
+                hb(grammar['currentmenuitem'], r.group(2), br(r.group(1)))
+            else:
+                hb(grammar['menuitem'], r.group(2), br(r.group(1)))
+
+        else: # menu category.
+            hb(grammar['menucategory'], br(l))
+
+    f.close()
 
 inname = 'test.jemdoc'
 outname = 'test.html'
@@ -45,16 +67,20 @@ outfile = sys.stdout # open(outname, 'w')
 def out(s):
     outfile.write(s)
 
-def hb(tag, content):
+def hb(tag, content1, content2=None):
     """Writes out a halfblock (hb)."""
-    out(re.sub(r'\|', content, tag))
-
+    if content2 is None:
+        out(re.sub(r'\|', content1, tag))
+    else:
+        r = re.sub(r'\|1', content1, tag)
+        r = re.sub(r'\|2', content2, r)
+        out(r)
 
 def pc(f = infile):
     """Peeks at next character in the file."""
     # Should only be used to look at the first character of a new line.
     c = f.read(1)
-    if c: # only undo forward movement if we're not to the end.
+    if c: # only undo forward movement if we're not at the end.
         #if c == '#': # interpret comment lines as blank.
         #    return '\n'
 
@@ -208,19 +234,51 @@ grammar = parseconf('jemdoc.conf')
 # Get the file started with the firstbit.
 out(grammar['firstbit'])
 
-linenum = 1
+linenum = 0
+
+menu = None
+if pc() == '#':
+    l = infile.readline()
+    linenum += 1
+    if l.startswith('# jemdoc: '):
+        l = l[len('# jemdoc: '):]
+        a = l.split(',')
+        # jem only handle one argument for now.
+        b = a[0]
+        b = b.strip()
+        if b.startswith('sidemenu'):
+            sidemenu = True
+            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
+            g = re.findall(r, l)
+            if len(g) != 2:
+                raise SyntaxError('sidemenu error on line %d' % linenum)
+
+            menu = (g[0], g[1])
+
+
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.
     t = br(nl())[:-1]
     hb(grammar['windowtitle'], t)
     out(grammar['bodystart'])
+
+else:
+    out(grammar['bodystart'])
+    t = None
+
+if menu:
+    out(grammar['menustart'])
+    insertmenuitems(*menu)
+    out(grammar['menuend'])
+else:
+    out(grammar['nomenu'])
+
+if t is not None:
     hb(grammar['doctitle'], t)
 
     # Look for a subtitle.
     if pc() != '\n':
         hb(grammar['subtitle'], br(np()))
-else:
-    out(grammar['bodystart'])
 
 def pyint(l):
     l = l.rstrip()
@@ -251,7 +309,7 @@ while 1: # wait for EOF.
                     out('<ul>\n<li>')
             elif newlevel < level:
                 for i in range(level - newlevel):
-                    out('</li>\n</ul>\n<li>')
+                    out('</li>\n</ul>\n</li><li>')
             else:
                 out('</li>\n<li>')
 
@@ -275,7 +333,7 @@ while 1: # wait for EOF.
                     out('<ol>\n<li>')
             elif newlevel < level:
                 for i in range(level - newlevel):
-                    out('</li>\n</ol>\n<li>')
+                    out('</li>\n</ol>\n</li><li>')
             else:
                 out('</li>\n<li>')
 
@@ -343,7 +401,7 @@ while 1: # wait for EOF.
 
             if g[1] not in ('', 'pyint'):
                 raise SyntaxError('unrecognised syntax '
-                                  'highlighting on line %d' % (linenum - 1))
+                                  'highlighting on line %d' % linenum)
 
             # Now we are handling code.
             # Handle \~ and ~ differently.
@@ -370,6 +428,10 @@ while 1: # wait for EOF.
         if s:
             hb('<p>|</p>\n', s)
 
-out(grammar['lastbit'])
+if menu:
+    out(grammar['menulastbit'])
+else:
+    out(grammar['nomenulastbit'])
+
 if outfile is not sys.stdout:
     outfile.close()
