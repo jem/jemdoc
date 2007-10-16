@@ -1,5 +1,6 @@
 import sys
 import re
+import time
 
 #inname = sys.argv[1]
 #outname = sys.argv[2]
@@ -244,8 +245,7 @@ if pc() == '#':
         l = l[len('# jemdoc: '):]
         a = l.split(',')
         # jem only handle one argument for now.
-        b = a[0]
-        b = b.strip()
+        b = a[0].strip()
         if b.startswith('sidemenu'):
             sidemenu = True
             r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
@@ -255,6 +255,14 @@ if pc() == '#':
 
             menu = (g[0], g[1])
 
+        try:
+            b = a[1].strip()
+            if b.startswith('date'):
+                footer = True
+            else:
+                footer = False
+        except IndexError:
+            footer = False
 
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.
@@ -427,6 +435,11 @@ while 1: # wait for EOF.
         s = br(np())
         if s:
             hb('<p>|</p>\n', s)
+
+if footer:
+    s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
+    s = 'Last updated %s.' % s
+    hb(grammar['footer'], s)
 
 if menu:
     out(grammar['menulastbit'])
