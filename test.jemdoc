@@ -1,4 +1,4 @@
-# jemdoc: sidemenu{MENU}{/}
+# jemdoc: sidemenu{MENU}{/}, date
 = Main heading at the top
 http://stanford.edu/~jacobm/[Jacob Mattingley]
 (jacobm@stanford.edu[])
@@ -53,7 +53,7 @@ This should try and do some code matching.
 This is some text right under the heading.
 This should be /italics/ and *bold* and +monospace+.
 It should be possible to have +i+/th/*s*.
-- This is a list.
+- This is a list. Link to http://cvxmod.net[here].
 - Another item.
 
 This should also
