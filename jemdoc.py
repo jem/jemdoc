@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 import sys
 import re
 import time
 
-#inname = sys.argv[1]
+inname = sys.argv[1]
+outname = inname.rsplit('.', 1)[0] + '.html'
 #outname = sys.argv[2]
 def readnoncomment(f):
     l = f.readline()
@@ -59,11 +62,12 @@ def insertmenuitems(mname, current):
 
     f.close()
 
-inname = 'test.jemdoc'
-outname = 'test.html'
+#inname = 'test.jemdoc'
+#outname = 'test.html'
 
 infile = open(inname)
-outfile = sys.stdout # open(outname, 'w')
+#outfile = sys.stdout # open(outname, 'w')
+outfile = open(outname, 'w')
 
 def out(s):
     outfile.write(s)
@@ -92,7 +96,7 @@ def pc(f = infile):
 
     return c
 
-def nl(withcount=False):
+def nl(withcount=False, leavecomments=False):
     global linenum
     """Get input file line."""
     s = infile.readline()
@@ -102,7 +106,8 @@ def nl(withcount=False):
     s = s.lstrip(' \t')
 
     # remove any trailing comments.
-    s = re.sub(r'\s*(?<!\\)#.*', '', s)
+    if not leavecomments:
+        s = re.sub(r'\s*(?<!\\)#.*', '', s)
 
     if withcount:
         if s[0] == '.':
@@ -121,8 +126,6 @@ def nl(withcount=False):
         s = s.lstrip('-.=')
 
         return s
-
-
 
 def np(withcount=False):
     """Gets the next paragraph from the input file."""
@@ -144,29 +147,42 @@ def np(withcount=False):
     else:
         return s[:-1]
 
-
 def quote(s):
-    return re.sub(r"""[\\*/+"']""", r'\\\g<0>', s)
+    return re.sub(r"""[\\*/+"'<>\.]""", r'\\\g<0>', s)
 
-def replacelinks(b):
-    r = re.compile(r'([ \(]|^)([^ \n]+?)(?<!\\)\[(.*?)(?<!\\)\]', re.M)
+def replacequoted(b):
+    r = re.compile(r'(?<!\\){{(.*?)(?<!\\)}}', re.M + re.S)
     m = r.search(b)
     while m:
-        if '@' in m.group(2) and not m.group(2).startswith('mailto:'):
-            link = 'mailto:' + m.group(2)
+        qb = quote(m.group(1))
+
+        b = b[:m.start()] + qb + b[m.end():]
+
+        m = r.search(b, m.start())
+
+    return b
+
+def replacelinks(b):
+    # works with [link.html new link style].
+    r = re.compile(r'(?<!\\)\[(.*?)(?:\s(.*?))?(?<!\\)\]', re.M + re.S)
+    m = r.search(b)
+    while m:
+        m1 = m.group(1).strip()
+
+        if '@' in m1 and not m1.startswith('mailto:'):
+            link = 'mailto:' + m1
         else:
-            link = m.group(2)
+            link = m1
 
         link = quote(link)
 
-
-        if m.group(3):
-            linkname = m.group(3)
+        if m.group(2):
+            linkname = m.group(2).strip()
         else:
+            # remove any mailto before labelling.
             linkname = re.sub('^mailto:', '', link)
 
-        b = b[:m.start()] + m.group(1) + \
-                r'<a href=\"%s\">%s<\/a>' % (link, linkname) + b[m.end():]
+        b = b[:m.start()] + r'<a href=\"%s\">%s<\/a>' % (link, linkname) + b[m.end():]
 
         m = r.search(b, m.start())
 
@@ -174,44 +190,52 @@ def replacelinks(b):
 
 def br(b):
     """Does simple text replacements on a block of text. ('block replacements')"""
+    # Deal with {html embedding}.
+    b = replacequoted(b)
+
     b = allreplace(b)
 
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replacelinks(b)
 
+
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
-    r = re.compile(r'(?<!\\)/(.*?)(?<!\\)/', re.M)
+    r = re.compile(r'(?<!\\)/(.*?)(?<!\\)/', re.M + re.S)
     b = re.sub(r, r'<i>\1</i>', b)
 
     # Deal with *bold*.
-    r = re.compile(r'(?<!\\)\*(.*?)(?<!\\)\*', re.M)
+    r = re.compile(r'(?<!\\)\*(.*?)(?<!\\)\*', re.M + re.S)
     b = re.sub(r, r'<b>\1</b>', b)
 
     # Deal with +monospace+.
-    r = re.compile(r'(?<!\\)\+(.*?)(?<!\\)\+', re.M)
+    r = re.compile(r'(?<!\\)\+(.*?)(?<!\\)\+', re.M + re.S)
     b = re.sub(r, r'<tt>\1</tt>', b)
 
     # Deal with "double quotes".
-    r = re.compile(r'(?<!\\)"(.*?)(?<!\\)"', re.M)
+    r = re.compile(r'(?<!\\)"(.*?)(?<!\\)"', re.M + re.S)
     b = re.sub(r, r'&ldquo;\1&rdquo;', b)
 
     # Deal with left quote `.
-    r = re.compile(r"(?<!\\)`", re.M)
+    r = re.compile(r"(?<!\\)`", re.M + re.S)
     b = re.sub(r, r'&lsquo;', b)
 
     # Deal with apostrophe '.
-    r = re.compile(r"(?<!\\)'", re.M)
+    r = re.compile(r"(?<!\\)'", re.M + re.S)
     b = re.sub(r, r'&rsquo;', b)
 
     # Deal with em dash ---.
-    r = re.compile(r"(?<!\\)---", re.M)
+    r = re.compile(r"(?<!\\)---", re.M + re.S)
     b = re.sub(r, r'&mdash;', b)
 
     # Deal with en dash --.
-    r = re.compile(r"(?<!\\)--", re.M)
+    r = re.compile(r"(?<!\\)--", re.M + re.S)
     b = re.sub(r, r'&ndash;', b)
+
+    # Deal with ellipsis  ....
+    r = re.compile(r"(?<!\\)\.\.\.", re.M + re.S)
+    b = re.sub(r, r'&hellip;', b)
 
     # Last remove any remaining quoting backslashes.
     b = re.sub(r'\\([^\\])', r'\1', b)
@@ -220,11 +244,10 @@ def br(b):
 
 def allreplace(b):
     """Replacements that should be done on everything."""
-    # Deal with left quote `.
-    r = re.compile(r">", re.M)
+    r = re.compile(r"(?<!\\)>", re.M + re.S)
     b = re.sub(r, r'&gt;', b)
 
-    r = re.compile(r"<", re.M)
+    r = re.compile(r"(?<!\\)<", re.M + re.S)
     b = re.sub(r, r'&lt;', b)
 
     return b
@@ -248,7 +271,7 @@ if pc() == '#':
         b = a[0].strip()
         if b.startswith('sidemenu'):
             sidemenu = True
-            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
+            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
             g = re.findall(r, l)
             if len(g) != 2:
                 raise SyntaxError('sidemenu error on line %d' % linenum)
@@ -292,6 +315,8 @@ def pyint(l):
     l = l.rstrip()
     if l.startswith('>>>'):
         hb('<span class="pycommand">|</span>\n', allreplace(l))
+    elif l.startswith('#'):
+        hb('<span class="comment">|</span>\n', allreplace(l))
     else:
         out(allreplace(l) + '\n')
 
@@ -372,7 +397,7 @@ while 1: # wait for EOF.
 
         if pc() == '{':
             l = br(nl())
-            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M)
+            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
             g = re.findall(r, l)
         elif pc() == '~':
             nl()
@@ -414,7 +439,7 @@ while 1: # wait for EOF.
             # Now we are handling code.
             # Handle \~ and ~ differently.
             while 1: # wait for EOF.
-                l = nl()
+                l = nl(leavecomments=True)
                 if not l:
                     break
                 elif l.startswith('~'):
