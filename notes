@@ -41,7 +41,8 @@ list continuation (multi-line lists)
 
 add $monospace on steroids$ which does no in-text replacements.
 
-fix wrapping when lines start with .s.
+fix wrapping when lines start with .s. fix wrapping with \n at the end of the
+line.
 
 way of bypassing ellipses.
 --> simply have \... which will bypass the first one and then the entire thing

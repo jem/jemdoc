@@ -148,7 +148,7 @@ def np(withcount=False):
         return s[:-1]
 
 def quote(s):
-    return re.sub(r"""[\\*/+"'<>\.]""", r'\\\g<0>', s)
+    return re.sub(r"""[\\*/+"'<>\.~]""", r'\\\g<0>', s)
 
 def replacequoted(b):
     r = re.compile(r'(?<!\\){{(.*?)(?<!\\)}}', re.M + re.S)
@@ -237,6 +237,14 @@ def br(b):
     r = re.compile(r"(?<!\\)\.\.\.", re.M + re.S)
     b = re.sub(r, r'&hellip;', b)
 
+    # Deal with non-breaking space ~.
+    r = re.compile(r"(?<!\\)~", re.M + re.S)
+    b = re.sub(r, r'&nbsp;', b)
+
+    # Deal with line break.
+    r = re.compile(r"(?<!\\)\\n", re.M + re.S)
+    b = re.sub(r, r'<br />', b)
+
     # Last remove any remaining quoting backslashes.
     b = re.sub(r'\\([^\\])', r'\1', b)
 
@@ -261,6 +269,7 @@ out(grammar['firstbit'])
 linenum = 0
 
 menu = None
+footer = True
 if pc() == '#':
     l = infile.readline()
     linenum += 1
@@ -269,7 +278,7 @@ if pc() == '#':
         a = l.split(',')
         # jem only handle one argument for now.
         b = a[0].strip()
-        if b.startswith('sidemenu'):
+        if b.startswith('menu'):
             sidemenu = True
             r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
             g = re.findall(r, l)
@@ -280,12 +289,10 @@ if pc() == '#':
 
         try:
             b = a[1].strip()
-            if b.startswith('date'):
-                footer = True
-            else:
+            if b.startswith('nodate'):
                 footer = False
         except IndexError:
-            footer = False
+            pass
 
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.
@@ -463,8 +470,9 @@ while 1: # wait for EOF.
 
 if footer:
     s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
-    s = 'Last updated %s.' % s
-    hb(grammar['footer'], s)
+    out(grammar['footerstart'])
+    hb(grammar['lastupdated'], s)
+    out(grammar['footerend'])
 
 if menu:
     out(grammar['menulastbit'])
