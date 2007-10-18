@@ -21,3 +21,28 @@ learn proper difference between span and div.
 
 do at least some replacements in code - things like dashes, ampersands etc,
 that are required for html.
+
+# marks in highlighting are *not* comments for jemdoc, they're comments for the highlighting.
+--> enable comments in code blocks, somehow?
+
+have to fix (jacobm@
+
+syntax highlighting runs out on +this is
+
+a sentence +. what happens?
+
+characters hidden in {} will confuse vim syntax highlighting.
+
+headers inside blocks should be coloured differently.
+
+links should just be [link-target.html link name], which is better than having to check (jem@jaboc.net[jacob]). Simply skip the link name if you want to! perfect.
+
+list continuation (multi-line lists)
+
+add $monospace on steroids$ which does no in-text replacements.
+
+fix wrapping when lines start with .s.
+
+way of bypassing ellipses.
+--> simply have \... which will bypass the first one and then the entire thing
+- quite nice and natural.
