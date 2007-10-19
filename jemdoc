@@ -4,9 +4,46 @@ import sys
 import re
 import time
 
-inname = sys.argv[1]
+# better checking of arguments?
+
+try:
+    inname = sys.argv[1]
+except IndexError:
+    inname = '--help'
+
+if inname == '--help' or inname =='-h':
+    print 'Usage: jemdoc INPUTNAME [-o OUTPUTNAME] [-c CONFIG1] [-c CONFIG2]...'
+    print 'Produces html markup from jemdoc input.'
+    print
+    print 'OUTPUTNAME defaults to INPUTNAME, minus extension, plus html.'
+    print
+    print 'CONFIG1 defaults to ./jemdoc.conf. Multiple CONFIG files are'
+    print 'treated in priority order from left to right.'
+    print
+    print 'See http://jemdoc.jaboc.net/ for a few more details.'
+    print
+    raise SystemExit
+
+if len(sys.argv[2:]) % 2 != 0:
+    raise RuntimeError('invalid arguments, try --help')
+
 outname = inname.rsplit('.', 1)[0] + '.html'
-#outname = sys.argv[2]
+outoverride = False
+confnames = []
+for i in range(2, len(sys.argv), 2):
+    if sys.argv[i] == '-o':
+        if outoverride:
+            raise RuntimeError('cannot specify two output filenames')
+        outname = sys.argv[i+1]
+        outoverride = True
+    elif sys.argv[i] == '-c':
+        confnames.append(sys.argv[i+1])
+    else:
+        raise RuntimeError('unrecognised argument %s, try --help' % sys.argv[i])
+
+if not confnames:
+    confnames = ['jemdoc.conf'] # have internal configuration file?
+
 def readnoncomment(f):
     l = f.readline()
     if l == '':
@@ -16,28 +53,31 @@ def readnoncomment(f):
     else:
         return l.rstrip() + '\n' # leave just one \n and no spaces etc.
 
-def parseconf(sname):
+def parseconf(cns):
     syntax = {}
-    f = open(sname)
-    while pc(f) != '':
-        l = readnoncomment(f)
-        r = re.match(r'\[(.*)\]\n', l)
-
-        if r:
-            tag = r.group(1)
-            if tag in syntax:
-                print 'Warning: ignoring redefinition of %s.' % tag
-                continue
-
-            s = ''
+    warn = False # jem. make configurable?
+    for sname in cns:
+        f = open(sname)
+        while pc(f) != '':
             l = readnoncomment(f)
-            while l not in ('\n', ''):
-                s += l
+            r = re.match(r'\[(.*)\]\n', l)
+
+            if r:
+                tag = r.group(1)
+                if tag in syntax:
+                    if warn:
+                        print 'Warning: ignoring redefinition of %s.' % tag
+                    continue
+
+                s = ''
                 l = readnoncomment(f)
+                while l not in ('\n', ''):
+                    s += l
+                    l = readnoncomment(f)
 
-            syntax[tag] = s
+                syntax[tag] = s
 
-    f.close()
+        f.close()
 
     return syntax
 
@@ -53,20 +93,17 @@ def insertmenuitems(mname, current):
 
         if r: # then we have a link.
             if r.group(2) == current: 
-                hb(grammar['currentmenuitem'], r.group(2), br(r.group(1)))
+                hb(conf['currentmenuitem'], r.group(2), br(r.group(1)))
             else:
-                hb(grammar['menuitem'], r.group(2), br(r.group(1)))
+                hb(conf['menuitem'], r.group(2), br(r.group(1)))
 
         else: # menu category.
-            hb(grammar['menucategory'], br(l))
+            hb(conf['menucategory'], br(l))
 
     f.close()
 
-#inname = 'test.jemdoc'
-#outname = 'test.html'
 
 infile = open(inname)
-#outfile = sys.stdout # open(outname, 'w')
 outfile = open(outname, 'w')
 
 def out(s):
@@ -96,17 +133,16 @@ def pc(f = infile):
 
     return c
 
-def nl(withcount=False, leavecomments=False):
+def nl(withcount=False, codemode=False):
     global linenum
     """Get input file line."""
     s = infile.readline()
     linenum += 1
-    # remove any special characters - assume they were checked by pc() before
-    # we got here.
-    s = s.lstrip(' \t')
-
-    # remove any trailing comments.
-    if not leavecomments:
+    if not codemode:
+        # remove any special characters - assume they were checked by pc() before
+        # we got here.
+        # remove any trailing comments.
+        s = s.lstrip(' \t')
         s = re.sub(r'\s*(?<!\\)#.*', '', s)
 
     if withcount:
@@ -119,11 +155,13 @@ def nl(withcount=False, leavecomments=False):
         if not r:
             raise SyntaxError('error (code 12039) on line %d' % linenum)
 
-        s = s.lstrip('-.=')
+        if not codemode:
+            s = s.lstrip('-.=')
 
         return (s, len(r.group(1)))
     else:
-        s = s.lstrip('-.=')
+        if not codemode:
+            s = s.lstrip('-.=')
 
         return s
 
@@ -148,7 +186,7 @@ def np(withcount=False):
         return s[:-1]
 
 def quote(s):
-    return re.sub(r"""[\\*/+"'<>\.~]""", r'\\\g<0>', s)
+    return re.sub(r"""[\\*/+"'<>\.~[\]]""", r'\\\g<0>', s)
 
 def replacequoted(b):
     r = re.compile(r'(?<!\\){{(.*?)(?<!\\)}}', re.M + re.S)
@@ -190,7 +228,7 @@ def replacelinks(b):
 
 def br(b):
     """Does simple text replacements on a block of text. ('block replacements')"""
-    # Deal with {html embedding}.
+    # Deal with {{html embedding}}.
     b = replacequoted(b)
 
     b = allreplace(b)
@@ -245,6 +283,14 @@ def br(b):
     r = re.compile(r"(?<!\\)\\n", re.M + re.S)
     b = re.sub(r, r'<br />', b)
 
+    # Deal with registered trademark \R.
+    r = re.compile(r"(?<!\\)\\R", re.M + re.S)
+    b = re.sub(r, r'&reg;', b)
+
+    # Deal with copyright \C.
+    r = re.compile(r"(?<!\\)\\C", re.M + re.S)
+    b = re.sub(r, r'&copy;', b)
+
     # Last remove any remaining quoting backslashes.
     b = re.sub(r'\\([^\\])', r'\1', b)
 
@@ -258,13 +304,16 @@ def allreplace(b):
     r = re.compile(r"(?<!\\)<", re.M + re.S)
     b = re.sub(r, r'&lt;', b)
 
+    r = re.compile(r"\\~", re.M + re.S)
+    b = re.sub(r, r'~', b)
+
     return b
 
-# load the grammar.
-grammar = parseconf('jemdoc.conf')
+# load the conf.
+conf = parseconf(confnames)
 
 # Get the file started with the firstbit.
-out(grammar['firstbit'])
+out(conf['firstbit'])
 
 linenum = 0
 
@@ -297,28 +346,38 @@ if pc() == '#':
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.
     t = br(nl())[:-1]
-    hb(grammar['windowtitle'], t)
-    out(grammar['bodystart'])
+    hb(conf['windowtitle'], t)
+    out(conf['bodystart'])
 
 else:
-    out(grammar['bodystart'])
+    out(conf['bodystart'])
     t = None
 
 if menu:
-    out(grammar['menustart'])
+    out(conf['menustart'])
     insertmenuitems(*menu)
-    out(grammar['menuend'])
+    out(conf['menuend'])
 else:
-    out(grammar['nomenu'])
+    out(conf['nomenu'])
 
 if t is not None:
-    hb(grammar['doctitle'], t)
+    hb(conf['doctitle'], t)
 
     # Look for a subtitle.
     if pc() != '\n':
-        hb(grammar['subtitle'], br(np()))
+        hb(conf['subtitle'], br(np()))
 
 def pyint(l):
+    l = l.rstrip()
+    if l.startswith('>>>'):
+        hb('<span class="pycommand">|</span>\n', allreplace(l))
+    elif l.startswith('#'): # jem upgrade this to handle not at the beginning.
+        hb('<span class="comment">|</span>\n', allreplace(l))
+    else:
+        out(allreplace(l) + '\n')
+
+def py(l):
+    # jem need to do much better here.
     l = l.rstrip()
     if l.startswith('>>>'):
         hb('<span class="pycommand">|</span>\n', allreplace(l))
@@ -327,7 +386,8 @@ def pyint(l):
     else:
         out(allreplace(l) + '\n')
 
-# Now (just for the moment) do the rest of the in-text substitutions.
+
+infoblock = False
 while 1: # wait for EOF.
     p = pc()
 
@@ -399,69 +459,60 @@ while 1: # wait for EOF.
 
     # look for blocks.
     elif p == '~':
-        # ignore the first line of separating ~(s).
         nl()
-
-        if pc() == '{':
-            l = br(nl())
-            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-            g = re.findall(r, l)
-        elif pc() == '~':
+        if infoblock:
+            out(conf['infoblockend'])
+            infoblock = False
             nl()
             continue
         else:
-            g = []
+            if pc() == '{':
+                l = br(nl())
+                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                g = re.findall(r, l)
+            else:
+                g = []
 
-        if len(g) in (0, 1): # info block.
-            out(grammar['infoblock'])
-            
-            if len(g) == 1: # info block.
-                hb(grammar['blocktitle'], g[0])
+            if len(g) in (0, 1): # info block.
+                out(conf['infoblock'])
+                infoblock = True
+                
+                if len(g) == 1: # info block.
+                    hb(conf['blocktitle'], g[0])
 
-            out(grammar['infoblockcontent'])
+                out(conf['infoblockcontent'])
 
-            while 1: # wait for EOF.
-                if pc() == '~':
-                    out(grammar['infoblockend'])
-                    nl()
-                else:
-                    l = np()
+            elif len(g) == 2: # code block.
+                out(conf['codeblock'])
+                if len(g[0]):
+                    hb(conf['blocktitle'], g[0])
+                out(conf['codeblockcontent'])
+
+                if g[1] not in ('', 'pyint', 'py'):
+                    raise SyntaxError('unrecognised syntax '
+                                      'highlighting on line %d' % linenum)
+
+                # Now we are handling code.
+                # Handle \~ and ~ differently.
+                while 1: # wait for EOF.
+                    l = nl(codemode=True)
                     if not l:
+                        break
+                    elif l.startswith('~'):
                         break
                     elif l.startswith('\\~'):
                         l = l[1:]
 
-                    out(br(l) + '\n')
+                    if g[1] == 'pyint':
+                        pyint(l)
+                    elif g[1] == 'py':
+                        py(l)
+                    else:
+                        out(allreplace(l))
 
-        elif len(g) == 2: # code block.
-            out(grammar['codeblock'])
-            if len(g[0]):
-                hb(grammar['blocktitle'], g[0])
-            out(grammar['codeblockcontent'])
-
-            if g[1] not in ('', 'pyint'):
-                raise SyntaxError('unrecognised syntax '
-                                  'highlighting on line %d' % linenum)
-
-            # Now we are handling code.
-            # Handle \~ and ~ differently.
-            while 1: # wait for EOF.
-                l = nl(leavecomments=True)
-                if not l:
-                    break
-                elif l.startswith('~'):
-                    break
-                elif l.startswith('\\~'):
-                    l = l[1:]
-
-                if g[1] == 'pyint':
-                    pyint(l)
-                else:
-                    out(allreplace(l))
-
-            out(grammar['codeblockend'])
-        else:
-            raise SyntaxError('error (code 0192977) on line %d' % linenum)
+                out(conf['codeblockend'])
+            else:
+                raise SyntaxError('error (code 0192977) on line %d' % linenum)
 
     else:
         s = br(np())
@@ -470,14 +521,14 @@ while 1: # wait for EOF.
 
 if footer:
     s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
-    out(grammar['footerstart'])
-    hb(grammar['lastupdated'], s)
-    out(grammar['footerend'])
+    out(conf['footerstart'])
+    hb(conf['lastupdated'], s)
+    out(conf['footerend'])
 
 if menu:
-    out(grammar['menulastbit'])
+    out(conf['menulastbit'])
 else:
-    out(grammar['nomenulastbit'])
+    out(conf['nomenulastbit'])
 
 if outfile is not sys.stdout:
     outfile.close()

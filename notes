@@ -47,3 +47,7 @@ line.
 way of bypassing ellipses.
 --> simply have \... which will bypass the first one and then the entire thing
 - quite nice and natural.
+
+will have trouble with certain numbers of backslashes preceding other symbols.
+
+deal with narrow pages not going to the edges?
