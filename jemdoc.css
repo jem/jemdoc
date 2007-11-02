@@ -3,20 +3,16 @@ body {
 	font-family: Georgia, serif;
 }
 
-h1 {
-	margin-top: 0.5em;
-}
-
 #layout-menu {
 	background-color: #f4f4f4;
-	border-right: 3px solid #eeeeee;
-	border-bottom: 3px solid #eeeeee;
+	border: 1px solid #dddddd;
 	padding-top: 0.5em;
-	padding-left: 10px;
-	padding-right: 0.2em;
+	padding-left: 8px;
+	padding-right: 8px;
 	font-size: 1.0em;
 	width: 150px;
 }
+
 #layout-menu a {
 	line-height: 1.5em;
 	margin-left: 0.5em;
@@ -51,10 +47,28 @@ div.menu-category {
 	font-weight: bold;
 }
 
+div#toptitle {
+	padding-bottom: 0.2em;
+}
+
+/* Add extra space if we begin a page with an ordinary paragraph. */
+div#toptitle + p {
+	margin-top: 1.5em;
+}
+
+div#toptitle h1 {
+	margin-bottom: 0.1em;
+	padding-bottom: 0.1em;
+	padding-top: 0;
+	margin-top: 0.5em;
+	border-bottom: none;
+}
+
+
 #layout-content {
 	padding-top: 0.0em;
 	padding-left: 1.0em;
-	padding-right: 1.5em;
+	padding-right: 1.0em;
 }
 
 @media print {
@@ -83,29 +97,44 @@ tt {
 	color: green;
 }
 
+pre, tt {
+	font-size: 90%;
+	font-family: monaco, monospace;
+}
+
+
 h1, h2, h3, h4, h5, h6 {
 	color: #527bbd;
-	margin-top: 0.5em;
-	margin-bottom: 0.2em;
+	margin-top: 0.9em;
+	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
 	padding-top: 0.5em;
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid #aaaaaa;
 }
 
 h1 {
-	padding-top: 0em;
-	font-size: 180%;
+	font-size: 170%;
+}
+
+
+div#subtitle {
+  margin-top: 0.0em;
+  margin-bottom: 0.0em;
+  padding-top: 0em;
+  padding-bottom: 0.2em;
+  border-bottom: 3px double gray;
 }
 
 h2 {
-	padding-top: 1em;
-	font-size: 140%;
+	padding-top: 0.5em;
+	font-size: 125%;
 }
 
 h3 {
 	font-size: 110%;
 	border-bottom: none;
+	margin-bottom: 0em;
 }
 
 hr {
@@ -170,19 +199,6 @@ ol ol ol {
 	list-style-type: lower-roman;
 }
 
-div.content {
-  background: #ffffee;
-  border: 1px solid silver;
-  padding: 0.5em;
-  padding-bottom: 0em;
-}
-
-div.block-title {
-  font-weight: bold;
-  margin-top: 0.0em;
-  margin-bottom: 0.5em;
-}
-
 div.codeblock, div.infoblock {
 	margin-right: 0%;
 	margin-top: 1.5em;
@@ -191,6 +207,7 @@ div.codeblock, div.infoblock {
 
 div.blocktitle {
 	font-weight: bold;
+	color: #cd7b62;
 	margin-top: 1.0em;
 	margin-bottom: 0.1em;
 }
@@ -204,15 +221,26 @@ div.infoblock > div.blockcontent {
 	background: #ffffee;
 }
 
+div.blockcontent p + ul, div.blockcontent p + ol {
+	margin-top: 0.4em;
+}
+
+div.infoblock p {
+	margin-bottom: 0em;
+}
+
+div.infoblock p + p {
+	margin-top: 0.8em;
+}
+
 div.codeblock > div.blockcontent {
 	background: #f4f4f4;
 }
 
-/* disable sidebar with this. */
-@media print {
-	div#footer-badges { display: none; }
+span.pycommand {
+	color: #000080;
 }
 
-span.pycommand {
-	color: #0000a0;
+span.comment {
+	color: #808080;
 }

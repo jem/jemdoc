@@ -51,3 +51,11 @@ way of bypassing ellipses.
 will have trouble with certain numbers of backslashes preceding other symbols.
 
 deal with narrow pages not going to the edges?
+
+allow different orders of stuff.
+
+custom numbers in lists.
+
+add support for custom additional css file.
+
+single tilde should not provoke block mode
