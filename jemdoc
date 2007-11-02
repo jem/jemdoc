@@ -1,48 +1,197 @@
 #!/usr/bin/env python
 
+"""
+jemdoc: light markup.
+
+version X.X.X, OcXXXtober 2007.
+"""
+
+# Copyright (C) 2007 Jacob Mattingley.
+#
+# This file is part of jemdoc.
+#
+# jemdoc is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 3 of the License, or (at your option) any later
+# version.
+#
+# jemdoc is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>.
+
 import sys
 import re
 import time
+import StringIO
 
 # better checking of arguments?
+def showhelp():
+    print """Usage: jemdoc [OPTIONS] [SOURCEFILE] 
+Produces html markup from a jemdoc SOURCEFILE.
 
-try:
-    inname = sys.argv[1]
-except IndexError:
-    inname = '--help'
+Most of the time you can use jemdoc without any additional flags.
+For example, typing
 
-if inname == '--help' or inname =='-h':
-    print 'Usage: jemdoc INPUTNAME [-o OUTPUTNAME] [-c CONFIG1] [-c CONFIG2]...'
-    print 'Produces html markup from jemdoc input.'
-    print
-    print 'OUTPUTNAME defaults to INPUTNAME, minus extension, plus html.'
-    print
-    print 'CONFIG1 defaults to ./jemdoc.conf. Multiple CONFIG files are'
-    print 'treated in priority order from left to right.'
-    print
-    print 'See http://jemdoc.jaboc.net/ for a few more details.'
-    print
+    jemdoc index.jemdoc
+
+will produce an index.html, using a default configuration.  You can
+change the output file by using -o OUTFILE, for example
+
+    jemdoc -o html/main.html index.jemdoc
+
+Some configuration options can be overridden by specifying a
+configuration file.  You can use
+
+    jemdoc --show-config
+
+to print a sample configuration file (which includes all of the
+default options). Any or all of the configuration [blocks] can be
+overwritten by including them in a configuration file, and running,
+for example,
+
+    jemdoc -c mywebsite.conf index.jemdoc 
+
+See http://jemdoc.jaboc.net/ for more details.
+"""
+
+def standardconf():
+    return """[firstbit]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="./jemdoc.css" type="text/css" />
+
+[windowtitle]
+# used in header for window title.
+<title>|</title>
+
+[doctitle]
+# used at top of document.
+<div id="toptitle">
+<h1>|</h1>
+
+[subtitle]
+<div id="subtitle">|</div>
+
+[doctitleend]
+</div>
+
+[bodystart]
+</head>
+<body>
+
+[menustart]
+<table summary="Table for page layout.">
+<tr valign="top">
+<td id="layout-menu">
+
+[menuend]
+</td>
+<td>
+<div id="layout-content">
+
+[menucategory]
+<div class="menu-category">|</div>
+
+[menuitem]
+<div><a href="|1">|2</a></div>
+
+[currentmenuitem]
+<div><a href="|1" class="current">|2</a></div>
+
+[nomenu]
+<div id="layout-content">
+
+[menulastbit]
+</div>
+</td>
+</tr>
+</table>
+
+[nomenulastbit]
+</div>
+
+[bodyend]
+</body>
+</html>
+
+[infoblock]
+<div class="infoblock">
+
+[codeblock]
+<div class="codeblock">
+
+[blocktitle]
+<div class="blocktitle">|</div>
+
+[infoblockcontent]
+<div class="blockcontent">
+
+[codeblockcontent]
+<div class="blockcontent"><pre>
+
+[codeblockend]
+</pre></div></div>
+
+[infoblockend]
+</div></div>
+
+[footerstart]
+<div id="footer">
+<div id="footer-text">
+
+[footerend]
+</div>
+</div>
+
+[lastupdated]
+Last updated |, using <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+"""
+
+class JandalError(Exception):
+    pass
+
+def raisejandal(msg, line=0):
+    if line == 0:
+        s = "%s" % msg
+    else:
+        s = "line %d: %s" % (line, msg)
+    raise JandalError(s)
+
+if len(sys.argv) == 1 or sys.argv[1] in ('--help', '-h'):
+    showhelp()
     raise SystemExit
+elif len(sys.argv[2:]) % 2 != 0:
+    raise JandalError('invalid arguments, try --help')
+if sys.argv[1] == '--show-config':
+    print standardconf()
+    raise SystemExit
+else:
+    inname = sys.argv[-1]
+    outname = re.search(r'(.*)\.', inname).group(1) + '.html'
 
-if len(sys.argv[2:]) % 2 != 0:
-    raise RuntimeError('invalid arguments, try --help')
-
-outname = inname.rsplit('.', 1)[0] + '.html'
 outoverride = False
+confoverride = False
 confnames = []
-for i in range(2, len(sys.argv), 2):
+for i in range(1, len(sys.argv) - 1, 2):
     if sys.argv[i] == '-o':
         if outoverride:
-            raise RuntimeError('cannot specify two output filenames')
+            raise RuntimeError("only one output file, please")
         outname = sys.argv[i+1]
         outoverride = True
     elif sys.argv[i] == '-c':
+        if confoverride:
+            raise RuntimeError("only one config file, please")
         confnames.append(sys.argv[i+1])
+        confoverride = True
     else:
         raise RuntimeError('unrecognised argument %s, try --help' % sys.argv[i])
-
-if not confnames:
-    confnames = ['jemdoc.conf'] # have internal configuration file?
 
 def readnoncomment(f):
     l = f.readline()
@@ -56,18 +205,18 @@ def readnoncomment(f):
 def parseconf(cns):
     syntax = {}
     warn = False # jem. make configurable?
+    # manually add the defaults as a file handle.
+    fs = [StringIO.StringIO(standardconf())]
     for sname in cns:
-        f = open(sname)
+        fs.append(open(sname))
+
+    for f in fs:
         while pc(f) != '':
             l = readnoncomment(f)
             r = re.match(r'\[(.*)\]\n', l)
 
             if r:
                 tag = r.group(1)
-                if tag in syntax:
-                    if warn:
-                        print 'Warning: ignoring redefinition of %s.' % tag
-                    continue
 
                 s = ''
                 l = readnoncomment(f)
@@ -153,15 +302,16 @@ def nl(withcount=False, codemode=False):
 
         r = re.match('(%s+) ' % m, s)
         if not r:
-            raise SyntaxError('error (code 12039) on line %d' % linenum)
+            raise SyntaxError("couldn't handle the jandal (code 12039) on line"
+                              " %d" % linenum)
 
         if not codemode:
-            s = s.lstrip('-.=')
+            s = s.lstrip('-.=:')
 
         return (s, len(r.group(1)))
     else:
         if not codemode:
-            s = s.lstrip('-.=')
+            s = s.lstrip('-.=:')
 
         return s
 
@@ -173,7 +323,7 @@ def np(withcount=False):
     else:
         s = nl()
 
-    while pc() not in ('\n', '-', '.', '', '=', '#', '~', '{'):
+    while pc() not in ('\n', '-', '.', ':', '', '=', '#', '~', '{'):
         s += nl()
 
     while pc() == '\n':
@@ -185,14 +335,29 @@ def np(withcount=False):
     else:
         return s[:-1]
 
-def quote(s):
-    return re.sub(r"""[\\*/+"'<>\.~[\]]""", r'\\\g<0>', s)
+def quote(s, dollars=False):
+    if dollars:
+        return re.sub(r"""[\\*/+"'<>$\.~[\]-]""", r'\\\g<0>', s)
+    else:
+        return re.sub(r"""[\\*/+"'<>\.~[\]-]""", r'\\\g<0>', s)
 
 def replacequoted(b):
-    r = re.compile(r'(?<!\\){{(.*?)(?<!\\)}}', re.M + re.S)
+    """Quotes {{raw html}} sections. Insert a backslash right before the end
+    with &bs;, an illegal html character."""
+    r = re.compile(r'\{\{(.*?)\}\}', re.M + re.S)
     m = r.search(b)
     while m:
-        qb = quote(m.group(1))
+        qb = quote(m.group(1), True)
+
+        b = b[:m.start()] + qb + b[m.end():]
+
+        m = r.search(b, m.start())
+
+    # likewise replace $sections$ as +{{sections}}+.
+    r = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S)
+    m = r.search(b)
+    while m:
+        qb = '+' + quote(m.group(1)) + '+'
 
         b = b[:m.start()] + qb + b[m.end():]
 
@@ -228,6 +393,9 @@ def replacelinks(b):
 
 def br(b):
     """Does simple text replacements on a block of text. ('block replacements')"""
+    # Deal with literal backspaces.
+    b = re.sub(r'\\\\', '&jemLITerl33talBS;', b)
+
     # Deal with {{html embedding}}.
     b = replacequoted(b)
 
@@ -236,7 +404,6 @@ def br(b):
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replacelinks(b)
-
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -271,17 +438,13 @@ def br(b):
     r = re.compile(r"(?<!\\)--", re.M + re.S)
     b = re.sub(r, r'&ndash;', b)
 
-    # Deal with ellipsis  ....
+    # Deal with ellipsis ....
     r = re.compile(r"(?<!\\)\.\.\.", re.M + re.S)
     b = re.sub(r, r'&hellip;', b)
 
     # Deal with non-breaking space ~.
     r = re.compile(r"(?<!\\)~", re.M + re.S)
     b = re.sub(r, r'&nbsp;', b)
-
-    # Deal with line break.
-    r = re.compile(r"(?<!\\)\\n", re.M + re.S)
-    b = re.sub(r, r'<br />', b)
 
     # Deal with registered trademark \R.
     r = re.compile(r"(?<!\\)\\R", re.M + re.S)
@@ -291,8 +454,15 @@ def br(b):
     r = re.compile(r"(?<!\\)\\C", re.M + re.S)
     b = re.sub(r, r'&copy;', b)
 
-    # Last remove any remaining quoting backslashes.
-    b = re.sub(r'\\([^\\])', r'\1', b)
+    # Deal with line break.
+    r = re.compile(r"(?<!\\)\\n", re.M + re.S)
+    b = re.sub(r, r'<br />', b)
+
+    # Second to last, remove any remaining quoting backslashes.
+    b = re.sub(r'\\(?!\\)', '', b)
+
+    # Deal with literal backspaces.
+    b = re.sub('&jemLITerl33talBS;', r'\\', b)
 
     return b
 
@@ -304,10 +474,129 @@ def allreplace(b):
     r = re.compile(r"(?<!\\)<", re.M + re.S)
     b = re.sub(r, r'&lt;', b)
 
-    r = re.compile(r"\\~", re.M + re.S)
-    b = re.sub(r, r'~', b)
-
     return b
+
+def pyint(l):
+    l = l.rstrip()
+    l = allreplace(l)
+
+    r = re.compile(r'(?<!\\)(#.*)')
+    l = r.sub(r'<span class = "comment">\1</span>', l)
+
+    if l.startswith('&gt;&gt;&gt;'):
+        hb('<span class="pycommand">|</span>\n', l)
+    else:
+        out(l + '\n')
+
+def py(l):
+    # jem need to do much better here.
+    l = l.rstrip()
+    if l.startswith('>>>'):
+        hb('<span class="pycommand">|</span>\n', allreplace(l))
+    elif l.startswith('#'):
+        hb('<span class="comment">|</span>\n', allreplace(l))
+    else:
+        out(allreplace(l) + '\n')
+
+def dashlist():
+    level = 0
+
+    while pc() == '-':
+        (s, newlevel) = np(True)
+
+        # first adjust list number as appropriate.
+        if newlevel > level:
+            for i in range(newlevel - level):
+                if newlevel > 1:
+                    out('\n')
+                out('<ul>\n<li>')
+        elif newlevel < level:
+            for i in range(level - newlevel):
+                out('</li>\n</ul>\n</li><li>')
+        else:
+            out('</li>\n<li>')
+
+        out(br(s))
+        level = newlevel
+
+    for i in range(level):
+        out('</li>\n</ul>\n')
+
+def dotlist():
+    level = 0
+
+    while pc() == '.':
+        (s, newlevel) = np(True)
+
+        # first adjust list number as appropriate.
+        if newlevel > level:
+            for i in range(newlevel - level):
+                if newlevel > 1:
+                    out('\n')
+                out('<ol>\n<li>')
+        elif newlevel < level:
+            for i in range(level - newlevel):
+                out('</li>\n</ol>\n</li><li>')
+        else:
+            out('</li>\n<li>')
+
+        out(br(s))
+        level = newlevel
+
+    for i in range(level):
+        out('</li>\n</ol>\n')
+
+def colonlist():
+    out('<dl>\n')
+    while pc() == ':':
+        s = np()
+        r = re.compile(r'\s*{(.*?)(?<!\\)}(.*)', re.M + re.S)
+        g = re.match(r, s)
+
+        if not g or len(g.groups()) != 2:
+            raise SyntaxError("couldn't handle the jandal (invalid deflist "
+                             "format) on line %d" % linenum)
+        # split into definition / non-definition part.
+        defpart = g.group(1)
+        rest = g.group(2)
+
+        hb('<dt>|</dt>\n', br(defpart))
+        hb('<dd>|</dd>\n', br(rest))
+
+    out('</dl>\n')
+
+def codeblock():
+    out(conf['codeblock'])
+    if len(g[0]):
+        hb(conf['blocktitle'], g[0])
+    out(conf['codeblockcontent'])
+
+    if g[1] not in ('', 'pyint', 'py'):
+        raise SyntaxError( \
+          "couldn't handle the jandal: unrecognised syntax "
+          "highlighting on line %d" % linenum)
+
+    # Now we are handling code.
+    # Handle \~ and ~ differently.
+    while 1: # wait for EOF.
+        l = nl(codemode=True)
+        if not l:
+            break
+        elif l.startswith('~'):
+            break
+        elif l.startswith('\\~'):
+            l = l[1:]
+        elif l.startswith('\\{'):
+            l = l[1:]
+
+        if g[1] == 'pyint':
+            pyint(l)
+        elif g[1] == 'py':
+            py(l)
+        else:
+            out(allreplace(l))
+
+    out(conf['codeblockend'])
 
 # load the conf.
 conf = parseconf(confnames)
@@ -326,22 +615,19 @@ if pc() == '#':
         l = l[len('# jemdoc: '):]
         a = l.split(',')
         # jem only handle one argument for now.
-        b = a[0].strip()
-        if b.startswith('menu'):
-            sidemenu = True
-            r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-            g = re.findall(r, l)
-            if len(g) != 2:
-                raise SyntaxError('sidemenu error on line %d' % linenum)
+        for b in a:
+            b = b.strip()
+            if b.startswith('menu'):
+                sidemenu = True
+                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                g = re.findall(r, l)
+                if len(g) != 2:
+                    raise SyntaxError('sidemenu error on line %d' % linenum)
 
-            menu = (g[0], g[1])
+                menu = (g[0], g[1])
 
-        try:
-            b = a[1].strip()
-            if b.startswith('nodate'):
+            elif b.startswith('nodate'):
                 footer = False
-        except IndexError:
-            pass
 
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.
@@ -367,25 +653,7 @@ if t is not None:
     if pc() != '\n':
         hb(conf['subtitle'], br(np()))
 
-def pyint(l):
-    l = l.rstrip()
-    if l.startswith('>>>'):
-        hb('<span class="pycommand">|</span>\n', allreplace(l))
-    elif l.startswith('#'): # jem upgrade this to handle not at the beginning.
-        hb('<span class="comment">|</span>\n', allreplace(l))
-    else:
-        out(allreplace(l) + '\n')
-
-def py(l):
-    # jem need to do much better here.
-    l = l.rstrip()
-    if l.startswith('>>>'):
-        hb('<span class="pycommand">|</span>\n', allreplace(l))
-    elif l.startswith('#'):
-        hb('<span class="comment">|</span>\n', allreplace(l))
-    else:
-        out(allreplace(l) + '\n')
-
+    hb(conf['doctitleend'], t)
 
 infoblock = False
 while 1: # wait for EOF.
@@ -396,52 +664,13 @@ while 1: # wait for EOF.
 
     # look for lists.
     elif p == '-':
-        level = 0
-
-        while pc() == '-':
-            (s, newlevel) = np(True)
-
-            # first adjust list number as appropriate.
-            if newlevel > level:
-                for i in range(newlevel - level):
-                    if newlevel > 1:
-                        out('\n')
-                    out('<ul>\n<li>')
-            elif newlevel < level:
-                for i in range(level - newlevel):
-                    out('</li>\n</ul>\n</li><li>')
-            else:
-                out('</li>\n<li>')
-
-            out(br(s))
-            level = newlevel
-
-        for i in range(level):
-            out('</li>\n</ul>\n')
+        dashlist()
 
     elif p == '.':
-        level = 0
+        dotlist()
 
-        while pc() == '.':
-            (s, newlevel) = np(True)
-
-            # first adjust list number as appropriate.
-            if newlevel > level:
-                for i in range(newlevel - level):
-                    if newlevel > 1:
-                        out('\n')
-                    out('<ol>\n<li>')
-            elif newlevel < level:
-                for i in range(level - newlevel):
-                    out('</li>\n</ol>\n</li><li>')
-            else:
-                out('</li>\n<li>')
-
-            out(br(s))
-            level = newlevel
-
-        for i in range(level):
-            out('</li>\n</ol>\n')
+    elif p == ':':
+        colonlist()
 
     # look for titles.
     elif p == '=':
@@ -482,37 +711,11 @@ while 1: # wait for EOF.
 
                 out(conf['infoblockcontent'])
 
-            elif len(g) == 2: # code block.
-                out(conf['codeblock'])
-                if len(g[0]):
-                    hb(conf['blocktitle'], g[0])
-                out(conf['codeblockcontent'])
+            elif len(g) == 2:
+                codeblock()
 
-                if g[1] not in ('', 'pyint', 'py'):
-                    raise SyntaxError('unrecognised syntax '
-                                      'highlighting on line %d' % linenum)
-
-                # Now we are handling code.
-                # Handle \~ and ~ differently.
-                while 1: # wait for EOF.
-                    l = nl(codemode=True)
-                    if not l:
-                        break
-                    elif l.startswith('~'):
-                        break
-                    elif l.startswith('\\~'):
-                        l = l[1:]
-
-                    if g[1] == 'pyint':
-                        pyint(l)
-                    elif g[1] == 'py':
-                        py(l)
-                    else:
-                        out(allreplace(l))
-
-                out(conf['codeblockend'])
             else:
-                raise SyntaxError('error (code 0192977) on line %d' % linenum)
+                raise JandalError("couldn't handle block", linenum)
 
     else:
         s = br(np())
@@ -529,6 +732,8 @@ if menu:
     out(conf['menulastbit'])
 else:
     out(conf['nomenulastbit'])
+
+out(conf['bodyend'])
 
 if outfile is not sys.stdout:
     outfile.close()
