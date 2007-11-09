@@ -28,136 +28,159 @@ import re
 import time
 import StringIO
 
+class controlstruct(object):
+    def __init__(self, infile, outfile, conf):
+        self.inf = infile
+        self.outf = outfile
+        self.conf = conf
+        self.linenum = 0
+
 # better checking of arguments?
 def showhelp():
-    print """Usage: jemdoc [OPTIONS] [SOURCEFILE] 
-Produces html markup from a jemdoc SOURCEFILE.
+    a = """Usage: jemdoc [OPTIONS] [SOURCEFILE] 
+    Produces html markup from a jemdoc SOURCEFILE.
 
-Most of the time you can use jemdoc without any additional flags.
-For example, typing
+    Most of the time you can use jemdoc without any additional flags.
+    For example, typing
 
-    jemdoc index.jemdoc
+        jemdoc index.jemdoc
 
-will produce an index.html, using a default configuration.  You can
-change the output file by using -o OUTFILE, for example
+    will produce an index.html, using a default configuration.  You can
+    change the output file by using -o OUTFILE, for example
 
-    jemdoc -o html/main.html index.jemdoc
+        jemdoc -o html/main.html index.jemdoc
 
-Some configuration options can be overridden by specifying a
-configuration file.  You can use
+    Some configuration options can be overridden by specifying a
+    configuration file.  You can use
 
-    jemdoc --show-config
+        jemdoc --show-config
 
-to print a sample configuration file (which includes all of the
-default options). Any or all of the configuration [blocks] can be
-overwritten by including them in a configuration file, and running,
-for example,
+    to print a sample configuration file (which includes all of the
+    default options). Any or all of the configuration [blocks] can be
+    overwritten by including them in a configuration file, and running,
+    for example,
 
-    jemdoc -c mywebsite.conf index.jemdoc 
+        jemdoc -c mywebsite.f.conf index.jemdoc 
 
-See http://jemdoc.jaboc.net/ for more details.
-"""
+    See http://jemdoc.jaboc.net/ for more details.
+    """
+    b = ''
+    for l in a.splitlines(True):
+        if l.startswith(' '*4):
+            b += l[4:]
+        else:
+            b += l
+
+    print b
 
 def standardconf():
-    return """[firstbit]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net" />
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    a = """[firstbit]
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+    <meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    
+    [defaultcss]
+    
+    [windowtitle]
+    # used in header for window title.
+    <title>|</title>
+    
+    [doctitle]
+    # used at top of document.
+    <div id="toptitle">
+    <h1>|</h1>
+    
+    [subtitle]
+    <div id="subtitle">|</div>
+    
+    [doctitleend]
+    </div>
+    
+    [bodystart]
+    </head>
+    <body>
+    
+    [menustart]
+    <table summary="Table for page layout.">
+    <tr valign="top">
+    <td id="layout-menu">
+    
+    [menuend]
+    </td>
+    <td>
+    <div id="layout-content">
+    
+    [menucategory]
+    <div class="menu-category">|</div>
+    
+    [menuitem]
+    <div><a href="|1">|2</a></div>
+    
+    [currentmenuitem]
+    <div><a href="|1" class="current">|2</a></div>
+    
+    [nomenu]
+    <div id="layout-content">
+    
+    [css]
+    <link rel="stylesheet" href="|" type="text/css" />
+    
+    [menulastbit]
+    </div>
+    </td>
+    </tr>
+    </table>
+    
+    [nomenulastbit]
+    </div>
+    
+    [bodyend]
+    </body>
+    </html>
+    
+    [infoblock]
+    <div class="infoblock">
+    
+    [codeblock]
+    <div class="codeblock">
+    
+    [blocktitle]
+    <div class="blocktitle">|</div>
+    
+    [infoblockcontent]
+    <div class="blockcontent">
+    
+    [codeblockcontent]
+    <div class="blockcontent"><pre>
+    
+    [codeblockend]
+    </pre></div></div>
+    
+    [infoblockend]
+    </div></div>
+    
+    [footerstart]
+    <div id="footer">
+    <div id="footer-text">
+    
+    [footerend]
+    </div>
+    </div>
+    
+    [lastupdated]
+    Last updated |, using <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+    """
+    b = ''
+    for l in a.splitlines(True):
+        if l.startswith('    '):
+            b += l[4:]
+        else:
+            b += l
 
-[defaultcss]
-
-[windowtitle]
-# used in header for window title.
-<title>|</title>
-
-[doctitle]
-# used at top of document.
-<div id="toptitle">
-<h1>|</h1>
-
-[subtitle]
-<div id="subtitle">|</div>
-
-[doctitleend]
-</div>
-
-[bodystart]
-</head>
-<body>
-
-[menustart]
-<table summary="Table for page layout.">
-<tr valign="top">
-<td id="layout-menu">
-
-[menuend]
-</td>
-<td>
-<div id="layout-content">
-
-[menucategory]
-<div class="menu-category">|</div>
-
-[menuitem]
-<div><a href="|1">|2</a></div>
-
-[currentmenuitem]
-<div><a href="|1" class="current">|2</a></div>
-
-[nomenu]
-<div id="layout-content">
-
-[css]
-<link rel="stylesheet" href="|" type="text/css" />
-
-[menulastbit]
-</div>
-</td>
-</tr>
-</table>
-
-[nomenulastbit]
-</div>
-
-[bodyend]
-</body>
-</html>
-
-[infoblock]
-<div class="infoblock">
-
-[codeblock]
-<div class="codeblock">
-
-[blocktitle]
-<div class="blocktitle">|</div>
-
-[infoblockcontent]
-<div class="blockcontent">
-
-[codeblockcontent]
-<div class="blockcontent"><pre>
-
-[codeblockend]
-</pre></div></div>
-
-[infoblockend]
-</div></div>
-
-[footerstart]
-<div id="footer">
-<div id="footer-text">
-
-[footerend]
-</div>
-</div>
-
-[lastupdated]
-Last updated |, using <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
-"""
+    return b
 
 class JandalError(Exception):
     pass
@@ -169,34 +192,6 @@ def raisejandal(msg, line=0):
         s = "line %d: %s" % (line, msg)
     raise JandalError(s)
 
-if len(sys.argv) == 1 or sys.argv[1] in ('--help', '-h'):
-    showhelp()
-    raise SystemExit
-elif len(sys.argv[2:]) % 2 != 0:
-    raise JandalError('invalid arguments, try --help')
-if sys.argv[1] == '--show-config':
-    print standardconf()
-    raise SystemExit
-else:
-    inname = sys.argv[-1]
-    outname = re.sub(r'.jemdoc$', '', inname) + '.html'
-
-outoverride = False
-confoverride = False
-confnames = []
-for i in range(1, len(sys.argv) - 1, 2):
-    if sys.argv[i] == '-o':
-        if outoverride:
-            raise RuntimeError("only one output file, please")
-        outname = sys.argv[i+1]
-        outoverride = True
-    elif sys.argv[i] == '-c':
-        if confoverride:
-            raise RuntimeError("only one config file, please")
-        confnames.append(sys.argv[i+1])
-        confoverride = True
-    else:
-        raise RuntimeError('unrecognised argument %s, try --help' % sys.argv[i])
 
 def readnoncomment(f):
     l = f.readline()
@@ -235,10 +230,10 @@ def parseconf(cns):
 
     return syntax
 
-def insertmenuitems(mname, current, prefix):
-    f = open(mname)
-    while pc(f) != '':
-        l = readnoncomment(f)
+def insertmenuitems(f, mname, current, prefix):
+    m = open(mname)
+    while pc(m) != '':
+        l = readnoncomment(m)
         l = l.strip()
         if l == '':
             continue
@@ -247,59 +242,49 @@ def insertmenuitems(mname, current, prefix):
 
         if r: # then we have a link.
             if r.group(2) == current: 
-                hb(conf['currentmenuitem'], prefix + r.group(2), br(r.group(1)))
+                hb(f.outf, f.conf['currentmenuitem'], prefix + r.group(2), br(r.group(1)))
             else:
-                hb(conf['menuitem'], prefix + r.group(2), br(r.group(1)))
+                hb(f.outf, f.conf['menuitem'], prefix + r.group(2), br(r.group(1)))
 
         else: # menu category.
-            hb(conf['menucategory'], br(l))
+            hb(f.outf, f.conf['menucategory'], br(l))
 
-    f.close()
+    m.close()
 
-# First, if not a file and no dot, try opening .jemdoc.
-if not os.path.isfile(inname) and '.' not in inname:
-    infile = open(inname + '.jemdoc')
-else:
-    # Otherwise, fall back to just doing exactly as asked.
-    infile = open(inname)
+def out(f, s):
+    f.write(s)
 
-outfile = open(outname, 'w')
-
-def out(s):
-    outfile.write(s)
-
-def hb(tag, content1, content2=None):
+def hb(f, tag, content1, content2=None):
     """Writes out a halfblock (hb)."""
     if content2 is None:
-        out(re.sub(r'\|', content1, tag))
+        out(f, re.sub(r'\|', content1, tag))
     else:
         r = re.sub(r'\|1', content1, tag)
         r = re.sub(r'\|2', content2, r)
-        out(r)
+        out(f, r)
 
-def pc(f = infile):
+def pc(f):
     """Peeks at next character in the file."""
-    # Should only be used to look at the first character of a new line.
+    # Should only be used to look at the first character f.outf a new line.
     c = f.read(1)
     if c: # only undo forward movement if we're not at the end.
         #if c == '#': # interpret comment lines as blank.
         #    return '\n'
 
         if c in ' \t':
-            return pc()
+            return pc(f)
 
         f.seek(-1, 1)
 
     return c
 
-def nl(withcount=False, codemode=False):
-    global linenum
+def nl(f, withcount=False, codemode=False):
     """Get input file line."""
-    s = infile.readline()
-    linenum += 1
+    s = f.inf.readline()
+    f.linenum += 1
     if not codemode:
-        # remove any special characters - assume they were checked by pc() before
-        # we got here.
+        # remove any special characters - assume they were checked by pc()
+        # before we got here.
         # remove any trailing comments.
         s = s.lstrip(' \t')
         s = re.sub(r'\s*(?<!\\)#.*', '', s)
@@ -325,19 +310,19 @@ def nl(withcount=False, codemode=False):
 
         return s
 
-def np(withcount=False):
+def np(f, withcount=False):
     """Gets the next paragraph from the input file."""
     # New paragraph markers signalled by characters in following tuple.
     if withcount:
-        (s, c) = nl(withcount)
+        (s, c) = nl(f, withcount)
     else:
-        s = nl()
+        s = nl(f)
 
-    while pc() not in ('\n', '-', '.', ':', '', '=', '#', '~', '{'):
-        s += nl()
+    while pc(f.inf) not in ('\n', '-', '.', ':', '', '=', '#', '~', '{'):
+        s += nl(f)
 
-    while pc() == '\n':
-        nl() # burn blank line.
+    while pc(f.inf) == '\n':
+        nl(f) # burn blank line.
 
     # in both cases, ditch the trailing \n.
     if withcount:
@@ -525,7 +510,7 @@ def allreplace(b):
 
     return b
 
-def pyint(l):
+def pyint(f, l):
     l = l.rstrip()
     l = allreplace(l)
 
@@ -533,72 +518,72 @@ def pyint(l):
     l = r.sub(r'<span class = "comment">\1</span>', l)
 
     if l.startswith('&gt;&gt;&gt;'):
-        hb('<span class="pycommand">|</span>\n', l)
+        hb(f, '<span class="pycommand">|</span>\n', l)
     else:
-        out(l + '\n')
+        out(f, l + '\n')
 
 def py(l):
     # jem need to do much better here.
     l = l.rstrip()
     if l.startswith('>>>'):
-        hb('<span class="pycommand">|</span>\n', allreplace(l))
+        hb(f.outf, '<span class="pycommand">|</span>\n', allreplace(l))
     elif l.startswith('#'):
-        hb('<span class="comment">|</span>\n', allreplace(l))
+        hb(f.outf, '<span class="comment">|</span>\n', allreplace(l))
     else:
-        out(allreplace(l) + '\n')
+        out(f.outf, allreplace(l) + '\n')
 
-def dashlist():
+def dashlist(f):
     level = 0
 
-    while pc() == '-':
-        (s, newlevel) = np(True)
+    while pc(f.inf) == '-':
+        (s, newlevel) = np(f, True)
 
         # first adjust list number as appropriate.
         if newlevel > level:
             for i in range(newlevel - level):
                 if newlevel > 1:
-                    out('\n')
-                out('<ul>\n<li>')
+                    out(f.outf, '\n')
+                out(f.outf, '<ul>\n<li>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out('</li>\n</ul>\n</li><li>')
+                out(f.outf, '</li>\n</ul>\n</li><li>')
         else:
-            out('</li>\n<li>')
+            out(f.outf, '</li>\n<li>')
 
-        out(br(s))
+        out(f.outf, br(s))
         level = newlevel
 
     for i in range(level):
-        out('</li>\n</ul>\n')
+        out(f.outf, '</li>\n</ul>\n')
 
-def dotlist():
+def dotlist(f):
     level = 0
 
-    while pc() == '.':
-        (s, newlevel) = np(True)
+    while pc(f.inf) == '.':
+        (s, newlevel) = np(f, True)
 
         # first adjust list number as appropriate.
         if newlevel > level:
             for i in range(newlevel - level):
                 if newlevel > 1:
-                    out('\n')
-                out('<ol>\n<li>')
+                    out(f.outf, '\n')
+                out(f.outf, '<ol>\n<li>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out('</li>\n</ol>\n</li><li>')
+                out(f.outf, '</li>\n</ol>\n</li><li>')
         else:
-            out('</li>\n<li>')
+            out(f.outf, '</li>\n<li>')
 
-        out(br(s))
+        out(f.outf, br(s))
         level = newlevel
 
     for i in range(level):
-        out('</li>\n</ol>\n')
+        out(f.outf, '</li>\n</ol>\n')
 
-def colonlist():
-    out('<dl>\n')
-    while pc() == ':':
-        s = np()
+def colonlist(f):
+    out(f.outf, '<dl>\n')
+    while pc(f.inf) == ':':
+        s = np(f)
         r = re.compile(r'\s*{(.*?)(?<!\\)}(.*)', re.M + re.S)
         g = re.match(r, s)
 
@@ -609,16 +594,16 @@ def colonlist():
         defpart = g.group(1)
         rest = g.group(2)
 
-        hb('<dt>|</dt>\n', br(defpart))
-        hb('<dd>|</dd>\n', br(rest))
+        hb(f.outf, '<dt>|</dt>\n', br(defpart))
+        hb(f.outf, '<dd>|</dd>\n', br(rest))
 
-    out('</dl>\n')
+    out(f.outf, '</dl>\n')
 
-def codeblock():
-    out(conf['codeblock'])
+def codeblock(f, g):
+    out(f.outf, f.conf['codeblock'])
     if len(g[0]):
-        hb(conf['blocktitle'], g[0])
-    out(conf['codeblockcontent'])
+        hb(f.outf, f.conf['blocktitle'], g[0])
+    out(f.outf, f.conf['codeblockcontent'])
 
     if g[1] not in ('', 'pyint', 'py'):
         raise SyntaxError( \
@@ -628,7 +613,7 @@ def codeblock():
     # Now we are handling code.
     # Handle \~ and ~ differently.
     while 1: # wait for EOF.
-        l = nl(codemode=True)
+        l = nl(f, codemode=True)
         if not l:
             break
         elif l.startswith('~'):
@@ -639,173 +624,226 @@ def codeblock():
             l = l[1:]
 
         if g[1] == 'pyint':
-            pyint(l)
+            pyint(f.outf, l)
         elif g[1] == 'py':
             py(l)
         else:
-            out(allreplace(l))
+            out(f.outf, allreplace(l))
 
-    out(conf['codeblockend'])
+    out(f.outf, f.conf['codeblockend'])
 
-# load the conf.
-conf = parseconf(confnames)
+def procfile(f):
+    linenum = 0
 
-linenum = 0
+    menu = None
+    footer = True
+    clearcss = False
+    css = []
+    if pc(f.inf) == '#':
+        l = f.inf.readline()
+        linenum += 1
+        if l.startswith('# jemdoc: '):
+            l = l[len('# jemdoc: '):]
+            a = l.split(',')
+            # jem only handle one argument for now.
+            for b in a:
+                b = b.strip()
+                if b.startswith('menu'):
+                    sidemenu = True
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    g = re.findall(r, b)
+                    if len(g) > 3 or len(g) < 2:
+                        raise SyntaxError('sidemenu error on line %d' % linenum)
 
-menu = None
-footer = True
-clearcss = False
-css = []
-if pc() == '#':
-    l = infile.readline()
-    linenum += 1
-    if l.startswith('# jemdoc: '):
-        l = l[len('# jemdoc: '):]
-        a = l.split(',')
-        # jem only handle one argument for now.
-        for b in a:
-            b = b.strip()
-            if b.startswith('menu'):
-                sidemenu = True
-                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-                g = re.findall(r, b)
-                if len(g) > 3 or len(g) < 2:
-                    raise SyntaxError('sidemenu error on line %d' % linenum)
+                    if len(g) == 2:
+                        menu = (f, g[0], g[1], '')
+                    else:
+                        menu = (f, g[0], g[1], g[2])
 
-                if len(g) == 2:
-                    menu = (g[0], g[1], '')
-                else:
-                    menu = (g[0], g[1], g[2])
+                elif b.startswith('nodate'):
+                    footer = False
 
-            elif b.startswith('nodate'):
-                footer = False
+                elif b.startswith('clearcss'):
+                    clearcss = True
 
-            elif b.startswith('clearcss'):
-                clearcss = True
+                elif b.startswith('addcss'):
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    css += re.findall(r, b)
 
-            elif b.startswith('addcss'):
-                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-                css += re.findall(r, b)
+    # Get the file started with the firstbit.
+    out(f.outf, f.conf['firstbit'])
 
-# Get the file started with the firstbit.
-out(conf['firstbit'])
+    if not clearcss:
+        out(f.outf, f.conf['defaultcss'])
 
-if not clearcss:
-    out(conf['defaultcss'])
+    # Add per-file css lines here.
+    for i in range(len(css)):
+        if '.' not in css[i]:
+            css[i] += '.css'
 
-# Add per-file css lines here.
-for i in range(len(css)):
-    if '.' not in css[i]:
-        css[i] += '.css'
+    for x in css:
+        hb(f.outf, f.conf['css'], x)
 
-for x in css:
-    hb(conf['css'], x)
-
-# Look for a title.
-if pc() == '=': # don't check exact number of '=' here jem.
-    t = br(nl())[:-1]
-    hb(conf['windowtitle'], t)
-    out(conf['bodystart'])
-
-else:
-    out(conf['bodystart'])
-    t = None
-
-if menu:
-    out(conf['menustart'])
-    insertmenuitems(*menu)
-    out(conf['menuend'])
-else:
-    out(conf['nomenu'])
-
-if t is not None:
-    hb(conf['doctitle'], t)
-
-    # Look for a subtitle.
-    if pc() != '\n':
-        hb(conf['subtitle'], br(np()))
-
-    hb(conf['doctitleend'], t)
-
-infoblock = False
-while 1: # wait for EOF.
-    p = pc()
-
-    if p == '':
-        break
-
-    # look for lists.
-    elif p == '-':
-        dashlist()
-
-    elif p == '.':
-        dotlist()
-
-    elif p == ':':
-        colonlist()
-
-    # look for titles.
-    elif p == '=':
-        (s, c) = nl(True)
-        # trim trailing \n.
-        s = s[:-1]
-        hb('<h%d>|</h%d>\n' % (c, c), br(s))
-
-    # look for comments.
-    elif p == '#':
-        nl()
-
-    elif p == '\n':
-        nl()
-
-    # look for blocks.
-    elif p == '~':
-        nl()
-        if infoblock:
-            out(conf['infoblockend'])
-            infoblock = False
-            nl()
-            continue
-        else:
-            if pc() == '{':
-                l = br(nl())
-                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-                g = re.findall(r, l)
-            else:
-                g = []
-
-            if len(g) in (0, 1): # info block.
-                out(conf['infoblock'])
-                infoblock = True
-                
-                if len(g) == 1: # info block.
-                    hb(conf['blocktitle'], g[0])
-
-                out(conf['infoblockcontent'])
-
-            elif len(g) == 2:
-                codeblock()
-
-            else:
-                raise JandalError("couldn't handle block", linenum)
+    # Look for a title.
+    if pc(f.inf) == '=': # don't check exact number f.outf '=' here jem.
+        t = br(nl(f))[:-1]
+        hb(f.outf, f.conf['windowtitle'], t)
+        out(f.outf, f.conf['bodystart'])
 
     else:
-        s = br(np())
-        if s:
-            hb('<p>|</p>\n', s)
+        out(f.outf, f.conf['bodystart'])
+        t = None
 
-if footer:
-    s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
-    out(conf['footerstart'])
-    hb(conf['lastupdated'], s)
-    out(conf['footerend'])
+    if menu:
+        out(f.outf, f.conf['menustart'])
+        insertmenuitems(*menu)
+        out(f.outf, f.conf['menuend'])
+    else:
+        out(f.outf, f.conf['nomenu'])
 
-if menu:
-    out(conf['menulastbit'])
-else:
-    out(conf['nomenulastbit'])
+    if t is not None:
+        hb(f.outf, f.conf['doctitle'], t)
 
-out(conf['bodyend'])
+        # Look for a subtitle.
+        if pc(f.inf) != '\n':
+            hb(f.outf, f.conf['subtitle'], br(np(f)))
 
-if outfile is not sys.stdout:
-    outfile.close()
+        hb(f.outf, f.conf['doctitleend'], t)
+
+    infoblock = False
+    while 1: # wait for EOF.
+        p = pc(f.inf)
+
+        if p == '':
+            break
+
+        # look for lists.
+        elif p == '-':
+            dashlist(f)
+
+        elif p == '.':
+            dotlist(f)
+
+        elif p == ':':
+            colonlist(f)
+
+        # look for titles.
+        elif p == '=':
+            (s, c) = nl(f, True)
+            # trim trailing \n.
+            s = s[:-1]
+            hb(f.outf, '<h%d>|</h%d>\n' % (c, c), br(s))
+
+        # look for comments.
+        elif p == '#':
+            nl(f)
+
+        elif p == '\n':
+            nl(f)
+
+        # look for blocks.
+        elif p == '~':
+            nl(f)
+            if infoblock:
+                out(f.outf, f.conf['infoblockend'])
+                infoblock = False
+                nl(f)
+                continue
+            else:
+                if pc(f.inf) == '{':
+                    l = br(nl(f))
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    g = re.findall(r, l)
+                else:
+                    g = []
+
+                if len(g) in (0, 1): # info block.
+                    out(f.outf, f.conf['infoblock'])
+                    infoblock = True
+                    
+                    if len(g) == 1: # info block.
+                        hb(f.outf, f.conf['blocktitle'], g[0])
+
+                    out(f.outf, f.conf['infoblockcontent'])
+
+                elif len(g) == 2:
+                    codeblock(f, g)
+
+                else:
+                    raise JandalError("couldn't handle block", linenum)
+
+        else:
+            s = br(np(f))
+            if s:
+                hb(f.outf, '<p>|</p>\n', s)
+
+    if footer:
+        s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
+        out(f.outf, f.conf['footerstart'])
+        hb(f.outf, f.conf['lastupdated'], s)
+        out(f.outf, f.conf['footerend'])
+
+    if menu:
+        out(f.outf, f.conf['menulastbit'])
+    else:
+        out(f.outf, f.conf['nomenulastbit'])
+
+    out(f.outf, f.conf['bodyend'])
+
+    if f.outf is not sys.stdout:
+        f.outf.close()
+
+
+def main():
+    if len(sys.argv) == 1 or sys.argv[1] in ('--help', '-h'):
+        showhelp()
+        raise SystemExit
+    elif len(sys.argv[2:]) % 2 != 0:
+        raise JandalError('invalid arguments, try --help')
+    if sys.argv[1] == '--show-config':
+        print standardconf()
+        raise SystemExit
+    else:
+        inname = sys.argv[-1]
+
+    outoverride = False
+    confoverride = False
+    outname = None
+    confnames = []
+    for i in range(1, len(sys.argv) - 1, 2):
+        if sys.argv[i] == '-o':
+            if outoverride:
+                raise RuntimeError("only one output file / directory, please")
+            outname = sys.argv[i+1]
+            outoverride = True
+        elif sys.argv[i] == '-c':
+            if confoverride:
+                raise RuntimeError("only one config file, please")
+            confnames.append(sys.argv[i+1])
+            confoverride = True
+        else:
+            raise RuntimeError('unrecognised argument %s, try --help' % sys.argv[i])
+    #
+    # now we get to the actual code section.
+    # First, if not a file and no dot, try opening .jemdoc. Otherwise, fall back
+    # to just doing exactly as asked.
+    if not os.path.isfile(inname) and '.' not in inname:
+        inname += '.jemdoc'
+    infile = open(inname)
+
+    if outname is None:
+        outname = re.sub(r'.jemdoc$', '', inname) + '.html'
+    elif os.path.isdir(outname):
+        # if directory, prepend directory to automatically generated name.
+        outname = outname + re.sub(r'.jemdoc$', '', inname) + '.html'
+    outfile = open(outname, 'w')
+
+    # load the f.conf.
+    conf = parseconf(confnames)
+    f = controlstruct(infile, outfile, conf)
+    procfile(f)
+
+#
+#
+if __name__ == '__main__':
+    main()

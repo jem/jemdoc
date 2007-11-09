@@ -15,8 +15,8 @@ deliberately feature poor), and that it has more consistent syntax.
 
 === Goals
 - Simple, consistent syntax.
-- Portability. One [http://www.python.org/ Python] script and one configuration
-  file.
+- Portability. The (single) jemdoc [http://www.python.org/ Python] file \+
+  single css file \+ your input file &rarr; html.
 - Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are
   independent of jemdoc.
 - Production of clean,

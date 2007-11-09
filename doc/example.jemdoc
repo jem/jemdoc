@@ -1,0 +1,109 @@
+# jemdoc: menu{MENU}{example.html}
+= jemdoc: a self-referential example page
+[http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
+
+== Heading level two
+Here are some /quite/ *simple* text features. I could [http://cvxmod.net/ link
+somewhere] or insert a raw link to another page like [download.html].
++Monospace+, too. I could write special characters like \#, \$ and \+ by just
+using a backslash (\\) in front of those characters.
+Or automatically detect an [jacobm@stanford.edu email address].
+
+~~~
+Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
+[download.html downloading], of course).
+~~~
+
+~~~
+{Code used so far}{}
+# jemdoc: menu{MENU}{example.html}
+= jemdoc: a self-referential example page
+[http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
+
+# comments won't appear in the output, with the exception of a # jemdoc line, as
+# in the first line.
+
+== Heading level two
+Here are some /quite/ *simple* text features. I could [http://cvxmod.net/ link
+somewhere] or insert a raw link to another page like [download.html].
++Monospace+, too. I could write special characters like \#, \$ and \+ by just
+using a backslash (\\) in front of those characters.
+Or automatically detect an [jacobm@stanford.edu email address].
+
+\~~~
+Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
+[download.html downloading], of course).
+\~~~
+~~~
+
+== Next bit
+=== Getting into level three now
+Why not use a list
+- to explain the way you do lists?
+- to demonstrate how a line\n
+  break might work?
+
+Or perhaps a
+. Multilevel
+  .. Numbered list
+  .. Is more
+. Useful?
+
+~~~
+{The next bit of code}{}
+== Next bit
+=== Getting into level three now
+Why not use a list
+- to explain the way you do lists?
+- to demonstrate how a line\n
+  break might work?
+
+Or perhaps a
+. Multilevel
+  .. Numbered list
+  .. Is more
+. Useful?
+~~~
+
+== Finally, a few `blocks' with "smart quotes"
+~~~
+{Simple block}
+This is a simple text block, with a title. Notice how the previous line has only
+one set of braces (\{\}).
+~~~
+
+~~~
+{Interactive Python listing}{pyint}
+>>> print 'This is a slightly smarter mode for listing interactive Python code.'
+'This is a slightly smarter mode for listing code.'
+~~~
+
+~~~
+{}{}
+Plain code block.
+~~~
+
+You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+
+~~~
+{Last bit of code}{}
+== Finally, a few `blocks' with "smart quotes"
+\~~~
+{Simple block}
+This is a simple text block, with a title. Notice how the previous line has only
+one set of braces (\{\}).
+\~~~
+
+\~~~
+{Interactive Python listing}{pyint}
+>>> print 'This is a slightly smarter mode for listing interactive Python code.'
+'This is a slightly smarter mode for listing code.'
+\~~~
+
+\~~~
+{}{}
+Plain code block.
+\~~~
+
+You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+~~~
