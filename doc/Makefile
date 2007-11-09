@@ -1,4 +1,4 @@
-DOCS=index cheatsheet contact download revision using menu stuff
+DOCS=index cheatsheet contact download revision using menu stuff example
 
 HDOCS=$(addsuffix .html, $(DOCS))
 PHDOCS=$(addprefix html/, $(HDOCS))

@@ -1,12 +1,13 @@
 jemdoc
-	home				[index.html]
-	download			[download.html]
-	revision history	[revision.html]
-	contact				[contact.html]
+    home                [index.html]
+    download            [download.html]
+    revision history    [revision.html]
+    contact             [contact.html]
 
 user's guide
-	cheat sheet			[cheatsheet.html]
-	using				[using.html]
+    cheat sheet         [cheatsheet.html]
+    using               [using.html]
+    example page        [example.html]
 
 goodies
     add a menu          [menu.html]

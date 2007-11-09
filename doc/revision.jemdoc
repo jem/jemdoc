@@ -2,12 +2,14 @@
 = jemdoc: revision history
 
 == Changes from +v0.2.0+ to +???+
-. Added per-file css specification. Use +\# jemdoc addcss{file1}{file2}.\..+ as the
-  first line. To prevent loading the +\[defaultcss\]+ configuration section, use
-  +\# jemdoc addcss{file1}{file2}.\..+.
+. Added per-file css specification. Use\n
+  +\# jemdoc addcss{file1}{file2}.\.., <other options>+\n as the
+  first line. To prevent loading the +\[defaultcss\]+ configuration section,
+  use\n
+  +\# jemdoc addcss{file1}{file2}.\.., <other options>+.
 . Added +jemdoc filename+ as an implicit alternative for +jemdoc filename.jemdoc+.
-. Added the syntax +[img{width}{height}{alt text} img.jpg caption]+ for
-  inserting pictures. The width, height, alt text and caption parameters are all
+. Added the syntax\n +\[img{width}{height}{alt text} img.jpg\]+\n for
+  inserting pictures. The width, height, and alt text parameters are all
   optional.
 
 == Changes from +v0.1.0+ to +v0.2.0+

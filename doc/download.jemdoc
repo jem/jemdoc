@@ -10,5 +10,5 @@ You may like to $cp jemdoc.py /usr/bin/jemdoc$ so that you can just type
 similar like $alias jemdoc='/somepath/jemdoc.py'$.
 
 jemdoc requires Python~2.3 or later. If you have a working installation of
-Python, you should be ready to go. This includes all Macs, and almost anything
-running Linux.
+Python, you should be ready to go. This includes all Macs, and almost any
+fairly modern unix or linux.

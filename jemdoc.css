@@ -125,11 +125,15 @@ h1 {
 	font-size: 170%;
 }
 
-
 h2 {
 	padding-top: 0.5em;
 	font-size: 125%;
 }
+
+h2 + h3 {
+    padding-top: 0.2em;
+}
+
 
 h3 {
 	font-size: 110%;
@@ -218,14 +222,14 @@ ol ol ol {
 
 div.codeblock, div.infoblock {
 	margin-right: 0%;
-	margin-top: 1.5em;
-	margin-bottom: 1.5em;
+	margin-top: 0.8em;
+	margin-bottom: 1.3em;
 }
 
 div.blocktitle {
 	font-weight: bold;
 	color: #cd7b62;
-	margin-top: 1.0em;
+	margin-top: 0.8em;
 	margin-bottom: 0.1em;
 }
 
