@@ -15,8 +15,8 @@
 - +\\R+ is \R
 - `singly quoted text' is written +\`singly quoted text\'+
 - "doubly quoted text" is written +\"doubly quoted text\"+
-- the sequence +\\n+ \n forces a manual line break
 - jemdoc's apostrophes are converted automatically from +jemdoc\'s+ input
+- the sequence +\\n+ \n forces a manual line break
 - paragraphs are separated by blank lines
 
 == Blocks
@@ -83,8 +83,7 @@ for lists of definitions. Here is some code and the resulting list:
 - +\{\{html text\}\}+ will insert +html text+ directly into the output document
   without performing any substitutions.
 - +{\\{text}\\}+ /will/ perform replacements and insert {\{text}\}.
-- +\$quoted tt\$+ is an alias for +\+\{\{quoted tt\}\}\++. *Deprecated---slated
-  for use with LaTeX equations.*
+- +\%quoted tt\%+ is an alias for +\+\{\{quoted tt\}\}\++.
 - make the first line of your file +\# jemdoc: menu{MENU}{index.html}+ to add a
   menu
 - make the first line of your file +\# jemdoc: nodate,menu{MENU}{index.html}\}+ to

@@ -11,7 +11,7 @@ look something like this one, [http://cvxmod.net/ that one] or
 jemdoc was inspired by [http://www.methods.co.nz/asciidoc/ AsciiDoc], which is a
 text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
-deliberately feature poor), and that it has more consistent syntax.
+deliberately feature poor) and has more consistent syntax.
 
 === Goals
 - Simple, consistent syntax.

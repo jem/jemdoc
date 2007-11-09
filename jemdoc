@@ -3,7 +3,7 @@
 """
 jemdoc: light markup.
 
-version X.X.X, OcXXXtober 2007.
+version 0.3.0, November 2007.
 """
 
 # Copyright (C) 2007 Jacob Mattingley.
@@ -83,6 +83,7 @@ def standardconf():
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     
     [defaultcss]
+    <link rel="stylesheet" href="jemdoc.css" type="text/css" />
     
     [windowtitle]
     # used in header for window title.
@@ -332,7 +333,7 @@ def np(f, withcount=False):
 
 def quote(s, dollars=False):
     if dollars:
-        return re.sub(r"""[\\*/+"'<>$\.~[\]-]""", r'\\\g<0>', s)
+        return re.sub(r"""[\\*/+"'<>$%\.~[\]-]""", r'\\\g<0>', s)
     else:
         return re.sub(r"""[\\*/+"'<>\.~[\]-]""", r'\\\g<0>', s)
 
@@ -348,8 +349,13 @@ def replacequoted(b):
 
         m = r.search(b, m.start())
 
-    # likewise replace $sections$ as +{{sections}}+.
     r = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S)
+    m = r.search(b)
+    if m:
+        print 'warning: $sections$ are deprecated.'
+
+    # likewise replace %sections% as +{{sections}}+.
+    r = re.compile(r'(?<!\\)%(.*?)(?<!\\)%', re.M + re.S)
     m = r.search(b)
     while m:
         qb = '+' + quote(m.group(1)) + '+'
@@ -522,15 +528,15 @@ def pyint(f, l):
     else:
         out(f, l + '\n')
 
-def py(l):
+def py(f, l):
     # jem need to do much better here.
     l = l.rstrip()
     if l.startswith('>>>'):
-        hb(f.outf, '<span class="pycommand">|</span>\n', allreplace(l))
+        hb(f, '<span class="pycommand">|</span>\n', allreplace(l))
     elif l.startswith('#'):
-        hb(f.outf, '<span class="comment">|</span>\n', allreplace(l))
+        hb(f, '<span class="comment">|</span>\n', allreplace(l))
     else:
-        out(f.outf, allreplace(l) + '\n')
+        out(f, allreplace(l) + '\n')
 
 def dashlist(f):
     level = 0
@@ -626,7 +632,7 @@ def codeblock(f, g):
         if g[1] == 'pyint':
             pyint(f.outf, l)
         elif g[1] == 'py':
-            py(l)
+            py(f.outf, l)
         else:
             out(f.outf, allreplace(l))
 
@@ -637,7 +643,7 @@ def procfile(f):
 
     menu = None
     footer = True
-    clearcss = False
+    nodefaultcss = False
     css = []
     if pc(f.inf) == '#':
         l = f.inf.readline()
@@ -663,8 +669,8 @@ def procfile(f):
                 elif b.startswith('nodate'):
                     footer = False
 
-                elif b.startswith('clearcss'):
-                    clearcss = True
+                elif b.startswith('nodefaultcss'):
+                    nodefaultcss = True
 
                 elif b.startswith('addcss'):
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
@@ -673,7 +679,7 @@ def procfile(f):
     # Get the file started with the firstbit.
     out(f.outf, f.conf['firstbit'])
 
-    if not clearcss:
+    if not nodefaultcss:
         out(f.outf, f.conf['defaultcss'])
 
     # Add per-file css lines here.
@@ -798,19 +804,15 @@ def main():
     if len(sys.argv) == 1 or sys.argv[1] in ('--help', '-h'):
         showhelp()
         raise SystemExit
-    elif len(sys.argv[2:]) % 2 != 0:
-        raise JandalError('invalid arguments, try --help')
     if sys.argv[1] == '--show-config':
         print standardconf()
         raise SystemExit
-    else:
-        inname = sys.argv[-1]
 
     outoverride = False
     confoverride = False
     outname = None
     confnames = []
-    for i in range(1, len(sys.argv) - 1, 2):
+    for i in range(1, len(sys.argv), 2):
         if sys.argv[i] == '-o':
             if outoverride:
                 raise RuntimeError("only one output file / directory, please")
@@ -821,29 +823,41 @@ def main():
                 raise RuntimeError("only one config file, please")
             confnames.append(sys.argv[i+1])
             confoverride = True
-        else:
+        elif sys.argv[i].startswith('-'):
             raise RuntimeError('unrecognised argument %s, try --help' % sys.argv[i])
-    #
-    # now we get to the actual code section.
-    # First, if not a file and no dot, try opening .jemdoc. Otherwise, fall back
-    # to just doing exactly as asked.
-    if not os.path.isfile(inname) and '.' not in inname:
-        inname += '.jemdoc'
-    infile = open(inname)
+        else:
+            break
 
-    if outname is None:
-        outname = re.sub(r'.jemdoc$', '', inname) + '.html'
-    elif os.path.isdir(outname):
-        # if directory, prepend directory to automatically generated name.
-        outname = outname + re.sub(r'.jemdoc$', '', inname) + '.html'
-    outfile = open(outname, 'w')
-
-    # load the f.conf.
     conf = parseconf(confnames)
-    f = controlstruct(infile, outfile, conf)
-    procfile(f)
 
-#
+    innames = []
+    for j in range(i, len(sys.argv)):
+        # First, if not a file and no dot, try opening .jemdoc. Otherwise, fall back
+        # to just doing exactly as asked.
+        inname = sys.argv[j]
+        if not os.path.isfile(inname) and '.' not in inname:
+            inname += '.jemdoc'
+
+        innames.append(inname)
+
+    if outname is not None and not os.path.isdir(outname) and len(innames) > 1:
+        raise RuntimeError('cannot handle one outfile with multiple infiles')
+
+    for inname in innames:
+        if outname is None:
+            thisout = re.sub(r'.jemdoc$', '', inname) + '.html'
+        elif os.path.isdir(outname):
+            # if directory, prepend directory to automatically generated name.
+            thisout = outname + re.sub(r'.jemdoc$', '', inname) + '.html'
+        else:
+            thisout = outname
+
+        infile = open(inname)
+        outfile = open(thisout, 'w')
+
+        f = controlstruct(infile, outfile, conf)
+        procfile(f)
+
 #
 if __name__ == '__main__':
     main()
