@@ -23,6 +23,7 @@ version X.X.X, OcXXXtober 2007.
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import os
 import re
 import time
 import StringIO
@@ -65,7 +66,8 @@ def standardconf():
 <head>
 <meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="stylesheet" href="./jemdoc.css" type="text/css" />
+
+[defaultcss]
 
 [windowtitle]
 # used in header for window title.
@@ -107,6 +109,9 @@ def standardconf():
 
 [nomenu]
 <div id="layout-content">
+
+[css]
+<link rel="stylesheet" href="|" type="text/css" />
 
 [menulastbit]
 </div>
@@ -174,7 +179,7 @@ if sys.argv[1] == '--show-config':
     raise SystemExit
 else:
     inname = sys.argv[-1]
-    outname = re.search(r'(.*)\.', inname).group(1) + '.html'
+    outname = re.sub(r'.jemdoc$', '', inname) + '.html'
 
 outoverride = False
 confoverride = False
@@ -230,7 +235,7 @@ def parseconf(cns):
 
     return syntax
 
-def insertmenuitems(mname, current):
+def insertmenuitems(mname, current, prefix):
     f = open(mname)
     while pc(f) != '':
         l = readnoncomment(f)
@@ -242,17 +247,22 @@ def insertmenuitems(mname, current):
 
         if r: # then we have a link.
             if r.group(2) == current: 
-                hb(conf['currentmenuitem'], r.group(2), br(r.group(1)))
+                hb(conf['currentmenuitem'], prefix + r.group(2), br(r.group(1)))
             else:
-                hb(conf['menuitem'], r.group(2), br(r.group(1)))
+                hb(conf['menuitem'], prefix + r.group(2), br(r.group(1)))
 
         else: # menu category.
             hb(conf['menucategory'], br(l))
 
     f.close()
 
+# First, if not a file and no dot, try opening .jemdoc.
+if not os.path.isfile(inname) and '.' not in inname:
+    infile = open(inname + '.jemdoc')
+else:
+    # Otherwise, fall back to just doing exactly as asked.
+    infile = open(inname)
 
-infile = open(inname)
 outfile = open(outname, 'w')
 
 def out(s):
@@ -365,6 +375,41 @@ def replacequoted(b):
 
     return b
 
+def replaceimages(b):
+    # works with [img{width}{height}{alttext} location caption].
+    r = re.compile(r'(?<!\\)\[img((?:\{.*\}){,3})\s(.*?)(?:\s(.*?))?(?<!\\)\]',
+                   re.M + re.S)
+    m = r.search(b)
+    s = re.compile(r'{(.*?)}', re.M + re.S)
+    while m:
+        m1 = list(s.findall(m.group(1)))
+        m1 += ['']*(3 - len(m1))
+
+        bits = []
+        link = m.group(2).strip()
+        bits.append(r'src=\"%s\"' % quote(link))
+
+        if m1[0]:
+            if m1[0].isdigit():
+                s = m1[0] + 'px'
+            else:
+                s = m1[0]
+            bits.append(r'width=\"%s\"' % quote(s))
+        if m1[1]:
+            if m1[1].isdigit():
+                s = m1[1] + 'px'
+            else:
+                s = m1[1]
+            bits.append(r'height=\"%s\"' % quote(s))
+        if m1[2]:
+            bits.append(r'alt=\"%s\"' % quote(m1[2]))
+
+        b = b[:m.start()] + r'<img %s />' % " ".join(bits) + b[m.end():]
+
+        m = r.search(b, m.start())
+
+    return b
+
 def replacelinks(b):
     # works with [link.html new link style].
     r = re.compile(r'(?<!\\)\[(.*?)(?:\s(.*?))?(?<!\\)\]', re.M + re.S)
@@ -457,6 +502,10 @@ def br(b):
     # Deal with line break.
     r = re.compile(r"(?<!\\)\\n", re.M + re.S)
     b = re.sub(r, r'<br />', b)
+
+    ## Deal with zero width \_.
+    #r = re.compile(r"(?<!\\)\\_", re.M + re.S)
+    #b = re.sub(r, '', b)
 
     # Second to last, remove any remaining quoting backslashes.
     b = re.sub(r'\\(?!\\)', '', b)
@@ -601,13 +650,12 @@ def codeblock():
 # load the conf.
 conf = parseconf(confnames)
 
-# Get the file started with the firstbit.
-out(conf['firstbit'])
-
 linenum = 0
 
 menu = None
 footer = True
+clearcss = False
+css = []
 if pc() == '#':
     l = infile.readline()
     linenum += 1
@@ -620,14 +668,38 @@ if pc() == '#':
             if b.startswith('menu'):
                 sidemenu = True
                 r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
-                g = re.findall(r, l)
-                if len(g) != 2:
+                g = re.findall(r, b)
+                if len(g) > 3 or len(g) < 2:
                     raise SyntaxError('sidemenu error on line %d' % linenum)
 
-                menu = (g[0], g[1])
+                if len(g) == 2:
+                    menu = (g[0], g[1], '')
+                else:
+                    menu = (g[0], g[1], g[2])
 
             elif b.startswith('nodate'):
                 footer = False
+
+            elif b.startswith('clearcss'):
+                clearcss = True
+
+            elif b.startswith('addcss'):
+                r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                css += re.findall(r, b)
+
+# Get the file started with the firstbit.
+out(conf['firstbit'])
+
+if not clearcss:
+    out(conf['defaultcss'])
+
+# Add per-file css lines here.
+for i in range(len(css)):
+    if '.' not in css[i]:
+        css[i] += '.css'
+
+for x in css:
+    hb(conf['css'], x)
 
 # Look for a title.
 if pc() == '=': # don't check exact number of '=' here jem.

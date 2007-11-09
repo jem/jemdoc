@@ -59,3 +59,8 @@ custom numbers in lists.
 add support for custom additional css file.
 
 single tilde should not provoke block mode
+
+add proper wrapping in vim file for lists etc. don't push \n onto previous
+line, if possible.
+
+do word wrap (properly).

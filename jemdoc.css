@@ -49,11 +49,13 @@ div.menu-category {
 
 div#toptitle {
 	padding-bottom: 0.2em;
+	margin-bottom: 1.5em;
+	border-bottom: 3px double gray;
 }
 
-/* Add extra space if we begin a page with an ordinary paragraph. */
-div#toptitle + p {
-	margin-top: 1.5em;
+/* Reduce space if we begin the page with a title. */
+div#toptitle + h2, div#toptitle + h3 {
+	margin-top: -0.5em;
 }
 
 div#toptitle h1 {
@@ -64,6 +66,12 @@ div#toptitle h1 {
 	border-bottom: none;
 }
 
+div#subtitle {
+	margin-top: 0.0em;
+	margin-bottom: 0.0em;
+	padding-top: 0em;
+	padding-bottom: 0.2em;
+}
 
 #layout-content {
 	padding-top: 0.0em;
@@ -118,14 +126,6 @@ h1 {
 }
 
 
-div#subtitle {
-  margin-top: 0.0em;
-  margin-bottom: 0.0em;
-  padding-top: 0em;
-  padding-bottom: 0.2em;
-  border-bottom: 3px double gray;
-}
-
 h2 {
 	padding-top: 0.5em;
 	font-size: 125%;
@@ -134,7 +134,6 @@ h2 {
 h3 {
 	font-size: 110%;
 	border-bottom: none;
-	margin-bottom: 0em;
 }
 
 hr {
@@ -164,10 +163,28 @@ div#footer-text {
 	padding-bottom: 0.5em;
 }
 
-ul, ol {
+ul, ol, dl {
 	margin-top: 0;
 	padding-top: 0;
 }
+
+dt {
+	margin-top: 0.5em;
+	margin-bottom: 0;
+}
+
+dl {
+	margin-left: 20px;
+}
+
+dd {
+	color: #222222;
+}
+
+dd > *:first-child {
+	margin-top: 0;
+}
+
 
 ul {
 	list-style-position: outside;

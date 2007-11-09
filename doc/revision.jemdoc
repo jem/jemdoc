@@ -1,0 +1,24 @@
+# jemdoc: menu{MENU}{revision.html}
+= jemdoc: revision history
+
+== Changes from +v0.2.0+ to +???+
+. Added per-file css specification. Use +\# jemdoc addcss{file1}{file2}.\..+ as the
+  first line. To prevent loading the +\[defaultcss\]+ configuration section, use
+  +\# jemdoc addcss{file1}{file2}.\..+.
+. Added +jemdoc filename+ as an implicit alternative for +jemdoc filename.jemdoc+.
+. Added the syntax +[img{width}{height}{alt text} img.jpg caption]+ for
+  inserting pictures. The width, height, alt text and caption parameters are all
+  optional.
+
+== Changes from +v0.1.0+ to +v0.2.0+
+. Embedded default configuration file within jemdoc, to eliminate the need for a
+  default configuration file.
+. Rearranged the arguments to +{{jemdoc [OPTIONS] [INFILE]}}+.
+. Added better formatting to document titles.
+. Added support for definintion lists via +{{: {item} definition}}+.
+. Added +\$quoted tt\$+ as an alias for +\+\{\{quoted tt\}\}\++.
+
+== Known bugs
+- Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
+  fail.
+- A line started by $~$ will be interpreted as a block delimiter.

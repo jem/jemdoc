@@ -1,0 +1,7 @@
+# jemdoc: menu{MENU}{contact.html}
+= jemdoc: Contact details
+
+== Development
+jemdoc is developed by [http://stanford.edu/~jacobm/ Jacob Mattingley].
+Please [jacobm@stanford.edu contact Jacob] with any bug reports and
+comments---they are gladly welcomed!

@@ -1,0 +1,91 @@
+# jemdoc: menu{MENU}{cheatsheet.html}
+= jemdoc: cheatsheet
+
+== Basic formatting
+- /\/italics\//
+- *\*bold\**
+- +\+monospace\++
+- +\-+ is a hyphen (-)
+- +\-\-+ is an en-dash (--)
+- +\-\-\-+ is an em-dash (---)
+- +\.\.\.+ is an ellipsis (...)
+- +\~+ is a non-breaking space (~)
+- +\#+ begins a comment, for the remainder of the line
+- +\\C+ is \C
+- +\\R+ is \R
+- `singly quoted text' is written +\`singly quoted text\'+
+- "doubly quoted text" is written +\"doubly quoted text\"+
+- the sequence +\\n+ \n forces a manual line break
+- jemdoc's apostrophes are converted automatically from +jemdoc\'s+ input
+- paragraphs are separated by blank lines
+
+== Blocks
+~~~
+{Code block syntax}{}
+\~~~
+\{Optionally empty title}{Optionally empty highlight mode}
+Code block with monospaced text.
+\~~~
+~~~
+
+~~~
+{Information block}
+Omit the second pair of braces in the first line of the block (or omit the whole
+first line altogether if you don't want a title) and you will get an
+/information block/. All the usual conventions apply in here.
+~~~
+
+== Headings and lists
+Headings are defined by starting a line with +=+.
+- += Heading level 1+
+- +== Heading level 2+, /etc./
+
+Lists are defined with +-+ for bulleted lists, +.+ for numbered lists and +:+
+for lists of definitions. Here is some code and the resulting list:
+
+~~~
+{}{}
+- Bullet level one
+    -- Bullet level two
+
+. Number level one
+    .. Number level two
+    .. Number level two (again)
+
+: {jemdoc} light markup
+: {asciidoc} a great alternative, but more complicated
+~~~
+
+~~~
+- Bullet level one
+    -- Bullet level two
+
+. Number level one
+    .. Number level two
+    .. Number level two (again)
+
+: {jemdoc} light markup
+: {asciidoc} a great alternative, but more complicated
+~~~
+
+== Preventing matches
+- a literal backspace (\\) is written +{{\\\\}}+ 
+- the literal characters \/, \*, \+ and \~ and \# are written +\\/+, +\\*+,
+  +\\\++, +\\\~+ and +\\\#+ to avoid the above formatting
+- +\\\...+ avoids an ellipsis
+- +-\\-+ avoids an en-dash
+- +-\\-\\-+ avoids an em-dash
+- +\\\`+ gives a back-tick (\`)
+- +\\\'+ gives an ordinary single quotation mark (\')
+- +\\\"+ gives an ordinary double quotation mark (\")
+
+== Other stuff
+- +\{\{html text\}\}+ will insert +html text+ directly into the output document
+  without performing any substitutions.
+- +{\\{text}\\}+ /will/ perform replacements and insert {\{text}\}.
+- +\$quoted tt\$+ is an alias for +\+\{\{quoted tt\}\}\++. *Deprecated---slated
+  for use with LaTeX equations.*
+- make the first line of your file +\# jemdoc: menu{MENU}{index.html}+ to add a
+  menu
+- make the first line of your file +\# jemdoc: nodate,menu{MENU}{index.html}\}+ to
+  add a menu and omit the `Last updated...' line along the bottom of the page.
