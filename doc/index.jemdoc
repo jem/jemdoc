@@ -1,0 +1,38 @@
+# jemdoc: menu{MENU}{index.html}
+= jemdoc: light markup
+[http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
+
+jemdoc is a light text-based markup language designed for creating simple
+websites. It takes a text file written with [cheatsheet.html jemdoc markup], an
+configuration file and an optional menu file, and makes static websites that
+look something like this one, [http://cvxmod.net/ that one] or
+[http://stanford.edu/class/ee263/ another one].
+
+jemdoc was inspired by [http://www.methods.co.nz/asciidoc/ AsciiDoc], which is a
+text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
+copied in jemdoc. The main differences are that jemdoc is simpler (you could say
+deliberately feature poor), and that it has more consistent syntax.
+
+=== Goals
+- Simple, consistent syntax.
+- Portability. One [http://www.python.org/ Python] script and one configuration
+  file.
+- Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are
+  independent of jemdoc.
+- Production of clean,
+  [http://validator.w3.org/check?uri=http%3A%2F%2Fjemdoc.jaboc.net%2F
+  standards-compliant] [http://www.w3.org/TR/xhtml11/ XHTML 1.1].
+- Minimal bells and whistles, but simple fallback to raw html if required.
+
+== License
+Copyright \C 2007 Jacob Mattingley.
+
+jemdoc is free software; you can redistribute it and\/or modify it under the
+terms of the [http://www.gnu.org/licenses/gpl-3.0.html GNU General Public
+License] as published by the Free Software Foundation; either version 3 of the
+License, or (at your option) any later version.
+
+jemdoc is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the [http://www.gnu.org/licenses/gpl-3.0.html GNU
+General Public License] for more details.

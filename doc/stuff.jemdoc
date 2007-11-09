@@ -1,0 +1,54 @@
+# jemdoc: menu{MENU}{stuff.html}
+= jemdoc: make, vim
+
+== Vim syntax highlighting
+Here is a preliminary vim syntax file [jemdoc.vim jemdoc.vim]. You should download it to
++\~\/.vim\/syntax\/+. You may also need to add the following lines in your
++\~\/.vimrc+:
+
+~~~
+{Additional +\~\/.vimrc+ lines}{}
+filetype plugin on
+augroup filetypedetect
+	au! BufNewFile,BufRead *.jemdoc setf jemdoc
+augroup END
+
+" Last line is for proper wrapping of jemdoc lists, etc.
+autocmd Filetype jemdoc setlocal comments=:#,fb:-,fb:.,fb:--,fb:..,fb:\:
+~~~
+
+== Makefile
+Here's a small example of a [Makefile Makefile]. A listing of it follows.
+
+This file would be used as follows:
+- Edit +index.jemdoc+ and +otherpage.jemdoc+ at will.
+- Type +make+ in the same directory, and files +html\/index.html+ and
+  +html\/otherpage.html+ will be updated as necessary.
+- Type +make update+ and your files will be copied to the server.
+- Type +make clean+ and old +html+ files in +html\/+ will be removed.
+
+Rinse and repeat.
+
+~~~
+{Makefile example}{}
+DOCS=index otherpage
+
+HDOCS=$(addsuffix .html, $(DOCS))
+PHDOCS=$(addprefix html/, $(HDOCS))
+
+.PHONY : docs
+docs : $(PHDOCS)
+
+.PHONY : update
+update : $(PHDOCS)
+	@echo -n 'Copying to server...'
+	# insert code for copying to server here.
+	@echo ' done.'
+
+html/%.html : %.jemdoc MENU jemdoc.conf
+	jemdoc -o $@ $<
+
+.PHONY : clean
+clean :
+	-rm -f html/*.html
+~~~
