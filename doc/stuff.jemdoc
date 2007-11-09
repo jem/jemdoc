@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{stuff.html}
-= jemdoc: make, vim
+= jemdoc: vim, make
 
 == Vim syntax highlighting
 Here is a preliminary vim syntax file [jemdoc.vim jemdoc.vim]. You should download it to

@@ -3,7 +3,7 @@
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
 == Heading level two
-Here are some /quite/ *simple* text features. I could [http://cvxmod.net/ link
+Here are /some/ *text* features. I could [http://cvxmod.net/ link
 somewhere] or insert a raw link to another page like [download.html].
 +Monospace+, too. I could write special characters like \#, \$ and \+ by just
 using a backslash (\\) in front of those characters.
@@ -24,7 +24,7 @@ Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
 # in the first line.
 
 == Heading level two
-Here are some /quite/ *simple* text features. I could [http://cvxmod.net/ link
+Here are /some/ *text* features. I could [http://cvxmod.net/ link
 somewhere] or insert a raw link to another page like [download.html].
 +Monospace+, too. I could write special characters like \#, \$ and \+ by just
 using a backslash (\\) in front of those characters.
@@ -49,6 +49,9 @@ Or perhaps a
   .. Is more
 . Useful?
 
+: {Definition} lists, especially when there are many definitions
+: {Can be useful} for explaining things
+
 ~~~
 {The next bit of code}{}
 == Next bit
@@ -63,6 +66,9 @@ Or perhaps a
   .. Numbered list
   .. Is more
 . Useful?
+
+: {Definition} lists, especially when there are many definitions
+: {Can be useful} for explaining things
 ~~~
 
 == Finally, a few `blocks' with "smart quotes"
