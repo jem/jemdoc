@@ -3,7 +3,7 @@
 """
 jemdoc: light markup.
 
-version 0.3.0, November 2007.
+version 0.3.X, NoXXXber 2007.
 """
 
 # Copyright (C) 2007 Jacob Mattingley.
@@ -193,7 +193,6 @@ def raisejandal(msg, line=0):
         s = "line %d: %s" % (line, msg)
     raise JandalError(s)
 
-
 def readnoncomment(f):
     l = f.readline()
     if l == '':
@@ -242,10 +241,15 @@ def insertmenuitems(f, mname, current, prefix):
         r = re.match(r'\s*(.*?)\s*\[(.*)\]', l)
 
         if r: # then we have a link.
+            link = r.group(2)
+            # Don't use prefix if we have an absolute link.
+            if '://' not in r.group(2):
+                link = prefix + link
+
             if r.group(2) == current: 
-                hb(f.outf, f.conf['currentmenuitem'], prefix + r.group(2), br(r.group(1)))
+                hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1)))
             else:
-                hb(f.outf, f.conf['menuitem'], prefix + r.group(2), br(r.group(1)))
+                hb(f.outf, f.conf['menuitem'], link, br(r.group(1)))
 
         else: # menu category.
             hb(f.outf, f.conf['menucategory'], br(l))
@@ -331,11 +335,11 @@ def np(f, withcount=False):
     else:
         return s[:-1]
 
-def quote(s, dollars=False):
-    if dollars:
-        return re.sub(r"""[\\*/+"'<>$%\.~[\]-]""", r'\\\g<0>', s)
+def quote(s, percents=True):
+    if percents:
+        return re.sub(r"""[\\*/+"'<>&$%\.~[\]-]""", r'\\\g<0>', s)
     else:
-        return re.sub(r"""[\\*/+"'<>\.~[\]-]""", r'\\\g<0>', s)
+        return re.sub(r"""[\\*/+"'<>&$\.~[\]-]""", r'\\\g<0>', s)
 
 def replacequoted(b):
     """Quotes {{raw html}} sections. Insert a backslash right before the end
@@ -430,7 +434,7 @@ def replacelinks(b):
 def br(b):
     """Does simple text replacements on a block of text. ('block replacements')"""
     # Deal with literal backspaces.
-    b = re.sub(r'\\\\', '&jemLITerl33talBS;', b)
+    b = re.sub(r'\\\\', 'jemLITerl33talBS', b)
 
     # Deal with {{html embedding}}.
     b = replacequoted(b)
@@ -439,6 +443,7 @@ def br(b):
 
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
+    b = replaceimages(b)
     b = replacelinks(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
@@ -502,12 +507,15 @@ def br(b):
     b = re.sub(r'\\(?!\\)', '', b)
 
     # Deal with literal backspaces.
-    b = re.sub('&jemLITerl33talBS;', r'\\', b)
+    b = re.sub('jemLITerl33talBS', r'\\', b)
 
     return b
 
 def allreplace(b):
     """Replacements that should be done on everything."""
+    r = re.compile(r"(?<!\\)&", re.M + re.S)
+    b = re.sub(r, r'&amp;', b)
+
     r = re.compile(r"(?<!\\)>", re.M + re.S)
     b = re.sub(r, r'&gt;', b)
 
@@ -717,6 +725,7 @@ def procfile(f):
         hb(f.outf, f.conf['doctitleend'], t)
 
     infoblock = False
+    imgblock = False
     while 1: # wait for EOF.
         p = pc(f.inf)
 
@@ -755,9 +764,14 @@ def procfile(f):
                 infoblock = False
                 nl(f)
                 continue
+            elif imgblock:
+                out(f.outf, '</td></tr></table>\n')
+                imgblock = False
+                nl(f)
+                continue
             else:
                 if pc(f.inf) == '{':
-                    l = br(nl(f))
+                    l = allreplace(nl(f))
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     g = re.findall(r, l)
                 else:
@@ -774,6 +788,32 @@ def procfile(f):
 
                 elif len(g) == 2:
                     codeblock(f, g)
+
+                elif len(g) >= 4 and g[1] == 'img_left':
+                    # handles
+                    # {}{img_left}{source}{alttext}{width}{height}{linktarget}.
+                    g += ['']*(7 - len(g))
+                    
+                    if g[4].isdigit():
+                        g[4] += 'px'
+
+                    if g[5].isdigit():
+                        g[5] += 'px'
+
+                    out(f.outf, '<table><tr><td>\n')
+                    if g[6]:
+                        out(f.outf, '<a href="%s">' % g[6])
+                    out(f.outf, '<img src="%s"' % g[2])
+                    out(f.outf, ' alt="%s"' % g[3])
+                    if g[4]:
+                        out(f.outf, ' width="%s"' % g[4])
+                    if g[5]:
+                        out(f.outf, ' height="%s"' % g[5])
+                    out(f.outf, ' />')
+                    if g[6]:
+                        out(f.outf, '</a>')
+                    out(f.outf, '&nbsp;</td>\n<td align="left">')
+                    imgblock = True
 
                 else:
                     raise JandalError("couldn't handle block", linenum)
@@ -798,7 +838,6 @@ def procfile(f):
 
     if f.outf is not sys.stdout:
         f.outf.close()
-
 
 def main():
     if len(sys.argv) == 1 or sys.argv[1] in ('--help', '-h'):

@@ -64,3 +64,9 @@ add proper wrapping in vim file for lists etc. don't push \n onto previous
 line, if possible.
 
 do word wrap (properly).
+
+paragraph with {{}} should have no <p></p>.
+
+investigate proper string continuation in python.
+
+proper vim handling of python \.

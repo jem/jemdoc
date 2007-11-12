@@ -1,6 +1,11 @@
 # jemdoc: menu{MENU}{revision.html}
 = jemdoc: revision history
 
+== Changes from +v0.3.0+ to +0.X.X+
+. Added support for image blocks.
+. Added support for raw blocks.
+. Fixed handling of ampersands (&).
+
 == Changes from +v0.2.0+ to +0.3.0+
 . Added per-file css specification. Use\n
   +\# jemdoc addcss{file1}{file2}.\.., <other options>+\n as the
