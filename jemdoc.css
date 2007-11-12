@@ -4,8 +4,8 @@ body {
 }
 
 #layout-menu {
-	background-color: #f4f4f4;
-	border: 1px solid #dddddd;
+	background-color: #f8f8f8;
+	border: 1px solid #c0c0c0;
 	padding-top: 0.5em;
 	padding-left: 8px;
 	padding-right: 8px;
@@ -18,17 +18,27 @@ body {
 	margin-left: 0.5em;
 }
 
-a {
-	color: #224b8d;
+tt {
+	color: green;
+}
+
+pre, tt {
+	font-size: 90%;
+	font-family: monaco, monospace;
+}
+
+
+a, a > tt {
+	color: #305080;
 	text-decoration: none;
 }
 
 a:hover {
-	border-bottom: 1px gray dotted;
+	border-bottom: 1px #305080 dotted;
 }
 
 #layout-menu a.current:link, #layout-menu a.current:visited {
-	color: #022b6d;
+	color: #204070;
 	border-bottom: 1px gray solid;
 }
 #layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
@@ -50,7 +60,7 @@ div.menu-category {
 div#toptitle {
 	padding-bottom: 0.2em;
 	margin-bottom: 1.5em;
-	border-bottom: 3px double gray;
+	border-bottom: 1px double #c0c0c0;
 }
 
 /* Reduce space if we begin the page with a title. */
@@ -59,7 +69,7 @@ div#toptitle + h2, div#toptitle + h3 {
 }
 
 div#toptitle h1 {
-	margin-bottom: 0.1em;
+	margin-bottom: 0.0em;
 	padding-bottom: 0.1em;
 	padding-top: 0;
 	margin-top: 0.5em;
@@ -70,7 +80,7 @@ div#subtitle {
 	margin-top: 0.0em;
 	margin-bottom: 0.0em;
 	padding-top: 0em;
-	padding-bottom: 0.2em;
+	padding-bottom: 0.1em;
 }
 
 #layout-content {
@@ -101,33 +111,24 @@ strong {
 	font-weight: bold;
 }
 
-tt {
-	color: green;
-}
-
-pre, tt {
-	font-size: 90%;
-	font-family: monaco, monospace;
-}
-
 
 h1, h2, h3, h4, h5, h6 {
-	color: #527bbd;
+	color: #204070;
 	margin-top: 0.9em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
 	padding-top: 0.5em;
-	border-bottom: 1px solid #aaaaaa;
+	border-bottom: 1px solid #c0c0c0;
 }
 
 h1 {
-	font-size: 170%;
+	font-size: 160%;
 }
 
 h2 {
 	padding-top: 0.5em;
-	font-size: 125%;
+	font-size: 115%;
 }
 
 h2 + h3 {
@@ -158,10 +159,15 @@ pre {
 
 div#footer {
 	font-size: small;
-	border-top: 1px solid gray;
+	color: #c0c0c0;
+	border-top: 1px solid #c0c0c0;
 	padding-top: 0.1em;
 	margin-top: 4.0em;
 }
+div#footer a {
+	color: #80a0d0;
+}
+
 div#footer-text {
 	float: left;
 	padding-bottom: 0.5em;
@@ -228,14 +234,14 @@ div.codeblock, div.infoblock {
 
 div.blocktitle {
 	font-weight: bold;
-	color: #cd7b62;
+	color: #204070;
 	margin-top: 0.8em;
 	margin-bottom: 0.1em;
 }
 
 div.blockcontent {
-	border: 1px solid silver;
-	padding: 0.5em;
+	border: 1px solid #c0c0c0;
+	padding: 0.3em 0.5em;
 }
 
 div.infoblock > div.blockcontent {
@@ -255,7 +261,7 @@ div.infoblock p + p {
 }
 
 div.codeblock > div.blockcontent {
-	background: #f4f4f4;
+	background: #f6f6f6;
 }
 
 span.pycommand {
