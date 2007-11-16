@@ -19,6 +19,12 @@ jemdoc -o html/index.html index.jemdoc
 
 This will instead output to +html\/index.html+.
 
+== CSS
+You will need to provide a [http://www.w3.org/Style/CSS/ CSS] file on your
+server. By default it should be called +jemdoc.css+. Here is an example
+[dist/jemdoc.css jemdoc.css] file: download it and place it in the same
+directory as your html files. (Or customize it, or start from scratch!)
+
 == Configuration
 jemdoc has a built-in default configuration. This configuration includes the
 particular html tags used when producing html. If you wish to adjust the html

@@ -70,3 +70,7 @@ paragraph with {{}} should have no <p></p>.
 investigate proper string continuation in python.
 
 proper vim handling of python \.
+
+remove argument for menu name and figure it out implicitly instead?
+
+what happens if you nest blocks?

@@ -11,7 +11,7 @@ Or automatically detect an [jacobm@stanford.edu email address].
 
 ~~~
 Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
-[download.html downloading], of course).
+[download.html downloading jemdoc], of course).
 ~~~
 
 ~~~
@@ -20,8 +20,8 @@ Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
 = jemdoc: a self-referential example page
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
-# comments won't appear in the output, with the exception of a # jemdoc line, as
-# in the first line.
+# comments won't appear in the output. A first line that starts with # jemdoc
+# can, however, alter the output.
 
 == Heading level two
 Here are /some/ *text* features. I could [http://cvxmod.net/ link

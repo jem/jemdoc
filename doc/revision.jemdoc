@@ -1,12 +1,15 @@
 # jemdoc: menu{MENU}{revision.html}
 = jemdoc: revision history
 
-== Changes from +v0.3.0+ to +0.X.X+
+== Changes from +v0.3.0+ to +0.3.3+ (2007-11-16)
 . Added support for image blocks.
 . Added support for raw blocks.
 . Fixed handling of ampersands (&).
+. Changed footer message to `Page generated ...' instead of `Last updated ...'.
+. Fixed handling of comments within lists.
+. Several other minor bug fixes.
 
-== Changes from +v0.2.0+ to +0.3.0+
+== Changes from +v0.2.0+ to +0.3.0+ (2007-11-09)
 . Added per-file css specification. Use\n
   +\# jemdoc addcss{file1}{file2}.\.., <other options>+\n as the
   first line. To prevent loading the +\[defaultcss\]+ configuration section,
@@ -19,7 +22,7 @@
   optional.
 . Deprecated the +\$quoted tt\$+ syntax, replacing it with +\%quoted tt\%+.
 
-== Changes from +v0.1.0+ to +v0.2.0+
+== Changes from +v0.1.0+ to +v0.2.0+ (2007-10-19)
 . Embedded default configuration file within jemdoc, to eliminate the need for a
   default configuration file.
 . Rearranged the arguments to +{{jemdoc [OPTIONS] [INFILE]}}+.
