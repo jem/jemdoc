@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 """
-jemdoc: light markup.
+jemdoc: light markup, see http://jemdoc.jaboc.net/.
 
-version 0.3.X, NoXXXber 2007.
+############ UNRELEASED VERSION
+
+##############version 0.3.5, November 2007.
 """
 
 # Copyright (C) 2007 Jacob Mattingley.
@@ -29,7 +31,7 @@ import time
 import StringIO
 
 class controlstruct(object):
-    def __init__(self, infile, outfile, conf):
+    def __init__(self, infile, outfile=None, conf=None):
         self.inf = infile
         self.outf = outfile
         self.conf = conf
@@ -60,7 +62,7 @@ def showhelp():
     overwritten by including them in a configuration file, and running,
     for example,
 
-        jemdoc -c mywebsite.f.conf index.jemdoc 
+        jemdoc -c mywebsite.conf index.jemdoc 
 
     See http://jemdoc.jaboc.net/ for more details.
     """
@@ -172,7 +174,7 @@ def standardconf():
     </div>
     
     [lastupdated]
-    Last updated |, using <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+    Page generated |, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
     """
     b = ''
     for l in a.splitlines(True):
@@ -211,7 +213,7 @@ def parseconf(cns):
         fs.append(open(sname))
 
     for f in fs:
-        while pc(f) != '':
+        while pc(controlstruct(f)) != '':
             l = readnoncomment(f)
             r = re.match(r'\[(.*)\]\n', l)
 
@@ -232,7 +234,7 @@ def parseconf(cns):
 
 def insertmenuitems(f, mname, current, prefix):
     m = open(mname)
-    while pc(m) != '':
+    while pc(controlstruct(m)) != '':
         l = readnoncomment(m)
         l = l.strip()
         if l == '':
@@ -244,7 +246,7 @@ def insertmenuitems(f, mname, current, prefix):
             link = r.group(2)
             # Don't use prefix if we have an absolute link.
             if '://' not in r.group(2):
-                link = prefix + link
+                link = prefix + allreplace(link)
 
             if r.group(2) == current: 
                 hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1)))
@@ -268,18 +270,20 @@ def hb(f, tag, content1, content2=None):
         r = re.sub(r'\|2', content2, r)
         out(f, r)
 
-def pc(f):
+def pc(f, ditchcomments=True):
     """Peeks at next character in the file."""
-    # Should only be used to look at the first character f.outf a new line.
-    c = f.read(1)
+    # Should only be used to look at the first character of a new line.
+    c = f.inf.read(1)
     if c: # only undo forward movement if we're not at the end.
         #if c == '#': # interpret comment lines as blank.
         #    return '\n'
+        if ditchcomments and c == '#':
+            nl(f)
 
         if c in ' \t':
             return pc(f)
 
-        f.seek(-1, 1)
+        f.inf.seek(-1, 1)
 
     return c
 
@@ -323,10 +327,10 @@ def np(f, withcount=False):
     else:
         s = nl(f)
 
-    while pc(f.inf) not in ('\n', '-', '.', ':', '', '=', '#', '~', '{'):
+    while pc(f) not in ('\n', '-', '.', ':', '', '=', '~', '{'):
         s += nl(f)
 
-    while pc(f.inf) == '\n':
+    while pc(f) == '\n':
         nl(f) # burn blank line.
 
     # in both cases, ditch the trailing \n.
@@ -436,15 +440,15 @@ def br(b):
     # Deal with literal backspaces.
     b = re.sub(r'\\\\', 'jemLITerl33talBS', b)
 
-    # Deal with {{html embedding}}.
-    b = replacequoted(b)
-
     b = allreplace(b)
 
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replaceimages(b)
     b = replacelinks(b)
+
+    # Deal with {{html embedding}}.
+    b = replacequoted(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -528,7 +532,7 @@ def pyint(f, l):
     l = l.rstrip()
     l = allreplace(l)
 
-    r = re.compile(r'(?<!\\)(#.*)')
+    r = re.compile(r'(#.*)')
     l = r.sub(r'<span class = "comment">\1</span>', l)
 
     if l.startswith('&gt;&gt;&gt;'):
@@ -536,20 +540,78 @@ def pyint(f, l):
     else:
         out(f, l + '\n')
 
-def py(f, l):
-    # jem need to do much better here.
+def putbsbs(l):
+    for i in range(len(l)):
+        l[i] = '\\b' + l[i] + '\\b'
+
+    return l
+
+def gethl(lang):
+    # disable comments by default, by choosing unlikely regex.
+    d = {'statement':[], 'commentstart':'######%%%%%', 'operator':[], 'builtin':[],
+         'error':[]}
+    if lang in ('py', 'python'):
+        d['statement'] = putbsbs(['break', 'continue', 'del', 'except', 'exec',
+                                 'finally', 'pass', 'print', 'raise', 'return',
+                                 'try', 'with', 'global', 'assert', 'lambda',
+                                 'yield', 'def', 'class', 'for', 'while', 'if',
+                                 'elif', 'else', 'import', 'from', 'as'])
+        d['operator'] = putbsbs(['and', 'in', 'is', 'not', 'or'])
+        d['builtin'] = putbsbs(['True', 'False', 'set', 'open', 'frozenset',
+                               'enumerate', 'object', 'hasattr', 'getattr',
+                               'filter', 'eval', 'zip', 'vars', 'unicode',
+                               'type', 'str', 'repr', 'round'])
+        d['error'] = putbsbs(['\w*Error',])
+        d['commentstart'] = '#'
+    elif lang == 'sh':
+        d['statement'] = putbsbs(['cd', 'ls', 'sudo'])
+        d['operator'] = ['&gt;']
+        d['builtin'] = putbsbs(['curl', 'wget', '(?<!\.)tar(?!\.)'])
+        d['commentstart'] = '#'
+
+    return d
+
+def language(f, l, hl):
+    # also handle strings and comments.
     l = l.rstrip()
-    if l.startswith('>>>'):
-        hb(f, '<span class="pycommand">|</span>\n', allreplace(l))
-    elif l.startswith('#'):
+    if l.startswith(hl['commentstart']):
         hb(f, '<span class="comment">|</span>\n', allreplace(l))
     else:
-        out(f, allreplace(l) + '\n')
+        l = allreplace(l)
+        # handle strings.
+        r = re.compile(r'(".*?")')
+        l = r.sub(r'<span CLASS="string">\1</span>', l)
+        r = re.compile(r"('.*?')")
+        l = r.sub(r'<span CLASS="string">\1</span>', l)
+
+        # handle comments.
+        r = re.compile(hl['commentstart'])
+        l = r.sub(r'<span CLASS="comment">\1</span>', l)
+
+        if hl['statement']:
+            r = re.compile('(' + '|'.join(hl['statement']) + ')')
+            l = r.sub(r'<span CLASS="statement">\1</span>', l)
+
+        if hl['operator']:
+            r = re.compile('(' + '|'.join(hl['operator']) + ')')
+            l = r.sub(r'<span CLASS="operator">\1</span>', l)
+
+        if hl['builtin']:
+            r = re.compile('(' + '|'.join(hl['builtin']) + ')')
+            l = r.sub(r'<span CLASS="builtin">\1</span>', l)
+
+        if hl['error']:
+            r = re.compile('(' + '|'.join(hl['error']) + ')')
+            l = r.sub(r'<span CLASS="error">\1</span>', l)
+
+        l = re.sub('CLASS', 'class', l)
+
+        out(f, l + '\n')
 
 def dashlist(f):
     level = 0
 
-    while pc(f.inf) == '-':
+    while pc(f) == '-':
         (s, newlevel) = np(f, True)
 
         # first adjust list number as appropriate.
@@ -573,7 +635,7 @@ def dashlist(f):
 def dotlist(f):
     level = 0
 
-    while pc(f.inf) == '.':
+    while pc(f) == '.':
         (s, newlevel) = np(f, True)
 
         # first adjust list number as appropriate.
@@ -596,7 +658,7 @@ def dotlist(f):
 
 def colonlist(f):
     out(f.outf, '<dl>\n')
-    while pc(f.inf) == ':':
+    while pc(f) == ':':
         s = np(f)
         r = re.compile(r'\s*{(.*?)(?<!\\)}(.*)', re.M + re.S)
         g = re.match(r, s)
@@ -614,15 +676,14 @@ def colonlist(f):
     out(f.outf, '</dl>\n')
 
 def codeblock(f, g):
-    out(f.outf, f.conf['codeblock'])
-    if len(g[0]):
-        hb(f.outf, f.conf['blocktitle'], g[0])
-    out(f.outf, f.conf['codeblockcontent'])
-
-    if g[1] not in ('', 'pyint', 'py'):
-        raise SyntaxError( \
-          "couldn't handle the jandal: unrecognised syntax "
-          "highlighting on line %d" % linenum)
+    if g[1] == 'raw':
+        raw = True
+    else:
+        raw = False
+        out(f.outf, f.conf['codeblock'])
+        if g[0]:
+            hb(f.outf, f.conf['blocktitle'], g[0])
+        out(f.outf, f.conf['codeblockcontent'])
 
     # Now we are handling code.
     # Handle \~ and ~ differently.
@@ -637,14 +698,17 @@ def codeblock(f, g):
         elif l.startswith('\\{'):
             l = l[1:]
 
+        # jem revise pyint out of the picture.
         if g[1] == 'pyint':
             pyint(f.outf, l)
-        elif g[1] == 'py':
-            py(f.outf, l)
         else:
-            out(f.outf, allreplace(l))
+            if raw:
+                out(f.outf, l)
+            else:
+                language(f.outf, l, gethl(g[1]))
 
-    out(f.outf, f.conf['codeblockend'])
+    if not raw:
+        out(f.outf, f.conf['codeblockend'])
 
 def procfile(f):
     linenum = 0
@@ -653,7 +717,7 @@ def procfile(f):
     footer = True
     nodefaultcss = False
     css = []
-    if pc(f.inf) == '#':
+    if pc(f, False) == '#':
         l = f.inf.readline()
         linenum += 1
         if l.startswith('# jemdoc: '):
@@ -699,7 +763,7 @@ def procfile(f):
         hb(f.outf, f.conf['css'], x)
 
     # Look for a title.
-    if pc(f.inf) == '=': # don't check exact number f.outf '=' here jem.
+    if pc(f) == '=': # don't check exact number f.outf '=' here jem.
         t = br(nl(f))[:-1]
         hb(f.outf, f.conf['windowtitle'], t)
         out(f.outf, f.conf['bodystart'])
@@ -719,7 +783,7 @@ def procfile(f):
         hb(f.outf, f.conf['doctitle'], t)
 
         # Look for a subtitle.
-        if pc(f.inf) != '\n':
+        if pc(f) != '\n':
             hb(f.outf, f.conf['subtitle'], br(np(f)))
 
         hb(f.outf, f.conf['doctitleend'], t)
@@ -727,7 +791,7 @@ def procfile(f):
     infoblock = False
     imgblock = False
     while 1: # wait for EOF.
-        p = pc(f.inf)
+        p = pc(f)
 
         if p == '':
             break
@@ -770,12 +834,16 @@ def procfile(f):
                 nl(f)
                 continue
             else:
-                if pc(f.inf) == '{':
+                if pc(f) == '{':
                     l = allreplace(nl(f))
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     g = re.findall(r, l)
                 else:
                     g = []
+
+                # process jemdoc markup in titles.
+                if len(g) >= 1:
+                    g[0] = br(g[0])
 
                 if len(g) in (0, 1): # info block.
                     out(f.outf, f.conf['infoblock'])

@@ -5,9 +5,10 @@ jemdoc
     contact             [contact.html]
 
 user's guide
-    cheat sheet         [cheatsheet.html]
     using               [using.html]
     example page        [example.html]
+    cheat sheet         [cheatsheet.html]
+	extra syntax        [extra.html]
 
 goodies
     add a menu          [menu.html]

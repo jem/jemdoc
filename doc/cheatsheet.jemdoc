@@ -81,10 +81,13 @@ for lists of definitions. Here is some code and the resulting list:
 
 == Other stuff
 - +\{\{html text\}\}+ will insert +html text+ directly into the output document
-  without performing any substitutions.
+  without performing any substitutions. (This is for inline escaping; use
+  [extra.html raw blocks] for larger amounts of html.)
 - +{\\{text}\\}+ /will/ perform replacements and insert {\{text}\}.
 - +\%quoted tt\%+ is an alias for +\+\{\{quoted tt\}\}\++.
 - make the first line of your file +\# jemdoc: menu{MENU}{index.html}+ to add a
   menu
 - make the first line of your file +\# jemdoc: nodate,menu{MENU}{index.html}\}+ to
   add a menu and omit the `Last updated...' line along the bottom of the page.
+
+This page is not exhaustive.
