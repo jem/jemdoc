@@ -1,10 +1,25 @@
 # jemdoc: menu{MENU}{revision.html}
 = jemdoc: revision history
 
-== Changes from +v0.3.0+ to +0.3.4+ (2007-11-17)
+== Probable upcoming features
+- Manual paragraph breaks +\\p+ for lists.
+- Support for LaTeX equations.
+
+== Known bugs
+- Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
+  fail.
+- Ampersands in links will cause problems---for the time being, they should be
+  manually replaced with +\&amp;amp;+.
+- Percentage symbols in links will cause problems---for the time being, use
+  quoted +<a href=\"linktargetwithpercents">link</a>+ blocks.
+- A line started by just a single %~% will be interpreted as a block delimiter
+  (a very minor bug).
+
+== Revision details
+=== Changes from +v0.3.3+ to +0.3.4+ (2007-11-17)
 . Corrected a (Windows) platform specific time-stamp issue.
 
-== Changes from +v0.3.0+ to +0.3.3+ (2007-11-16)
+=== Changes from +v0.3.0+ to +0.3.3+ (2007-11-16)
 . Added support for image blocks.
 . Added support for raw blocks.
 . Fixed handling of ampersands (&).
@@ -12,7 +27,7 @@
 . Fixed handling of comments within lists.
 . Several other minor bug fixes.
 
-== Changes from +v0.2.0+ to +0.3.0+ (2007-11-09)
+=== Changes from +v0.2.0+ to +0.3.0+ (2007-11-09)
 . Added per-file css specification. Use\n
   +\# jemdoc addcss{file1}{file2}.\.., <other options>+\n as the
   first line. To prevent loading the +\[defaultcss\]+ configuration section,
@@ -25,24 +40,10 @@
   optional.
 . Deprecated the +\$quoted tt\$+ syntax, replacing it with +\%quoted tt\%+.
 
-== Changes from +v0.1.0+ to +v0.2.0+ (2007-10-19)
+=== Changes from +v0.1.0+ to +v0.2.0+ (2007-10-19)
 . Embedded default configuration file within jemdoc, to eliminate the need for a
   default configuration file.
 . Rearranged the arguments to +{{jemdoc [OPTIONS] [INFILE]}}+.
 . Added better formatting to document titles.
 . Added support for definintion lists via +{{: {item} definition}}+.
 . Added +\$quoted tt\$+ as an alias for +\+\{\{quoted tt\}\}\++.
-
-== Known bugs
-- Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
-  fail.
-- Ampersands in links will cause problems---for the time being, they should be
-  manually replaced with +\&amp;amp;+.
-- Percentage symbols in links will cause problems---for the time being, use
-  quoted +<a href=\"linktargetwithpercents">link</a>+ blocks.
-- A line started by just a single %~% will be interpreted as a block delimiter
-  (a very minor bug).
-
-== Probable features
-- Manual paragraph breaks +\\p+ for lists.
-- Support for LaTeX equations.
