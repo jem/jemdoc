@@ -162,6 +162,12 @@ def standardconf():
     [codeblockend]
     </pre></div></div>
     
+    [codeblockcontenttt]
+    <div class="blockcontent"><tt class="tthl">
+    
+    [codeblockendtt]
+    </tt></div></div>
+    
     [infoblockend]
     </div></div>
     
@@ -549,7 +555,7 @@ def putbsbs(l):
 def gethl(lang):
     # disable comments by default, by choosing unlikely regex.
     d = {'statement':[], 'commentstart':'######%%%%%', 'operator':[], 'builtin':[],
-         'error':[]}
+         'error':[], 'strings':False}
     if lang in ('py', 'python'):
         d['statement'] = putbsbs(['break', 'continue', 'del', 'except', 'exec',
                                  'finally', 'pass', 'print', 'raise', 'return',
@@ -563,11 +569,13 @@ def gethl(lang):
                                'type', 'str', 'repr', 'round'])
         d['error'] = putbsbs(['\w*Error',])
         d['commentstart'] = '#'
+        d['strings'] = True
     elif lang == 'sh':
         d['statement'] = putbsbs(['cd', 'ls', 'sudo'])
         d['operator'] = ['&gt;']
         d['builtin'] = putbsbs(['curl', 'wget', '(?<!\.)tar(?!\.)'])
         d['commentstart'] = '#'
+        d['strings'] = True
 
     return d
 
@@ -579,10 +587,11 @@ def language(f, l, hl):
     else:
         l = allreplace(l)
         # handle strings.
-        r = re.compile(r'(".*?")')
-        l = r.sub(r'<span CLASS="string">\1</span>', l)
-        r = re.compile(r"('.*?')")
-        l = r.sub(r'<span CLASS="string">\1</span>', l)
+        if hl['strings']:
+            r = re.compile(r'(".*?")')
+            l = r.sub(r'<span CLASS="string">\1</span>', l)
+            r = re.compile(r"('.*?')")
+            l = r.sub(r'<span CLASS="string">\1</span>', l)
 
         # handle comments.
         r = re.compile(hl['commentstart'])
@@ -683,7 +692,10 @@ def codeblock(f, g):
         out(f.outf, f.conf['codeblock'])
         if g[0]:
             hb(f.outf, f.conf['blocktitle'], g[0])
-        out(f.outf, f.conf['codeblockcontent'])
+        if g[1] == 'jemdoctt':
+            out(f.outf, f.conf['codeblockcontenttt'])
+        else:
+            out(f.outf, f.conf['codeblockcontent'])
 
     # Now we are handling code.
     # Handle \~ and ~ differently.
@@ -704,11 +716,32 @@ def codeblock(f, g):
         else:
             if raw:
                 out(f.outf, l)
+            elif g[1] == 'jemdoctt':
+                # doing this more nicely needs python 2.5.
+                for x in ('#', '~', '>>>', '\~', '{'):
+                    if str(l).lstrip().startswith(x):
+                        out(f.outf, '</tt><pre class="tthl">')
+                        out(f.outf, l + '</pre><tt class="tthl">')
+                        break
+                else:
+                    for x in (':', '.', '-'):
+                        if str(l).lstrip().startswith(x):
+                            out(f.outf, '<br />' + prependnbsps(l))
+                            break
+                    else:
+                        out(f.outf, l)
             else:
                 language(f.outf, l, gethl(g[1]))
 
     if not raw:
-        out(f.outf, f.conf['codeblockend'])
+        if g[1] == 'jemdoctt':
+            out(f.outf, f.conf['codeblockendtt'])
+        else:
+            out(f.outf, f.conf['codeblockend'])
+
+def prependnbsps(l):
+    g = re.search('(^ *)(.*)', l).groups()
+    return g[0].replace(' ', '&nbsp;') + g[1]
 
 def procfile(f):
     linenum = 0
