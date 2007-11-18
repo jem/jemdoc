@@ -1,77 +1,266 @@
+# jemdoc: menu{MENU}{example.html}, addcss{example.css}
+= jemdoc: example page
+
+~~~
+This page shows example jemdoc source and output side by side.
+~~~
+
+## jemdoc: start now.
+~~~
+{}{raw}
+<table class="dual-mode" cellpadding="0" cellspacing="0">
+<tr><td class="leftcell">
+~~~
 # jemdoc: menu{MENU}{example.html}
-= jemdoc: a self-referential example page
-[http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
-
-== Heading level two
-Here are /some/ *text* features. I could [http://cvxmod.net/ link
-somewhere] or insert a raw link to another page like [download.html].
-+Monospace+, too. I could write special characters like \#, \$ and \+ by just
-using a backslash (\\) in front of those characters.
-Or automatically detect an [jacobm@stanford.edu email address].
+= jemdoc: example page
+[http://stanford.edu/~jacobm/ Jacob Mattingley]
+([jacobm@stanford.edu])
 
 ~~~
-Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
-[download.html downloading jemdoc], of course).
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
 ~~~
-
 ~~~
-{Code used so far}{}
+{}{jemdoctt}
 # jemdoc: menu{MENU}{example.html}
-= jemdoc: a self-referential example page
-[http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
+= jemdoc: example page
+[http://stanford.edu/~jacobm/ Jacob Mattingley]
+([jacobm@stanford.edu])
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+If the first line of the file starts with +\# jemdoc+, special functions like
+[menu.html menus] will be used.
 
-# comments won't appear in the output. A first line that starts with # jemdoc
-# can, however, alter the output.
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+If the first line of the file starts with +\# jemdoc+, special functions like
+[menu.html menus] will be used.
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+== Example
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+== Example
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+Here are /some/ *text* features. I could [http://cvxmod.net/ link somewhere] or
+insert a raw link to another page like [download.html].  I could use
++monospace+, too.
 
-== Heading level two
-Here are /some/ *text* features. I could [http://cvxmod.net/ link
-somewhere] or insert a raw link to another page like [download.html].
-+Monospace+, too. I could write special characters like \#, \$ and \+ by just
-using a backslash (\\) in front of those characters.
-Or automatically detect an [jacobm@stanford.edu email address].
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+Here are /some/ *text* features. I could [http://cvxmod.net/ link somewhere] or
+insert a raw link to another page like [download.html].  I could use
++monospace+, too.
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+I could write special characters like
+\#, \$ and \+ by just using a backslash
+(\\) in front of those characters.  Or
+automatically detect an
+[jacobm@stanford.edu email address].
 
-\~~~
-Save the file as +index.jemdoc+, say, and simply call +jemdoc index+ (after
-[download.html downloading], of course).
-\~~~
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+I could write special characters like
+\#, \$ and \+ by just using a backslash
+(\\) in front of those characters.  Or
+automatically detect an
+[jacobm@stanford.edu email address].
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+~~~
+Save the file as +index.jemdoc+, say, and simply
+call +jemdoc index+ (after [download.html
+downloading jemdoc], of course).
 ~~~
 
-== Next bit
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+\~~~
+Save the file as +index.jemdoc+, say, and simply
+call +jemdoc index+ (after [download.html
+downloading jemdoc], of course).
+\~~~
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+== Next bit, next heading level two
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+== Next bit, next heading level two
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 === Getting into level three now
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+=== Getting into level three now
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 Why not use a list
 - to explain the way you do lists?
 - to demonstrate how a line\n
   break might work?
 
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+Why not use a list
+- to explain the way you do lists?
+- to demonstrate how a line\n
+  break might work?
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 Or perhaps a
 . Multilevel
   .. Numbered list
   .. Is more
 . Useful?
 
-: {Definition} lists, especially when there are many definitions
-: {Can be useful} for explaining things
-
 ~~~
-{The next bit of code}{}
-== Next bit
-=== Getting into level three now
-Why not use a list
-- to explain the way you do lists?
-- to demonstrate how a line\n
-  break might work?
-
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
 Or perhaps a
 . Multilevel
   .. Numbered list
   .. Is more
 . Useful?
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+: {Definition} lists, especially when there are
+  many definitions
+: {Can be useful} for explaining things
 
-: {Definition} lists, especially when there are many definitions
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+: {Definition} lists, especially when there are
+  many definitions
 : {Can be useful} for explaining things
 ~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+== Finally, a few more blocks
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+== Finally, a few more blocks
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+This `section' features "smart quotes".
 
-== Finally, a few `blocks' with "smart quotes"
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+This `section' features "smart quotes".
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 ~~~
 {Simple block}
 This is a simple text block, with a title. Notice how the previous line has only
@@ -79,37 +268,80 @@ one set of braces (\{\}).
 ~~~
 
 ~~~
-{Interactive Python listing}{pyint}
->>> print 'This is a slightly smarter mode for listing interactive Python code.'
-'This is a slightly smarter mode for listing code.'
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
 ~~~
-
 ~~~
-{}{}
-Plain code block.
-~~~
-
-You might need 1--2 different-sized dashes---they can be useful. Now we're done!
-
-~~~
-{Last bit of code}{}
-== Finally, a few `blocks' with "smart quotes"
+{}{jemdoctt}
 \~~~
 {Simple block}
 This is a simple text block, with a title. Notice how the previous line has only
 one set of braces (\{\}).
 \~~~
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+~~~
+{Interactive Python listing}{pyint}
+>>> print 'Interactive Python code.'
+'Interactive Python code.'
+~~~
 
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
 \~~~
 {Interactive Python listing}{pyint}
->>> print 'This is a slightly smarter mode for listing interactive Python code.'
-'This is a slightly smarter mode for listing code.'
+>>> print 'Interactive Python code.'
+'Interactive Python code.'
 \~~~
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
+~~~
+{}{}
+Plain code block with no title.
+~~~
 
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
 \~~~
 {}{}
-Plain code block.
+Plain code block with no title.
 \~~~
-
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+~~~
+~~~
+{}{raw}
+</td></tr></table>
 ~~~

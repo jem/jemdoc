@@ -3,7 +3,7 @@
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
 jemdoc is a light text-based markup language designed for creating simple
-websites. It takes a text file written with [cheatsheet.html jemdoc markup], an
+websites. It takes a text file written with [example.html jemdoc markup], an
 optional configuration file and an optional menu file, and makes static websites
 that look something like this one, [http://cvxmod.net/ that one] or
 [http://stanford.edu/class/ee263/ another one].
