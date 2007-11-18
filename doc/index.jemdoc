@@ -8,13 +8,6 @@ optional configuration file and an optional menu file, and makes static websites
 that look something like this one, [http://cvxmod.net/ that one] or
 [http://stanford.edu/class/ee263/ another one].
 
-This is a list
-- one item
-- two item
-# this is a comment.
-- three item
-- four item
-
 jemdoc was inspired by [http://www.methods.co.nz/asciidoc/ AsciiDoc], which is a
 text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
@@ -23,7 +16,7 @@ deliberately feature poor) and has more consistent syntax.
 === Goals
 - Simple, consistent syntax.
 - Portability. The (single) jemdoc [http://www.python.org/ Python] file \+
-  single css file \+ your input file &rarr; html.
+  single css file \+ your input file {{&rarr;}} html.
 - Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are
   independent of jemdoc.
 - Production of clean,

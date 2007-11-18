@@ -1,6 +1,9 @@
 # jemdoc: menu{MENU}{revision.html}
 = jemdoc: revision history
 
+== Changes from +v0.3.0+ to +0.3.4+ (2007-11-17)
+. Corrected a (Windows) platform specific time-stamp issue.
+
 == Changes from +v0.3.0+ to +0.3.3+ (2007-11-16)
 . Added support for image blocks.
 . Added support for raw blocks.
@@ -33,7 +36,12 @@
 == Known bugs
 - Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
   fail.
-- A line started by %~% will be interpreted as a block delimiter.
+- Ampersands in links will cause problems---for the time being, they should be
+  manually replaced with +\&amp;amp;+.
+- Percentage symbols in links will cause problems---for the time being, use
+  quoted +<a href=\"linktargetwithpercents">link</a>+ blocks.
+- A line started by just a single %~% will be interpreted as a block delimiter
+  (a very minor bug).
 
 == Probable features
 - Manual paragraph breaks +\\p+ for lists.
