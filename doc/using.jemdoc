@@ -1,8 +1,9 @@
 # jemdoc: menu{MENU}{using.html}
 = jemdoc: using
 
-Type in your file, put jemdoc in your path somewhere, make sure
-[http://www.python.org/ Python] is installed, and 
+Make sure
+[http://www.python.org/ Python] is installed, put jemdoc in your path somewhere,
+type in your file, and run
 
 ~~~
 {}{}

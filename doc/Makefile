@@ -25,7 +25,7 @@ realupdate : $(PHDOCS)
 	@rsync -a --delete --copy-unsafe-links $(PHDOCS) dist /var/www/jemdoc/
 	@echo ' done.'
 	@echo 'Copying to anteater...'
-	rsync -av --delete --copy-unsafe-links /var/www/jemdoc/ anteater:/var/www/jemdoc/
+	rsync -a --delete --copy-unsafe-links /var/www/jemdoc/ anteater:/var/www/jemdoc/
 	@echo ' done.'
 
 .PHONY : clean

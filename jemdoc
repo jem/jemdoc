@@ -440,15 +440,15 @@ def br(b):
     # Deal with literal backspaces.
     b = re.sub(r'\\\\', 'jemLITerl33talBS', b)
 
+    # Deal with {{html embedding}}.
+    b = replacequoted(b)
+
     b = allreplace(b)
 
     # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replaceimages(b)
     b = replacelinks(b)
-
-    # Deal with {{html embedding}}.
-    b = replacequoted(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -892,7 +892,7 @@ def procfile(f):
                 hb(f.outf, '<p>|</p>\n', s)
 
     if footer:
-        s = time.strftime('%F %R:%S %Z', time.localtime(time.time()))
+        s = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(time.time()))
         out(f.outf, f.conf['footerstart'])
         hb(f.outf, f.conf['lastupdated'], s)
         out(f.outf, f.conf['footerend'])
