@@ -13,7 +13,7 @@ text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
-=== Goals
+== Goals
 - Simple, consistent syntax.
 - Portability. The (single) jemdoc [http://www.python.org/ Python] file \+
   single css file \+ your input file {{&rarr;}} html.

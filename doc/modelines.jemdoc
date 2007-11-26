@@ -1,0 +1,40 @@
+# jemdoc: menu{MENU}{modelines.html}, showsource
+= jemdoc: modelines
+
+jemdoc includes a mechanism for specifying options inside a source file. It is
+called a /modeline/, after the same concept in [http://www.vim.org vim].  To use
+a modeline, start your jemdoc source file (on the first line) with the exact
+string +\# jemdoc:+. Follow this string with one or more /modeline options/,
+separated with a comma (and any amount of white space).
+
+Multiple modelines can be included if they are all at the beginning of the file,
+and start with the same string. The modeline can be omitted altogether.
+
+== Modeline options
+- +menu{MENUFILENAME}{CURRENTFILENAME}+\n
+  Place a [menu.html menu] at the left of the page.
+- +nodate+\n
+  Withhold the `Page generated' footer.
+- +showsource+\n
+  Include a link to the jemdoc source.
+- +nodefaultcss+\n
+  Clear the list of CSS stylesheets included by the page.
+- +addcss{CSSSHEET}+\n
+  Explicitly include a custom CSS stylesheet.
+
+== Examples
+~~~
+{This page}{}
+# jemdoc: menu{MENU}{modelines.html}, showsource
+~~~
+
+~~~
+{Use a different stylesheet altogether}{}
+# jemdoc: nodefaultcss, addcss{custom.css}
+~~~
+
+~~~
+{Combine various options}{}
+# jemdoc: nodefaultcss, addcss{custom.css}{another.css}
+# jemdoc: showsource, addcss{yetanother.css}
+~~~

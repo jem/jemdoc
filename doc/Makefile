@@ -1,4 +1,4 @@
-DOCS=index cheatsheet contact download revision using menu stuff extra example
+DOCS=index cheatsheet contact download revision using menu stuff extra example modelines languages
 
 HDOCS=$(addsuffix .html, $(DOCS))
 PHDOCS=$(addprefix html/, $(HDOCS))
