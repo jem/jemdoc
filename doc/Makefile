@@ -6,7 +6,7 @@ PHDOCS=$(addprefix html/, $(HDOCS))
 .PHONY : update
 update : $(PHDOCS)
 	@echo -n 'Copying to (hidden) server...'
-	@rsync -a --delete --copy-unsafe-links html/* dist /var/www/jemdoc/
+	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist /var/www/jemdoc/
 	@echo ' done.'
 
 .PHONY : extra
@@ -26,10 +26,10 @@ example.jemdoc : exampleIN.jemdoc procexample.py
 .PHONY : realupdate
 realupdate : $(PHDOCS)
 	@echo -n 'Copying to (hidden) server...'
-	@rsync -a --delete --copy-unsafe-links html/* dist /var/www/jemdoc/
+	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist /var/www/jemdoc/
 	@echo ' done.'
 	@echo 'Copying to anteater...'
-	rsync -a --delete --copy-unsafe-links /var/www/jemdoc/ anteater:/var/www/jemdoc/
+	rsync -a --delete --copy-unsafe-links *.jemdoc /var/www/jemdoc/ anteater:/var/www/jemdoc/
 	@echo ' done.'
 
 .PHONY : clean

@@ -4,6 +4,13 @@
 == Probable upcoming features
 - Manual paragraph breaks +\\p+ for lists.
 - Support for LaTeX equations.
+- Clearer documentation for the +\# jemdoc+ comment line options.
+- Support for different character sets (if relatively simple to implement).
+- Support for a "show source" link.
+- Better support for specifying the title to appear in the browser titlebar.
+
+== Possible upcoming features
+- Better wrapping behaviour for the menu sidebar.
 
 == Known bugs
 - Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will

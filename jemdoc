@@ -31,7 +31,8 @@ import time
 import StringIO
 
 class controlstruct(object):
-    def __init__(self, infile, outfile=None, conf=None):
+    def __init__(self, infile, outfile=None, conf=None, inname=None):
+        self.inname = inname
         self.inf = infile
         self.outf = outfile
         self.conf = conf
@@ -181,6 +182,10 @@ def standardconf():
     
     [lastupdated]
     Page generated |, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+
+    [sourcelink]
+    (<a href="|">source</a>)
+
     """
     b = ''
     for l in a.splitlines(True):
@@ -747,7 +752,8 @@ def procfile(f):
     linenum = 0
 
     menu = None
-    footer = True
+    showsourcelink = False
+    showlastupdated = True
     nodefaultcss = False
     css = []
     if pc(f, False) == '#':
@@ -772,7 +778,10 @@ def procfile(f):
                         menu = (f, g[0], g[1], g[2])
 
                 elif b.startswith('nodate'):
-                    footer = False
+                    showlastupdated = False
+
+                elif b.startswith('showsource'):
+                    showsourcelink = True
 
                 elif b.startswith('nodefaultcss'):
                     nodefaultcss = True
@@ -798,7 +807,8 @@ def procfile(f):
     # Look for a title.
     if pc(f) == '=': # don't check exact number f.outf '=' here jem.
         t = br(nl(f))[:-1]
-        hb(f.outf, f.conf['windowtitle'], t)
+        u = re.sub(' *(<br />)|(&nbsp;) *', ' ', t)
+        hb(f.outf, f.conf['windowtitle'], u)
         out(f.outf, f.conf['bodystart'])
 
     else:
@@ -924,10 +934,13 @@ def procfile(f):
             if s:
                 hb(f.outf, '<p>|</p>\n', s)
 
-    if footer:
-        s = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(time.time()))
+    if showlastupdated or showsourcelink:
         out(f.outf, f.conf['footerstart'])
-        hb(f.outf, f.conf['lastupdated'], s)
+        if showlastupdated:
+            s = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(time.time()))
+            hb(f.outf, f.conf['lastupdated'], s)
+        if showsourcelink:
+            hb(f.outf, f.conf['sourcelink'], f.inname)
         out(f.outf, f.conf['footerend'])
 
     if menu:
@@ -995,7 +1008,7 @@ def main():
         infile = open(inname)
         outfile = open(thisout, 'w')
 
-        f = controlstruct(infile, outfile, conf)
+        f = controlstruct(infile, outfile, conf, inname)
         procfile(f)
 
 #
