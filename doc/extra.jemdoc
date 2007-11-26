@@ -23,7 +23,7 @@ by Wikipedia].
 == Raw blocks
 When placing large amounts of raw html, you should use a raw block instead of
 +\{\{inline html escaping\}\}+. As well as cleaner syntax, raw blocks will avoid
-having %<p>% tags in the wrong places.
+having +<p>+ tags in the wrong places.
 ~~~
 {Raw block syntax}{}
 \~~~
@@ -31,3 +31,17 @@ having %<p>% tags in the wrong places.
 Any text here will be copied straight to the output file without processing.
 \~~~
 ~~~
+
+== Other character sets
+Here's a quick example of how to include text in a language with a different
+character set.
+
+To include Korean ({{<span lang="ko" xml:lang="ko">}}한국말{{</span>}}),
+use something like this:
+~~~
+{}{}
+{{<span lang="ko" xml:lang="ko">}}한국말{{</span>}}
+~~~
+
+([jacobm@stanford.edu Let me know] if you need better support for your
+language.)

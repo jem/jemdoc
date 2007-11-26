@@ -2,8 +2,8 @@
 = jemdoc: download
 
 Here is {{<a href="dist/jemdoc.py"
-onclick="javascript:urchinTracker('/downloads/jemdoc.py-0.3.4');">jemdoc.py</a>}}
-(+v0.3.4+, November 2007). You can also download this [dist/jemdoc.css example
+onclick="javascript:urchinTracker('/downloads/jemdoc.py');">jemdoc.py</a>}}
+(+v0.3.5+, 2007-11-26). You can also download this [dist/jemdoc.css example
 css file] to get you started. You can easily modify the css to adjust colours,
 fonts and general layout elements to your taste. 
 
