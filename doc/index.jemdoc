@@ -1,4 +1,4 @@
-# jemdoc: menu{MENU}{index.html}
+# jemdoc: menu{MENU}{index.html}, showsource
 = jemdoc: light markup
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
@@ -20,7 +20,7 @@ deliberately feature poor) and has more consistent syntax.
 - Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are
   independent of jemdoc.
 - Production of clean,
-  [http://validator.w3.org/check?uri=http%3A%2F%2Fjemdoc.jaboc.net%2Findex.html
+  [http://validator.w3.org/check/referer
   standards-compliant] [http://www.w3.org/TR/xhtml11/ XHTML 1.1].
 - Minimal bells and whistles, but simple fallback to raw html if required.
 

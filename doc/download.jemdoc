@@ -1,10 +1,11 @@
 # jemdoc: menu{MENU}{download.html}
 = jemdoc: download
 
-Here is [dist/jemdoc.py jemdoc.py] (+v0.3.4+, November 2007). You can also
-download this [dist/jemdoc.css example css file] to get you started. You can
-easily modify the css to adjust colours, fonts and general layout elements to
-your taste. 
+Here is {{<a href="dist/jemdoc.py"
+onclick="javascript:urchinTracker('/downloads/jemdoc.py-0.3.4');">jemdoc.py</a>}}
+(+v0.3.4+, November 2007). You can also download this [dist/jemdoc.css example
+css file] to get you started. You can easily modify the css to adjust colours,
+fonts and general layout elements to your taste. 
 
 You may like to %cp jemdoc.py /usr/bin/jemdoc% so that you can just type
 +jemdoc+; alternatively, you could also add a line to your %~/.bashrc% or
