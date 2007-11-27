@@ -12,7 +12,7 @@ update : $(PHDOCS)
 	# insert code for copying to server here.
 	@echo ' done.'
 
-html/%.html : %.jemdoc MENU jemdoc.conf
+html/%.html : %.jemdoc MENU
 	jemdoc $< -o $@
 
 .PHONY : clean

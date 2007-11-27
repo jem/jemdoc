@@ -119,9 +119,9 @@ def standardconf():
     
     [menucategory]
     <div class="menu-category">|</div>
-    
+
     [menuitem]
-    <div><a href="|1">|2</a></div>
+    <div class="menu-item"><a href="|1">|2</a></div>
     
     [currentmenuitem]
     <div><a href="|1" class="current">|2</a></div>
@@ -253,16 +253,19 @@ def insertmenuitems(f, mname, current, prefix):
 
         r = re.match(r'\s*(.*?)\s*\[(.*)\]', l)
 
-        if r: # then we have a link.
+        if r: # then we have a menu item.
             link = r.group(2)
             # Don't use prefix if we have an absolute link.
             if '://' not in r.group(2):
                 link = prefix + allreplace(link)
 
+            # replace spaces with nbsps.
+            menuitem = re.sub(r'(?<!\\n) +', '~', r.group(1))
+
             if r.group(2) == current: 
-                hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1)))
+                hb(f.outf, f.conf['currentmenuitem'], link, br(menuitem))
             else:
-                hb(f.outf, f.conf['menuitem'], link, br(r.group(1)))
+                hb(f.outf, f.conf['menuitem'], link, br(menuitem))
 
         else: # menu category.
             hb(f.outf, f.conf['menucategory'], br(l))

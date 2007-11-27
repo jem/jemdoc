@@ -1,8 +1,10 @@
 # jemdoc: menu{MENU}{stuff.html}
-= jemdoc: vim, make
+= jemdoc -- vim, make
 
 == Vim syntax highlighting
-Here is a preliminary vim syntax file [jemdoc.vim jemdoc.vim]. You should download it to
+Here is a vim syntax file {{<a href="dist/jemdoc.vim"
+onclick="javascript:urchinTracker('/downloads/jemdoc.vim');">jemdoc.vim</a>}}.
+You should download it to
 +\~\/.vim\/syntax\/+. You may also need to add the following lines in your
 +\~\/.vimrc+:
 
@@ -18,7 +20,9 @@ autocmd Filetype jemdoc setlocal comments=:#,fb:-,fb:.,fb:--,fb:..,fb:\:
 ~~~
 
 == Makefile
-Here's a small example of a [Makefile Makefile]. A listing of it follows.
+Here's a small example of a {{<a href="dist/Makefile"
+onclick="javascript:urchinTracker('/downloads/Makefile');">Makefile</a>}}.
+A listing of it follows.
 
 This file would be used as follows:
 - Edit +index.jemdoc+ and +otherpage.jemdoc+ at will.
@@ -45,7 +49,7 @@ update : $(PHDOCS)
 	# insert code for copying to server here.
 	@echo ' done.'
 
-html/%.html : %.jemdoc MENU jemdoc.conf
+html/%.html : %.jemdoc MENU
 	jemdoc -o $@ $<
 
 .PHONY : clean

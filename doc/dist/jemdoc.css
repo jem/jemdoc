@@ -57,10 +57,11 @@ div.menu-category {
 	font-weight: bold;
 }
 
-div#toptitle {
-	padding-bottom: 0.2em;
-	margin-bottom: 1.5em;
-	border-bottom: 3px double gray;
+div.menu-item {
+	padding-left: 16px;
+	text-indent: -16px;
+}
+
 }
 
 /* Reduce space if we begin the page with a title. */
@@ -263,6 +264,18 @@ span.pycommand {
 	color: #000080;
 }
 
-span.comment {
-	color: #808080;
+span.statement {
+	color: #008800;
+}
+span.builtin {
+	color: #000088;
+}
+span.operator {
+	color: #880000;
+}
+span.error {
+	color: #aa0000;
+}
+span.comment, span.comment > *, span.string, span.string > * {
+	color: #606060;
 }

@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{example.html}, addcss{example.css}
-= jemdoc: example page
+= jemdoc -- example page
 
 ~~~
 This page shows example jemdoc source and output side by side.
@@ -12,7 +12,7 @@ This page shows example jemdoc source and output side by side.
 <tr><td class="leftcell">
 ~~~
 # jemdoc: menu{MENU}{example.html}
-= jemdoc: example page
+= jemdoc -- example page
 [http://stanford.edu/~jacobm/ Jacob Mattingley]
 ([jacobm@stanford.edu])
 
@@ -24,7 +24,7 @@ This page shows example jemdoc source and output side by side.
 ~~~
 {}{jemdoctt}
 # jemdoc: menu{MENU}{example.html}
-= jemdoc: example page
+= jemdoc -- example page
 [http://stanford.edu/~jacobm/ Jacob Mattingley]
 ([jacobm@stanford.edu])
 ~~~

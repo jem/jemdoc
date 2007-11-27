@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{download.html}
-= jemdoc: download
+= jemdoc -- download
 
 Here is {{<a href="dist/jemdoc.py"
 onclick="javascript:urchinTracker('/downloads/jemdoc.py');">jemdoc.py</a>}}

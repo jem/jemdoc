@@ -1,11 +1,11 @@
 # jemdoc: menu{MENU}{modelines.html}, showsource
-= jemdoc: modelines
+= jemdoc -- modelines
 
 jemdoc includes a mechanism for specifying options inside a source file. It is
 called a /modeline/, after the same concept in [http://www.vim.org vim].  To use
 a modeline, start your jemdoc source file (on the first line) with the exact
 string +\# jemdoc:+. Follow this string with one or more /modeline options/,
-separated with a comma (and any amount of white space).
+separated with commas (and any amount of white space).
 
 Multiple modelines can be included if they are all at the beginning of the file,
 and start with the same string. The modeline can be omitted altogether.

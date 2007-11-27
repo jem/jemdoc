@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{cheatsheet.html}
-= jemdoc: cheatsheet
+= jemdoc -- cheatsheet
 
 == Basic formatting
 - /\/italics\//
