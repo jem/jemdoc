@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{example.html}, addcss{example.css}
-= jemdoc: example page
+= jemdoc -- example page
 
 ~~~
 This page shows example jemdoc source and output side by side.
@@ -7,7 +7,7 @@ This page shows example jemdoc source and output side by side.
 
 ## jemdoc: start now.
 # jemdoc: menu{MENU}{example.html}
-= jemdoc: example page
+= jemdoc -- example page
 [http://stanford.edu/~jacobm/ Jacob Mattingley]
 ([jacobm@stanford.edu])
 

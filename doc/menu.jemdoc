@@ -1,9 +1,9 @@
 # jemdoc: menu{MENU}{menu.html}
-= jemdoc: add a menu
+= jemdoc -- add a menu
 
 jemdoc provides an easy way to add a `menu' like the one you see at the left of
 this page. You should create a file called +MENU+, for example, in the current
-directory. This website's +MENU+ looks like this:
+directory. This website's +MENU+ looks something like this:
 
 ~~~
 {}{}
@@ -22,7 +22,7 @@ goodies
     other stuff         [stuff.html]
 ~~~
 
-To make the menu work, start the first line of /each/ source file with a special
+To use the menu, start the first line of /each/ source file with a special
 comment like this one:
 
 ~~~
@@ -32,3 +32,9 @@ comment like this one:
 
 This will add a menu from the file called +MENU+, and underline and darken the
 menu entry corresponding to +index.html+.
+
+== A note on menu widths
+jemdoc will create menu entries that do not wrap. If you have a particularly
+long title, or menu item, insert manual linebreaks using +\\++n+ in your
+MENU file. Multi-line menu items will (by default) have their second and
+subsequent lines slightly indented.

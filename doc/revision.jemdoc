@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{revision.html}
-= jemdoc: revision history
+= jemdoc -- revision history
 
 == Probable upcoming features
 - Manual paragraph breaks +\\p+ for lists.
@@ -20,6 +20,9 @@
   (a very minor bug).
 
 == Revision details
+=== Changes from +v0.3.5+ to +0.3.6+ (???)
+. Changed the way menus are laid out to prevent wrapping.
+
 === Changes from +v0.3.4+ to +0.3.5+ (2007-11-26)
 . Added a +showsource+ modeline option.
 . Corrected a minor bug with whitespace appearing in the titles.

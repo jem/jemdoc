@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{using.html}
-= jemdoc: using
+= jemdoc -- using
 
 Make sure
 [http://www.python.org/ Python] is installed, put jemdoc in your path somewhere,

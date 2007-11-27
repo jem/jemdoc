@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{contact.html}
-= jemdoc: Contact details
+= jemdoc -- contact details
 
 == Development
 jemdoc is developed by [http://stanford.edu/~jacobm/ Jacob Mattingley].

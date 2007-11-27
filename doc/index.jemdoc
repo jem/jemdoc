@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{index.html}, showsource
-= jemdoc: light markup
+= jemdoc -- light markup
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
 jemdoc is a light text-based markup language designed for creating simple

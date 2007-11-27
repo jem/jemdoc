@@ -15,5 +15,11 @@ goodies
     modelines           [modelines.html]
     vim, make           [stuff.html]
 
+sample\nmultiline\ntitle
+    this is very long\nand annoying  [other.html]
+    another long text\n string which is\n manually split [other.html]
+    ordinary []
+    items []
+
 
 # vim: et
