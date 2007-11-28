@@ -21,7 +21,7 @@ syn sync linebreaks=1
 "
 syn keyword jemdocToDo TODO FIXME XXX ZZZ
 syn match jemdocQuotedCharError /\\./
-syn match jemdocQuotedChar /\\[\\\*{}\/\.\-\+"=~n#%RC`'\$%]/
+syn match jemdocQuotedChar /\\[\\\*{}\/\.\-\+"=~np#%RC`'\$%]/
 syn match jemdocListBullet /^\s*[-.:]\+\s/
 syn match jemdocCommentLine "\\\@<!#.*$" contains=jemdocToDo
 syn region jemdocMonospaced start=/+/ end=/+/ contains=jemdocQuotedChar

@@ -38,7 +38,6 @@ class controlstruct(object):
         self.conf = conf
         self.linenum = 0
 
-# better checking of arguments?
 def showhelp():
     a = """Usage: jemdoc [OPTIONS] [SOURCEFILE] 
     Produces html markup from a jemdoc SOURCEFILE.
@@ -321,7 +320,7 @@ def nl(f, withcount=False, codemode=False):
         r = re.match('(%s+) ' % m, s)
         if not r:
             raise SyntaxError("couldn't handle the jandal (code 12039) on line"
-                              " %d" % linenum)
+                              " %d" % f.linenum)
 
         if not codemode:
             s = s.lstrip('-.=:')
@@ -517,6 +516,11 @@ def br(b):
     r = re.compile(r"(?<!\\)\\n", re.M + re.S)
     b = re.sub(r, r'<br />', b)
 
+    # Deal with paragraph break. Caution! Should only use when we're already in
+    # a paragraph.
+    r = re.compile(r"(?<!\\)\\p", re.M + re.S)
+    b = re.sub(r, r'</p><p>', b)
+
     ## Deal with zero width \_.
     #r = re.compile(r"(?<!\\)\\_", re.M + re.S)
     #b = re.sub(r, '', b)
@@ -636,18 +640,18 @@ def dashlist(f):
             for i in range(newlevel - level):
                 if newlevel > 1:
                     out(f.outf, '\n')
-                out(f.outf, '<ul>\n<li>')
+                out(f.outf, '<ul>\n<li><p>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out(f.outf, '</li>\n</ul>\n</li><li>')
+                out(f.outf, '</p></li>\n</ul>\n</p></li><li><p>')
         else:
-            out(f.outf, '</li>\n<li>')
+            out(f.outf, '</p></li>\n<li><p>')
 
         out(f.outf, br(s))
         level = newlevel
 
     for i in range(level):
-        out(f.outf, '</li>\n</ul>\n')
+        out(f.outf, '</p></li>\n</ul>\n')
 
 def dotlist(f):
     level = 0
@@ -660,18 +664,18 @@ def dotlist(f):
             for i in range(newlevel - level):
                 if newlevel > 1:
                     out(f.outf, '\n')
-                out(f.outf, '<ol>\n<li>')
+                out(f.outf, '<ol>\n<li><p>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out(f.outf, '</li>\n</ol>\n</li><li>')
+                out(f.outf, '</p></li>\n</ol>\n</li><li><p>')
         else:
-            out(f.outf, '</li>\n<li>')
+            out(f.outf, '</p></li>\n<li><p>')
 
         out(f.outf, br(s))
         level = newlevel
 
     for i in range(level):
-        out(f.outf, '</li>\n</ol>\n')
+        out(f.outf, '</p></li>\n</ol>\n')
 
 def colonlist(f):
     out(f.outf, '<dl>\n')
@@ -682,13 +686,13 @@ def colonlist(f):
 
         if not g or len(g.groups()) != 2:
             raise SyntaxError("couldn't handle the jandal (invalid deflist "
-                             "format) on line %d" % linenum)
+                             "format) on line %d" % f.linenum)
         # split into definition / non-definition part.
         defpart = g.group(1)
         rest = g.group(2)
 
         hb(f.outf, '<dt>|</dt>\n', br(defpart))
-        hb(f.outf, '<dd>|</dd>\n', br(rest))
+        hb(f.outf, '<dd><p>|</p></dd>\n', br(rest))
 
     out(f.outf, '</dl>\n')
 
@@ -752,7 +756,7 @@ def prependnbsps(l):
     return g[0].replace(' ', '&nbsp;') + g[1]
 
 def procfile(f):
-    linenum = 0
+    f.linenum = 0
 
     menu = None
     showsourcelink = False
@@ -761,7 +765,7 @@ def procfile(f):
     css = []
     while pc(f, False) == '#':
         l = f.inf.readline()
-        linenum += 1
+        f.linenum += 1
         if l.startswith('# jemdoc:'):
             l = l[len('# jemdoc:'):]
             a = l.split(',')
@@ -773,7 +777,7 @@ def procfile(f):
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     g = re.findall(r, b)
                     if len(g) > 3 or len(g) < 2:
-                        raise SyntaxError('sidemenu error on line %d' % linenum)
+                        raise SyntaxError('sidemenu error on line %d' % f.linenum)
 
                     if len(g) == 2:
                         menu = (f, g[0], g[1], '')
@@ -930,7 +934,7 @@ def procfile(f):
                     imgblock = True
 
                 else:
-                    raise JandalError("couldn't handle block", linenum)
+                    raise JandalError("couldn't handle block", f.linenum)
 
         else:
             s = br(np(f))

@@ -1,7 +1,7 @@
 jemdoc
     home                [index.html]
     download            [download.html]
-    revision history    [revision.html]
+    revision details    [revision.html]
     contact             [contact.html]
 
 user's guide
@@ -14,12 +14,6 @@ goodies
     add a menu          [menu.html]
     modelines           [modelines.html]
     vim, make           [stuff.html]
-
-sample\nmultiline\ntitle
-    this is very long\nand annoying  [other.html]
-    another long text\n string which is\n manually split [other.html]
-    ordinary []
-    items []
 
 
 # vim: et

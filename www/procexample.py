@@ -20,7 +20,7 @@ while l != '':
         t += '\\'
     t += l
 
-    if not l.strip() or l.startswith('=='):
+    if not l.strip() or l.startswith('='):
         # First write out real deal.
         outf.write(s)
         # Separate this from the source.
@@ -28,7 +28,7 @@ while l != '':
         outf.write('<td class="rightcell">\n~~~\n~~~\n{}{jemdoctt}\n')
         # Output the stuff again, but raw.
         if not t.splitlines()[-1].strip():
-            t = t[:-1]
+            t = t[:-1] + '<pre> </pre>\n'
         outf.write(t)
         # Separate this from the source.
         outf.write('~~~\n~~~\n{}{raw}\n</td></tr><tr>\n<td class="leftcell">\n~~~\n')
@@ -43,8 +43,8 @@ outf.write(s)
 outf.write('~~~\n{}{raw}\n</td><td class="sepcell">&nbsp;</td>\n')
 outf.write('<td class="rightcell">\n~~~\n~~~\n{}{jemdoctt}\n')
 # Output the stuff again, but raw.
-if not t.splitlines()[-1].strip():
-    t = t[:-1]
+#if not t.splitlines()[-1].strip():
+#    t = t[:-1]
 outf.write(t)
 # Separate this from the source and end the table.
 outf.write('~~~\n~~~\n{}{raw}\n</td></tr></table>\n~~~\n')

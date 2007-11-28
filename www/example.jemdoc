@@ -2,7 +2,8 @@
 = jemdoc -- example page
 
 ~~~
-This page shows example jemdoc source and output side by side.
+This page shows example jemdoc source and output side by side. The spacing of
+the `page' on the left will consequently be somewhat off.
 ~~~
 
 ## jemdoc: start now.
@@ -13,9 +14,6 @@ This page shows example jemdoc source and output side by side.
 ~~~
 # jemdoc: menu{MENU}{example.html}
 = jemdoc -- example page
-[http://stanford.edu/~jacobm/ Jacob Mattingley]
-([jacobm@stanford.edu])
-
 ~~~
 {}{raw}
 </td><td class="sepcell">&nbsp;</td>
@@ -25,8 +23,25 @@ This page shows example jemdoc source and output side by side.
 {}{jemdoctt}
 # jemdoc: menu{MENU}{example.html}
 = jemdoc -- example page
+~~~
+~~~
+{}{raw}
+</td></tr><tr>
+<td class="leftcell">
+~~~
 [http://stanford.edu/~jacobm/ Jacob Mattingley]
 ([jacobm@stanford.edu])
+
+~~~
+{}{raw}
+</td><td class="sepcell">&nbsp;</td>
+<td class="rightcell">
+~~~
+~~~
+{}{jemdoctt}
+[http://stanford.edu/~jacobm/ Jacob Mattingley]
+([jacobm@stanford.edu])
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -45,6 +60,7 @@ If the first line of the file starts with +\# jemdoc+, special functions like
 {}{jemdoctt}
 If the first line of the file starts with +\# jemdoc+, special functions like
 [menu.html menus] will be used.
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -66,7 +82,7 @@ If the first line of the file starts with +\# jemdoc+, special functions like
 </td></tr><tr>
 <td class="leftcell">
 ~~~
-Here are /some/ *text* features. I could [http://cvxmod.net/ link somewhere] or
+Here are some *text* /features/. I could [http://cvxmod.net/ link somewhere] or
 insert a raw link to another page like [download.html].  I could use
 +monospace+, too.
 
@@ -77,9 +93,10 @@ insert a raw link to another page like [download.html].  I could use
 ~~~
 ~~~
 {}{jemdoctt}
-Here are /some/ *text* features. I could [http://cvxmod.net/ link somewhere] or
+Here are some *text* /features/. I could [http://cvxmod.net/ link somewhere] or
 insert a raw link to another page like [download.html].  I could use
 +monospace+, too.
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -104,6 +121,7 @@ I could write special characters like
 (\\) in front of those characters.  Or
 automatically detect an
 [jacobm@stanford.edu email address].
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -128,6 +146,7 @@ Save the file as +index.jemdoc+, say, and simply
 call +jemdoc index+ (after [download.html
 downloading jemdoc], of course).
 \~~~
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -180,6 +199,7 @@ Why not use a list
 - to explain the way you do lists?
 - to demonstrate how a line\n
   break might work?
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -204,6 +224,7 @@ Or perhaps a
   .. Numbered list
   .. Is more
 . Useful?
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -224,6 +245,7 @@ Or perhaps a
 : {Definition} lists, especially when there are
   many definitions
 : {Can be useful} for explaining things
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -255,6 +277,7 @@ This `section' features "smart quotes".
 ~~~
 {}{jemdoctt}
 This `section' features "smart quotes".
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -279,6 +302,7 @@ one set of braces (\{\}).
 This is a simple text block, with a title. Notice how the previous line has only
 one set of braces (\{\}).
 \~~~
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -303,6 +327,7 @@ one set of braces (\{\}).
 >>> print 'Interactive Python code.'
 'Interactive Python code.'
 \~~~
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -325,13 +350,14 @@ Plain code block with no title.
 {}{}
 Plain code block with no title.
 \~~~
+<pre> </pre>
 ~~~
 ~~~
 {}{raw}
 </td></tr><tr>
 <td class="leftcell">
 ~~~
-You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+You might need 2--3 different-sized dashes---they can be useful. Now we're done!
 ~~~
 {}{raw}
 </td><td class="sepcell">&nbsp;</td>
@@ -339,7 +365,7 @@ You might need 1--2 different-sized dashes---they can be useful. Now we're done!
 ~~~
 ~~~
 {}{jemdoctt}
-You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+You might need 2--3 different-sized dashes---they can be useful. Now we're done!
 ~~~
 ~~~
 {}{raw}
