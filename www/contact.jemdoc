@@ -4,7 +4,6 @@
 == Development
 jemdoc is developed by [http://stanford.edu/~jacobm/ Jacob Mattingley].
 Please [jacobm@stanford.edu contact Jacob] with any bug reports and
-comments---they are gladly welcomed!
-
-If reporting a bug, please mention your operating system and Python version
-number.
+comments.
+If reporting a bug, please run the command +jemdoc -\-version+ and include the
+result in your email.

@@ -2,8 +2,8 @@
 = jemdoc -- example page
 
 ~~~
-This page shows example jemdoc source and output side by side. The spacing of
-the `page' on the left will consequently be somewhat off.
+This page shows example jemdoc source and output side by side. (The spacing of
+the `page' on the left is consequently incorrect.)
 ~~~
 
 ## jemdoc: start now.

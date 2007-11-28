@@ -1,11 +1,11 @@
 body {
-	background-color: white;
+	background: white;
 	font-family: Georgia, serif;
-	padding-bottom: 0.5em;
+	padding-bottom: 8px;
 }
 
 #layout-menu {
-	background-color: #f6f6f6;
+	background: #f6f6f6;
 	border: 1px solid #c0c0c0;
 	padding-top: 0.5em;
 	padding-left: 8px;
@@ -69,7 +69,7 @@ div.menu-item {
 div#toptitle {
 	padding-bottom: 0.2em;
 	margin-bottom: 1.3em;
-	border-bottom: 1px double #c0c0c0;
+	border-bottom: 1px solid #c0c0c0;
 }
 
 /* Reduce space if we begin the page with a title. */
@@ -163,8 +163,8 @@ pre {
 
 div#footer {
 	font-size: small;
-	color: #c0c0c0;
 	border-top: 1px solid #c0c0c0;
+	color: #c0c0c0;
 	padding-top: 0.1em;
 	margin-top: 4.0em;
 }
@@ -174,7 +174,6 @@ div#footer a {
 
 div#footer-text {
 	float: left;
-	padding-bottom: 0;
 }
 
 ul, ol, dl {
@@ -250,7 +249,7 @@ div.blockcontent {
 }
 
 div.infoblock > div.blockcontent {
-	background-color: #ffffee;
+	background: #ffffee;
 }
 
 div.blockcontent p + ul, div.blockcontent p + ol {
@@ -261,12 +260,16 @@ div.infoblock p {
 	margin-bottom: 0em;
 }
 
+div.infoblock li p, div.infoblock dd p {
+	margin-bottom: 0.5em;
+}
+
 div.infoblock p + p {
 	margin-top: 0.8em;
 }
 
 div.codeblock > div.blockcontent {
-	background-color: #f6f6f6;
+	background: #f6f6f6;
 }
 
 span.pycommand {

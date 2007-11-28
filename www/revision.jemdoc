@@ -2,12 +2,8 @@
 = jemdoc -- revision details
 
 == Probable upcoming features
-- Manual paragraph breaks +\\p+ for lists.
 - Support for LaTeX equations.
 - Better support for specifying the title to appear in the browser titlebar.
-
-== Possible upcoming features
-- Better wrapping behaviour for the menu sidebar.
 
 == Known bugs
 - Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
@@ -20,10 +16,11 @@
   (a very minor bug).
 
 == Revision details
-=== Changes from +v0.3.5+ to +0.3.6+ (2007-11-27)
-. Changed the way menus are laid out to prevent wrapping.
+=== Changes from +v0.3.5+ to +0.3.6+ (2007-11-28)
+. Changed the way menus are laid out, preventing unwanted wrapping.
 . Improved the vim syntax highlighting file.
 . Added the command +\\p+ to create a manual paragraph break in lists.
+. Added +jemdoc -\-version+ as a command line option.
 
 === Changes from +v0.3.4+ to +0.3.5+ (2007-11-26)
 . Added a +showsource+ modeline option.
