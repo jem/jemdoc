@@ -124,11 +124,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-	font-size: 170%;
+	font-size: 165%;
 }
 
 h2 {
-	padding-top: 0.5em;
+	padding-top: 0.8em;
 	font-size: 125%;
 }
 
@@ -140,10 +140,7 @@ h2 + h3 {
 h3 {
 	font-size: 110%;
 	border-bottom: none;
-}
-
-hr {
-	border: 1px solid gray;
+	margin-bottom: 0;
 }
 
 p {
@@ -166,12 +163,13 @@ div#footer {
 }
 div#footer-text {
 	float: left;
-	padding-bottom: 0.5em;
+	padding-bottom: 0;
 }
 
 ul, ol, dl {
-	margin-top: 0;
+	margin-top: 0.2em;
 	padding-top: 0;
+	margin-bottom: 0.8em;
 }
 
 dt {
@@ -191,18 +189,17 @@ dd > *:first-child {
 	margin-top: 0;
 }
 
-
 ul {
 	list-style-position: outside;
 	list-style-type: square;
 }
 
 p + ul, p + ol {
-	margin-top: -0.4em;
+	margin-top: -0.5em;
 }
 
 li ul, li ol {
-	margin-top: 0.4em;
+	margin-top: 0.5em;
 }
 
 ol {
@@ -210,9 +207,10 @@ ol {
 	list-style-type: decimal;
 }
 
-li {
-	margin-bottom: 0.5em;
+li, dd {
+	margin-bottom: 0.8em;
 }
+
 
 ol ol {
 	list-style-type: lower-alpha;
@@ -224,7 +222,7 @@ ol ol ol {
 
 div.codeblock, div.infoblock {
 	margin-right: 0%;
-	margin-top: 0.8em;
+	margin-top: 1.0em;
 	margin-bottom: 1.3em;
 }
 

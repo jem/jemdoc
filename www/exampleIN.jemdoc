@@ -2,7 +2,8 @@
 = jemdoc -- example page
 
 ~~~
-This page shows example jemdoc source and output side by side.
+This page shows example jemdoc source and output side by side. The spacing of
+the `page' on the left will consequently be somewhat off.
 ~~~
 
 ## jemdoc: start now.
@@ -15,7 +16,7 @@ If the first line of the file starts with +\# jemdoc+, special functions like
 [menu.html menus] will be used.
 
 == Example
-Here are /some/ *text* features. I could [http://cvxmod.net/ link somewhere] or
+Here are some *text* /features/. I could [http://cvxmod.net/ link somewhere] or
 insert a raw link to another page like [download.html].  I could use
 +monospace+, too.
 
@@ -68,4 +69,4 @@ one set of braces (\{\}).
 Plain code block with no title.
 ~~~
 
-You might need 1--2 different-sized dashes---they can be useful. Now we're done!
+You might need 2--3 different-sized dashes---they can be useful. Now we're done!

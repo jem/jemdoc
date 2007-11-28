@@ -1,15 +1,15 @@
 .PHONY : update
 update :
-	@make -C doc update
+	@make -C www update
 
 .PHONY : realupdate
 realupdate :
-	@make -C doc realupdate
+	@make -C www realupdate
 
-.PHONY : docs
+.PHONY : wwws
 docs :
-	@make -C doc docs
+	@make -C www docs
 
 .PHONY : clean
 clean :
-	@make -C doc clean
+	@make -C www clean
