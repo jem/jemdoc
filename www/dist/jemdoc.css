@@ -1,16 +1,17 @@
 body {
-	background-color: white;
+	background: white;
 	font-family: Georgia, serif;
+	padding-bottom: 8px;
 }
 
 #layout-menu {
-	background-color: #f4f4f4;
+	background: #f4f4f4;
 	border: 1px solid #dddddd;
 	padding-top: 0.5em;
 	padding-left: 8px;
 	padding-right: 8px;
 	font-size: 1.0em;
-	width: 150px;
+	width: auto;
 }
 
 #layout-menu a {
@@ -26,7 +27,6 @@ pre, tt {
 	font-size: 90%;
 	font-family: monaco, monospace;
 }
-
 
 a, a > tt {
 	color: #224b8d;
@@ -62,15 +62,19 @@ div.menu-item {
 	text-indent: -16px;
 }
 
+div#toptitle {
+	padding-bottom: 0.2em;
+	margin-bottom: 1.5em;
+	border-bottom: 3px double gray;
 }
 
 /* Reduce space if we begin the page with a title. */
 div#toptitle + h2, div#toptitle + h3 {
-	margin-top: -0.5em;
+	margin-top: -0.7em;
 }
 
 div#toptitle h1 {
-	margin-bottom: 0.1em;
+	margin-bottom: 0.0em;
 	padding-bottom: 0.1em;
 	padding-top: 0;
 	margin-top: 0.5em;
@@ -81,7 +85,7 @@ div#subtitle {
 	margin-top: 0.0em;
 	margin-bottom: 0.0em;
 	padding-top: 0em;
-	padding-bottom: 0.2em;
+	padding-bottom: 0.1em;
 }
 
 #layout-content {
@@ -136,11 +140,9 @@ h2 + h3 {
     padding-top: 0.2em;
 }
 
-
 h3 {
 	font-size: 110%;
 	border-bottom: none;
-	margin-bottom: 0;
 }
 
 p {
@@ -163,7 +165,7 @@ div#footer {
 }
 div#footer-text {
 	float: left;
-	padding-bottom: 0;
+	padding-bottom: 8px;
 }
 
 ul, ol, dl {
@@ -199,7 +201,7 @@ p + ul, p + ol {
 }
 
 li ul, li ol {
-	margin-top: 0.5em;
+	margin-top: -0.3em;
 }
 
 ol {
@@ -207,8 +209,8 @@ ol {
 	list-style-type: decimal;
 }
 
-li, dd {
-	margin-bottom: 0.8em;
+li p, dd p {
+	margin-bottom: 0.5em;
 }
 
 
@@ -235,7 +237,7 @@ div.blocktitle {
 
 div.blockcontent {
 	border: 1px solid silver;
-	padding: 0.5em;
+	padding: 0.3em 0.5em;
 }
 
 div.infoblock > div.blockcontent {
@@ -248,6 +250,10 @@ div.blockcontent p + ul, div.blockcontent p + ol {
 
 div.infoblock p {
 	margin-bottom: 0em;
+}
+
+div.infoblock li p, div.infoblock dd p {
+	margin-bottom: 0.5em;
 }
 
 div.infoblock p + p {
