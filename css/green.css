@@ -1,0 +1,32 @@
+#layout-menu {
+	background: white;
+	border: 1px solid #c0f0c0;
+}
+
+tt {
+	color: #202020;
+}
+
+a, a > tt {
+	color: #308050;
+}
+
+a:hover {
+	border-bottom: 1px #30a030 dotted;
+}
+
+#layout-menu a.current:link, #layout-menu a.current:visited {
+	color: #004010;
+	border-bottom: 1px #c0f0c0 solid;
+}
+#layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
+	color: #009000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #202020;
+}
+
+div.blocktitle {
+	color: #402020;
+}

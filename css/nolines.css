@@ -1,0 +1,30 @@
+#layout-menu {
+	border: none;
+	border-right: 1px solid #c0c0c0;
+	padding: 10px 20px 10px 20px;
+	background: white;
+}
+
+#layout-menu a.current:link, #layout-menu a.current:visited {
+	border-bottom: 1px gray solid;
+}
+
+div.menu-category {
+	border-bottom: 0px solid gray;
+}
+
+div#toptitle {
+	border-bottom: 1px solid #c0c0c0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	border-bottom: 0px solid #c0c0c0;
+}
+
+div#footer {
+	border-top: 1px solid #c0c0c0;
+}
+
+div.blockcontent {
+	border: 1px solid #c0c0c0;
+}

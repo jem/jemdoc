@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{revision.html}
-= jemdoc -- revision details
+= jemdoc -- version and bug information
 
 == Probable upcoming features
 - Support for LaTeX equations.
@@ -11,9 +11,13 @@
 - Ampersands in links will cause problems---for the time being, they should be
   manually replaced with +\&amp;amp;+.
 - Percentage symbols in links will cause problems---for the time being, use
-  quoted +<a href=\"linktargetwithpercents">link</a>+ blocks.
+  quoted +{\{<a href=\"linktargetwithpercents">link</a>}\}+ blocks.
 - A line started by just a single %~% will be interpreted as a block delimiter
   (a very minor bug).
+- At signs (@) appearing in links will be converted to email addresses---even
+  when they're not. This will be fixed by preventing links starting with
+  %http://% from being recognised as email addresses. In the mean time, use a
+  quoted block.
 
 == Revision details
 === Changes from +v0.3.5+ to +0.3.6+ (2007-11-28)
