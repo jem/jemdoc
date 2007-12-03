@@ -1,3 +1,6 @@
+/* Extra css file for personal jemdoc customizations. */
+/* Copyright (C) Jacob Mattingley 2007. */
+
 #layout-menu {
 	background: #f6f6f6;
 	border: 1px solid #c0c0c0;
@@ -10,12 +13,36 @@ a:hover {
 	border-bottom: 1px #305080 dotted;
 }
 
-#layout-menu a.current:link, #layout-menu a.current:visited {
-	color: #203070;
-}
-
 div#toptitle {
 	margin-bottom: 1.3em;
 	border-bottom: 1px solid #c0c0c0;
 }
 
+h1, h2, h3, #layout-menu a.current:link, #layout-menu a.current:visited {
+	color: #203060;
+}
+
+h1, h2, h3 {
+	border-bottom: 1px solid #c0c0c0;
+}
+
+div#footer {
+	border-top: 1px solid #c0c0c0;
+	color: #c0c0c0;
+}
+
+div#footer a {
+	color: #80a0b0;
+}
+
+div#footer-text {
+	padding-bottom: 0;
+}
+
+div.blocktitle {
+	color: #203070;
+}
+
+div.blockcontent {
+	border: 1px solid #c0c0c0;
+}

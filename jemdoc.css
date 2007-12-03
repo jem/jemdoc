@@ -5,8 +5,8 @@ body {
 }
 
 #layout-menu {
-	background: #f6f6f6;
-	border: 1px solid #c0c0c0;
+	background: #f4f4f4;
+	border: 1px solid #dddddd;
 	padding-top: 0.5em;
 	padding-left: 8px;
 	padding-right: 8px;
@@ -33,16 +33,16 @@ pre, tt {
 }
 
 a, a > tt {
-	color: #305080;
+	color: #224b8d;
 	text-decoration: none;
 }
 
 a:hover {
-	border-bottom: 1px #305080 dotted;
+	border-bottom: 1px gray dotted;
 }
 
 #layout-menu a.current:link, #layout-menu a.current:visited {
-	color: #203070;
+	color: #022b6d;
 	border-bottom: 1px gray solid;
 }
 #layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
@@ -68,8 +68,8 @@ div.menu-item {
 
 div#toptitle {
 	padding-bottom: 0.2em;
-	margin-bottom: 1.3em;
-	border-bottom: 1px solid #c0c0c0;
+	margin-bottom: 1.5em;
+	border-bottom: 3px double gray;
 }
 
 /* Reduce space if we begin the page with a title. */
@@ -111,14 +111,14 @@ strong {
 }
 
 
-h1, h2, h3, h4, h5, h6 {
-	color: #207030;
+h1, h2, h3 {
+	color: #527bbd;
 	margin-top: 0.8em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
 	padding-top: 0.5em;
-	border-bottom: 1px solid #c0c0c0;
+	border-bottom: 1px solid #aaaaaa;
 }
 
 h1 {
@@ -126,6 +126,7 @@ h1 {
 }
 
 h2 {
+	padding-top: 0.8em;
 	font-size: 125%;
 }
 
@@ -152,17 +153,13 @@ pre {
 
 div#footer {
 	font-size: small;
-	border-top: 1px solid #c0c0c0;
-	color: #c0c0c0;
+	border-top: 1px solid gray;
 	padding-top: 0.1em;
 	margin-top: 4.0em;
 }
-div#footer a {
-	color: #80a0b0;
-}
-
 div#footer-text {
 	float: left;
+	padding-bottom: 8px;
 }
 
 ul, ol, dl {
@@ -231,13 +228,13 @@ div.codeblock, div.infoblock {
 
 div.blocktitle {
 	font-weight: bold;
-	color: #203070;
+	color: #cd7b62;
 	margin-top: 1.2em;
 	margin-bottom: 0.1em;
 }
 
 div.blockcontent {
-	border: 1px solid #c0c0c0;
+	border: 1px solid silver;
 	padding: 0.3em 0.5em;
 }
 

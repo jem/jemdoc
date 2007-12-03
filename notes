@@ -1,62 +1,19 @@
-allow inline comments.
-
 normalize spacing (or rely on tidy?).
-
-grammar rules
--------------
-- one line maximum for titles.
-
-handle # that has whitespace before it at the beginning of a line.
-
-a comment only line is thought of as a blank line, not a missing line.
-
-make sure *everything* can be backslash quoted, including {} in code blocks.
-
-make sidebarblock etc better name.
-
-make infinite loop protection.
 
 learn proper difference between span and div.
 --> div includes paragraph breaks as well.
 
-do at least some replacements in code - things like dashes, ampersands etc,
-that are required for html.
-
 # marks in highlighting are *not* comments for jemdoc, they're comments for the highlighting.
 --> enable comments in code blocks, somehow?
 
-have to fix (jacobm@
-
 syntax highlighting runs out on +this is
-
-a sentence +. what happens?
-
-characters hidden in {} will confuse vim syntax highlighting.
-
-headers inside blocks should be coloured differently.
-
-links should just be [link-target.html link name], which is better than having to check (jem@jaboc.net[jacob]). Simply skip the link name if you want to! perfect.
-
-list continuation (multi-line lists)
-
-add $monospace on steroids$ which does no in-text replacements.
 
 fix wrapping when lines start with .s. fix wrapping with \n at the end of the
 line.
 
-way of bypassing ellipses.
---> simply have \... which will bypass the first one and then the entire thing
-- quite nice and natural.
-
-will have trouble with certain numbers of backslashes preceding other symbols.
-
-deal with narrow pages not going to the edges?
-
 allow different orders of stuff.
 
 custom numbers in lists.
-
-add support for custom additional css file.
 
 single tilde should not provoke block mode
 
@@ -66,19 +23,17 @@ line, if possible.
 do word wrap (properly).
 
 paragraph with {{}} should have no <p></p>.
+--> no. use raw block instead.
 
 investigate proper string continuation in python.
 
 proper vim handling of python \.
 
-remove argument for menu name and figure it out implicitly instead?
+remove argument for menu name and figure it out implicitly instead? (no)
 
 what happens if you nest blocks?
-
-add chmod +x requirement.
+--> doesn't work. should it?
 
 --show-config with -c.
-
-notime option.
 
 half the functions should hang off the controlstruct class.
