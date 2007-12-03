@@ -770,7 +770,12 @@ def codeblock(f, g):
                         else:
                             out(f.outf, l)
             else:
-                language(f.outf, l, gethl(g[1]))
+                if l.startswith('\\#include{') or l.startswith('\\#includeraw{'):
+                    out(f.outf, l[1:])
+                elif l.startswith('#') and doincludes(f, l[1:]):
+                    continue
+                else:
+                    language(f.outf, l, gethl(g[1]))
 
     if not raw:
         if g[1] == 'jemdoc':

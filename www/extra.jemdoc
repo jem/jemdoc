@@ -45,3 +45,19 @@ use something like this:
 
 ([jacobm@stanford.edu Let me know] if you need better support for your
 language.)
+
+== Including other files
+The line
+~~~
+{}{}
+\#include{otherfile.jemdoc}
+~~~
+will include the contents of +otherfile.jemdoc+ as if the contents were actually
+in the ordinary input file (that is, with full jemdoc substitutions).
+The line
+~~~
+{}{}
+\#includeraw{otherfile.html}
+~~~
+will copy the contents of +otherfile.html+ verbatim to the current position in
+the output file (that is, without any jemdoc substitutions).
