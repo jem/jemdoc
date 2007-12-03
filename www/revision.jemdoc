@@ -3,37 +3,33 @@
 
 == Probable upcoming features
 - Support for LaTeX equations.
-- Better support for specifying the title to appear in the browser titlebar.
 
 == Known bugs
-- Including +\#+ within a quoted block like +{\{block}\}+ or +\$block\$+ will
-  fail.
-- Ampersands in links will cause problems---for the time being, they should be
-  manually replaced with +\&amp;amp;+.
-- Percentage symbols in links will cause problems---for the time being, use
-  quoted +{\{<a href=\"linktargetwithpercents">link</a>}\}+ blocks.
-- A line started by just a single %~% will be interpreted as a block delimiter
-  (a very minor bug).
-- At signs (@) appearing in links will be converted to email addresses---even
-  when they're not. This will be fixed by preventing links starting with
-  %http://% from being recognised as email addresses. In the mean time, use a
-  quoted block.
+- Including +\#+ within a +{\{quoted block}}+ will fail. Use instead a +raw+
+  block or place the +\#+ outside like in +{\{a~}}\\\#{\{2}}+ workaround.
+  [jacobm@stanford.edu Tell me] if this becomes annoying.
 
 == Revision details
+=== Changes from +v0.3.6+ to +v0.4.0+ (2007-12-02)
+. Added new syntax items +\#include{FILE}+ and +\#includeraw{FILE}+.
+. Corrected various bugs in link handling.
+. Added a +title{Page title}+ modeline option.
+. Added a +notime+ modeline option.
+
 === Changes from +v0.3.5+ to +0.3.6+ (2007-11-28)
 . Changed the way menus are laid out, preventing unwanted wrapping.
 . Improved the vim syntax highlighting file.
 . Added the command +\\p+ to create a manual paragraph break in lists.
 . Added +jemdoc -\-version+ as a command line option.
 
-=== Changes from +v0.3.4+ to +0.3.5+ (2007-11-26)
+=== Changes from +v0.3.4+ to +v0.3.5+ (2007-11-26)
 . Added a +showsource+ modeline option.
 . Corrected a minor bug with whitespace appearing in the titles.
 
-=== Changes from +v0.3.3+ to +0.3.4+ (2007-11-17)
+=== Changes from +v0.3.3+ to +v0.3.4+ (2007-11-17)
 . Corrected a (Windows) platform specific time-stamp issue.
 
-=== Changes from +v0.3.0+ to +0.3.3+ (2007-11-16)
+=== Changes from +v0.3.0+ to +v0.3.3+ (2007-11-16)
 . Added support for image blocks.
 . Added support for raw blocks.
 . Fixed handling of ampersands (&).
@@ -41,7 +37,7 @@
 . Fixed handling of comments within lists.
 . Several other minor bug fixes.
 
-=== Changes from +v0.2.0+ to +0.3.0+ (2007-11-09)
+=== Changes from +v0.2.0+ to +v0.3.0+ (2007-11-09)
 . Added per-file css specification. Use\n
   +\# jemdoc addcss{file1}{file2}.\.., <other options>+\n as the
   first line. To prevent loading the +\[defaultcss\]+ configuration section,

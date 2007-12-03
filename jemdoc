@@ -36,6 +36,15 @@ class controlstruct(object):
         self.outf = outfile
         self.conf = conf
         self.linenum = 0
+        self.otherfiles = []
+
+    def pushfile(self, newfile):
+        self.otherfiles.insert(0, self.inf)
+        self.inf = open(newfile)
+
+    def nextfile(self):
+        self.inf.close()
+        self.inf = self.otherfiles.pop(0)
 
 def showhelp():
     a = """Usage: jemdoc [OPTIONS] [SOURCEFILE] 
@@ -288,17 +297,34 @@ def pc(f, ditchcomments=True):
     # Should only be used to look at the first character of a new line.
     c = f.inf.read(1)
     if c: # only undo forward movement if we're not at the end.
-        #if c == '#': # interpret comment lines as blank.
-        #    return '\n'
         if ditchcomments and c == '#':
-            nl(f)
+            l = nl(f)
+            if doincludes(f, l):
+                return pc(f)
 
         if c in ' \t':
             return pc(f)
 
         f.inf.seek(-1, 1)
+    elif f.otherfiles:
+        f.nextfile()
+        return pc(f, ditchcomments)
 
     return c
+
+def doincludes(f, l):
+    ir = 'includeraw{'
+    i = 'include{'
+    if l.startswith(ir):
+        nf = open(l[len(ir):-2])
+        f.outf.write(nf.read())
+        nf.close()
+    elif l.startswith(i):
+        f.pushfile(l[len(i):-2])
+    else:
+        return False
+
+    return True
 
 def nl(f, withcount=False, codemode=False):
     """Get input file line."""
@@ -352,30 +378,26 @@ def np(f, withcount=False):
     else:
         return s[:-1]
 
-def quote(s, percents=True):
-    if percents:
-        return re.sub(r"""[\\*/+"'<>&$%\.~[\]-]""", r'\\\g<0>', s)
-    else:
-        return re.sub(r"""[\\*/+"'<>&$\.~[\]-]""", r'\\\g<0>', s)
+def quote(s):
+    return re.sub(r"""[\\*/+"'<>&$%\.~[\]-]""", r'\\\g<0>', s)
 
 def replacequoted(b):
-    """Quotes {{raw html}} sections. Insert a backslash right before the end
-    with &bs;, an illegal html character."""
+    """Quotes {{raw html}} sections."""
+
     r = re.compile(r'\{\{(.*?)\}\}', re.M + re.S)
     m = r.search(b)
     while m:
-        qb = quote(m.group(1), True)
+        qb = quote(m.group(1))
 
         b = b[:m.start()] + qb + b[m.end():]
 
         m = r.search(b, m.start())
 
-    r = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S)
-    m = r.search(b)
-    if m:
-        print 'warning: $sections$ are deprecated.'
+    return b
 
-    # likewise replace %sections% as +{{sections}}+.
+def replacepercents(b):
+    # replace %sections% as +{{sections}}+. Do not replace if within a link.
+
     r = re.compile(r'(?<!\\)%(.*?)(?<!\\)%', re.M + re.S)
     m = r.search(b)
     while m:
@@ -429,7 +451,7 @@ def replacelinks(b):
     while m:
         m1 = m.group(1).strip()
 
-        if '@' in m1 and not m1.startswith('mailto:'):
+        if '@' in m1 and not m1.startswith('mailto:') and not m1.startswith('http://'):
             link = 'mailto:' + m1
         else:
             link = m1
@@ -458,10 +480,12 @@ def br(b):
 
     b = allreplace(b)
 
-    # First do the URL thing.
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
-    b = replaceimages(b)
+    b = replaceimages(b) # jem not sure if this is still used.
+
     b = replacelinks(b)
+
+    b = replacepercents(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -640,18 +664,18 @@ def dashlist(f):
             for i in range(newlevel - level):
                 if newlevel > 1:
                     out(f.outf, '\n')
-                out(f.outf, '<ul>\n<li><p>')
+                out(f.outf, '<ul>\n<li>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out(f.outf, '</p></li>\n</ul>\n</p></li><li><p>')
+                out(f.outf, '</li>\n</ul>\n</li><li>')
         else:
-            out(f.outf, '</p></li>\n<li><p>')
+            out(f.outf, '</li>\n<li>')
 
-        out(f.outf, br(s))
+        out(f.outf, '<p>' + br(s) + '</p>')
         level = newlevel
 
     for i in range(level):
-        out(f.outf, '</p></li>\n</ul>\n')
+        out(f.outf, '</li>\n</ul>\n')
 
 def dotlist(f):
     level = 0
@@ -664,18 +688,18 @@ def dotlist(f):
             for i in range(newlevel - level):
                 if newlevel > 1:
                     out(f.outf, '\n')
-                out(f.outf, '<ol>\n<li><p>')
+                out(f.outf, '<ol>\n<li>')
         elif newlevel < level:
             for i in range(level - newlevel):
-                out(f.outf, '</p></li>\n</ol>\n</li><li><p>')
+                out(f.outf, '</li>\n</ol>\n</li><li>')
         else:
-            out(f.outf, '</p></li>\n<li><p>')
+            out(f.outf, '</li>\n<li>')
 
-        out(f.outf, br(s))
+        out(f.outf, '<p>' + br(s) + '</p>')
         level = newlevel
 
     for i in range(level):
-        out(f.outf, '</p></li>\n</ol>\n')
+        out(f.outf, '</li>\n</ol>\n')
 
 def colonlist(f):
     out(f.outf, '<dl>\n')
@@ -704,7 +728,7 @@ def codeblock(f, g):
         out(f.outf, f.conf['codeblock'])
         if g[0]:
             hb(f.outf, f.conf['blocktitle'], g[0])
-        if g[1] == 'jemdoctt':
+        if g[1] == 'jemdoc':
             out(f.outf, f.conf['codeblockcontenttt'])
         else:
             out(f.outf, f.conf['codeblockcontent'])
@@ -728,7 +752,7 @@ def codeblock(f, g):
         else:
             if raw:
                 out(f.outf, l)
-            elif g[1] == 'jemdoctt':
+            elif g[1] == 'jemdoc':
                 # doing this more nicely needs python 2.5.
                 for x in ('#', '~', '>>>', '\~', '{'):
                     if str(l).lstrip().startswith(x):
@@ -741,12 +765,15 @@ def codeblock(f, g):
                             out(f.outf, '<br />' + prependnbsps(l))
                             break
                     else:
-                        out(f.outf, l)
+                        if str(l).lstrip().startswith('='):
+                            out(f.outf, prependnbsps(l) + '<br />')
+                        else:
+                            out(f.outf, l)
             else:
                 language(f.outf, l, gethl(g[1]))
 
     if not raw:
-        if g[1] == 'jemdoctt':
+        if g[1] == 'jemdoc':
             out(f.outf, f.conf['codeblockendtt'])
         else:
             out(f.outf, f.conf['codeblockend'])
@@ -761,11 +788,15 @@ def procfile(f):
     menu = None
     showsourcelink = False
     showlastupdated = True
+    showlastupdatedtime = True
     nodefaultcss = False
     css = []
+    title = None
     while pc(f, False) == '#':
         l = f.inf.readline()
         f.linenum += 1
+        if doincludes(f, l[1:]):
+            continue
         if l.startswith('# jemdoc:'):
             l = l[len('# jemdoc:'):]
             a = l.split(',')
@@ -787,6 +818,9 @@ def procfile(f):
                 elif b.startswith('nodate'):
                     showlastupdated = False
 
+                elif b.startswith('notime'):
+                    showlastupdatedtime = False
+
                 elif b.startswith('showsource'):
                     showsourcelink = True
 
@@ -796,6 +830,14 @@ def procfile(f):
                 elif b.startswith('addcss'):
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     css += re.findall(r, b)
+
+                elif b.startswith('title'):
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    g = re.findall(r, b)
+                    if len(g) != 1:
+                        raise SyntaxError('addtitle error on line %d' % f.linenum)
+
+                    title = g[0]
 
     # Get the file started with the firstbit.
     out(f.outf, f.conf['firstbit'])
@@ -814,13 +856,15 @@ def procfile(f):
     # Look for a title.
     if pc(f) == '=': # don't check exact number f.outf '=' here jem.
         t = br(nl(f))[:-1]
-        u = re.sub(' *(<br />)|(&nbsp;) *', ' ', t)
-        hb(f.outf, f.conf['windowtitle'], u)
-        out(f.outf, f.conf['bodystart'])
-
+        if title is None:
+            title = re.sub(' *(<br />)|(&nbsp;) *', ' ', t)
     else:
-        out(f.outf, f.conf['bodystart'])
         t = None
+
+    if title:
+        hb(f.outf, f.conf['windowtitle'], title)
+
+    out(f.outf, f.conf['bodystart'])
 
     if menu:
         out(f.outf, f.conf['menustart'])
@@ -865,7 +909,7 @@ def procfile(f):
 
         # look for comments.
         elif p == '#':
-            nl(f)
+            l = nl(f)
 
         elif p == '\n':
             nl(f)
@@ -944,7 +988,11 @@ def procfile(f):
     if showlastupdated or showsourcelink:
         out(f.outf, f.conf['footerstart'])
         if showlastupdated:
-            s = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(time.time()))
+            if showlastupdatedtime:
+                ts = '%Y-%m-%d %H:%M:%S %Z'
+            else:
+                ts = '%Y-%m-%d'
+            s = time.strftime(ts, time.localtime(time.time()))
             hb(f.outf, f.conf['lastupdated'], s)
         if showsourcelink:
             hb(f.outf, f.conf['sourcelink'], f.inname)

@@ -1,5 +1,5 @@
 # jemdoc: menu{MENU}{using.html}
-= jemdoc -- using
+= jemdoc -- running jemdoc
 
 Make sure
 [http://www.python.org/ Python] is installed, put jemdoc in your path somewhere,
@@ -11,14 +11,14 @@ jemdoc index.jemdoc
 ~~~
 
 This will use a default configuration for the html elements, and create an
-+index.html+. You can also use
++index.html+.
 
+Even simpler, you can omit the extension, and jemdoc will still
+process the +index.jemdoc+ file, as in
 ~~~
 {}{}
-jemdoc -o html/index.html index.jemdoc
+jemdoc index
 ~~~
-
-This will instead output to +html\/index.html+.
 
 == CSS
 You will need to provide a [http://www.w3.org/Style/CSS/ CSS] file on your
@@ -26,64 +26,52 @@ server. By default it should be called +jemdoc.css+. Here is an example
 [dist/jemdoc.css jemdoc.css] file: download it and place it in the same
 directory as your html files. (Or customize it, or start from scratch!)
 
-== Configuration
-jemdoc has a built-in default configuration. This configuration includes the
-particular html tags used when producing html. If you wish to adjust the html
-that jemdoc produces, you can provide a configuration file to override the
-built-in defaults.
+== Change the configuration
+To choose a different output file, use +-o+:
 
-For example, suppose you wanted to add [http://www.google.com/analytics/ Google
-Analytics] tracking to your website. That requires adding a short section of
-code before the +</body>+ tag.
+~~~
+{}{}
+jemdoc -o html/index.html index
+~~~
 
-First, find out which block needs to be changed by using
+You can specify a different output directory with +-o+:
+~~~
+{}{}
+jemdoc -o html/ index
+~~~
 
+This will instead output to +html\/index.html+.
+
+To change the html configuration ([htmlchanges.html details here]), use +-c+:
+~~~
+{}{}
+jemdoc -c mysite.conf index
+~~~
+
+Command line options may be combined. For example, the following command will
+use +mysite.conf+, reading syntax from +index.jemdoc+ and outputting to
++html\/index.html+:
+~~~
+{}{}
+jemdoc -c mysite.conf -o html/ index
+~~~
+
+== Other command line options
+To check which version of jemdoc you are using, run the command
+~~~
+{}{}
+jemdoc --version
+~~~
+
+To get simple command-line help, you can run +jemdoc+ without arguments, or
+~~~
+{}{}
+jemdoc --help
+~~~
+
+To show the html configuration ([htmlchanges.html details here]), run
 ~~~
 {}{}
 jemdoc --show-config
 ~~~
 
-This prints the default configuration. From this, the relevant configuration
-block (the one which includes the +</body>+ tag) has a title +\[bodyend\]+, and
-looks like
-
-~~~
-{}{}
-[bodyend]
-</body>
-</html>
-~~~
-
-We create a new file +mysite.conf+, say, and put a new +\[bodyend\]+ block
-inside it. The new file looks like this:
-
-~~~
-{}{}
-[bodyend]
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-_uacct = "UA-0000000-0";
-urchinTracker();
-</script>
-</body>
-</html>
-~~~
-
-To include the new configuration file, use the +-c+ option:
-
-~~~
-{}{}
-jemdoc -c mysite.conf index.jemdoc
-~~~
-
-This will pull in the new +\[bodyend\]+ block from +mysite.conf+, but otherwise
-work as before.
-
-Options can be combined, as in
-~~~
-{}{}
-jemdoc -c mysite.conf -o html/index.html index.jemdoc
-~~~
-
-This will use +mysite.conf+ and output to +html\/index.html+.

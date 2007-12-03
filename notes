@@ -74,3 +74,11 @@ proper vim handling of python \.
 remove argument for menu name and figure it out implicitly instead?
 
 what happens if you nest blocks?
+
+add chmod +x requirement.
+
+--show-config with -c.
+
+notime option.
+
+half the functions should hang off the controlstruct class.

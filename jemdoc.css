@@ -23,7 +23,7 @@ tt {
 	color: green;
 }
 
-tt.tthl, pre.tthl {
+tt.tthl {
 	color: black;
 }
 
@@ -98,16 +98,6 @@ div#subtitle {
 	padding-right: 1.0em;
 }
 
-@media print {
-	#layout-menu { display: none; }
-}
-/* Debug borders */
-p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
-
-	/*border: 1px solid red;*/
-
-}
-
 body {
 	margin: 0;
 }
@@ -122,8 +112,8 @@ strong {
 
 
 h1, h2, h3, h4, h5, h6 {
-	color: #203070;
-	margin-top: 0.9em;
+	color: #207030;
+	margin-top: 0.8em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
@@ -136,7 +126,6 @@ h1 {
 }
 
 h2 {
-	padding-top: 0.8em;
 	font-size: 125%;
 }
 
@@ -230,16 +219,20 @@ ol ol ol {
 	list-style-type: lower-roman;
 }
 
+p + div.codeblock {
+	margin-top: -0.6em;
+}
+
 div.codeblock, div.infoblock {
 	margin-right: 0%;
-	margin-top: 1.0em;
+	margin-top: 1.2em;
 	margin-bottom: 1.3em;
 }
 
 div.blocktitle {
 	font-weight: bold;
 	color: #203070;
-	margin-top: 0.8em;
+	margin-top: 1.2em;
 	margin-bottom: 0.1em;
 }
 
@@ -291,3 +284,8 @@ span.error {
 span.comment, span.comment > *, span.string, span.string > * {
 	color: #606060;
 }
+
+@media print {
+	#layout-menu { display: none; }
+}
+

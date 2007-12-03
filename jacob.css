@@ -1,0 +1,21 @@
+#layout-menu {
+	background: #f6f6f6;
+	border: 1px solid #c0c0c0;
+}
+
+a, a > tt {
+	color: #305080;
+}
+a:hover {
+	border-bottom: 1px #305080 dotted;
+}
+
+#layout-menu a.current:link, #layout-menu a.current:visited {
+	color: #203070;
+}
+
+div#toptitle {
+	margin-bottom: 1.3em;
+	border-bottom: 1px solid #c0c0c0;
+}
+

@@ -5,14 +5,17 @@ jemdoc
     contact             [contact.html]
 
 user's guide
+    running jemdoc      [using.html]
     example page        [example.html]
-    using               [using.html]
     cheat sheet         [cheatsheet.html]
     extra syntax        [extra.html]
 
-goodies
-    add a menu          [menu.html]
+configuration
+    html changes        [htmlchanges.html]
+    adding a menu       [menu.html]
     modelines           [modelines.html]
+
+goodies
     vim, make           [stuff.html]
 
 
