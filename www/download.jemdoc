@@ -3,13 +3,14 @@
 
 Here is {{<a href="dist/jemdoc.py"
 onclick="javascript:urchinTracker('/downloads/jemdoc.py');">jemdoc.py</a>}}
-(+v0.3.6+, 2007-11-28). You can also download this [dist/jemdoc.css example
+(+v0.4.0+, 2007-12-02). You can also download this [dist/jemdoc.css example
 css file] to get you started. You can easily modify the css to adjust colours,
 fonts and general layout elements to your taste. 
 
 You may like to %cp jemdoc.py /usr/bin/jemdoc% so that you can just type
 +jemdoc+; alternatively, you could also add a line to your %~/.bashrc% or
-similar like %alias jemdoc='/somepath/jemdoc.py'%.
+similar like %alias jemdoc='/somepath/jemdoc.py'%. Remember to +chmod \+x+ your
+file to make it executable.
 
 jemdoc requires Python~2.3 or later. If you have a working installation of
 Python, you should be ready to go. This includes all Macs, and almost any
