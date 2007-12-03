@@ -14,34 +14,21 @@ the `page' on the left is consequently incorrect.)
 ~~~
 # jemdoc: menu{MENU}{example.html}
 = jemdoc -- example page
+[http://stanford.edu/~jacobm/ Jacob Mattingley]
+([jacobm@stanford.edu])
+
 ~~~
 {}{raw}
 </td><td class="sepcell">&nbsp;</td>
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 # jemdoc: menu{MENU}{example.html}
 = jemdoc -- example page
-~~~
-~~~
-{}{raw}
-</td></tr><tr>
-<td class="leftcell">
-~~~
 [http://stanford.edu/~jacobm/ Jacob Mattingley]
 ([jacobm@stanford.edu])
 
-~~~
-{}{raw}
-</td><td class="sepcell">&nbsp;</td>
-<td class="rightcell">
-~~~
-~~~
-{}{jemdoctt}
-[http://stanford.edu/~jacobm/ Jacob Mattingley]
-([jacobm@stanford.edu])
-<pre> </pre>
 ~~~
 ~~~
 {}{raw}
@@ -57,10 +44,10 @@ If the first line of the file starts with +\# jemdoc+, special functions like
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 If the first line of the file starts with +\# jemdoc+, special functions like
 [menu.html menus] will be used.
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -68,20 +55,6 @@ If the first line of the file starts with +\# jemdoc+, special functions like
 <td class="leftcell">
 ~~~
 == Example
-~~~
-{}{raw}
-</td><td class="sepcell">&nbsp;</td>
-<td class="rightcell">
-~~~
-~~~
-{}{jemdoctt}
-== Example
-~~~
-~~~
-{}{raw}
-</td></tr><tr>
-<td class="leftcell">
-~~~
 Here are some *text* /features/. I could [http://cvxmod.net/ link somewhere] or
 insert a raw link to another page like [download.html].  I could use
 +monospace+, too.
@@ -92,11 +65,12 @@ insert a raw link to another page like [download.html].  I could use
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
+== Example
 Here are some *text* /features/. I could [http://cvxmod.net/ link somewhere] or
 insert a raw link to another page like [download.html].  I could use
 +monospace+, too.
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -115,13 +89,13 @@ automatically detect an
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 I could write special characters like
 \#, \$ and \+ by just using a backslash
 (\\) in front of those characters.  Or
 automatically detect an
 [jacobm@stanford.edu email address].
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -140,13 +114,13 @@ downloading jemdoc], of course).
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 \~~~
 Save the file as +index.jemdoc+, say, and simply
 call +jemdoc index+ (after [download.html
 downloading jemdoc], of course).
 \~~~
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -154,29 +128,18 @@ downloading jemdoc], of course).
 <td class="leftcell">
 ~~~
 == Next bit, next heading level two
+=== Getting into level three now
+
 ~~~
 {}{raw}
 </td><td class="sepcell">&nbsp;</td>
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 == Next bit, next heading level two
-~~~
-~~~
-{}{raw}
-</td></tr><tr>
-<td class="leftcell">
-~~~
 === Getting into level three now
-~~~
-{}{raw}
-</td><td class="sepcell">&nbsp;</td>
-<td class="rightcell">
-~~~
-~~~
-{}{jemdoctt}
-=== Getting into level three now
+
 ~~~
 ~~~
 {}{raw}
@@ -194,12 +157,12 @@ Why not use a list
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 Why not use a list
 - to explain the way you do lists?
 - to demonstrate how a line\n
   break might work?
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -218,13 +181,13 @@ Or perhaps a
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 Or perhaps a
 . Multilevel
   .. Numbered list
   .. Is more
 . Useful?
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -241,11 +204,11 @@ Or perhaps a
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 : {Definition} lists, especially when there are
   many definitions
 : {Can be useful} for explaining things
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -253,20 +216,6 @@ Or perhaps a
 <td class="leftcell">
 ~~~
 == Finally, a few more blocks
-~~~
-{}{raw}
-</td><td class="sepcell">&nbsp;</td>
-<td class="rightcell">
-~~~
-~~~
-{}{jemdoctt}
-== Finally, a few more blocks
-~~~
-~~~
-{}{raw}
-</td></tr><tr>
-<td class="leftcell">
-~~~
 This `section' features "smart quotes".
 
 ~~~
@@ -275,9 +224,10 @@ This `section' features "smart quotes".
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
+== Finally, a few more blocks
 This `section' features "smart quotes".
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -296,13 +246,13 @@ one set of braces (\{\}).
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 \~~~
 {Simple block}
 This is a simple text block, with a title. Notice how the previous line has only
 one set of braces (\{\}).
 \~~~
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -321,13 +271,13 @@ one set of braces (\{\}).
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 \~~~
 {Interactive Python listing}{pyint}
 >>> print 'Interactive Python code.'
 'Interactive Python code.'
 \~~~
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -345,12 +295,12 @@ Plain code block with no title.
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 \~~~
 {}{}
 Plain code block with no title.
 \~~~
-<pre> </pre>
+
 ~~~
 ~~~
 {}{raw}
@@ -364,7 +314,7 @@ You might need 2--3 different-sized dashes---they can be useful. Now we're done!
 <td class="rightcell">
 ~~~
 ~~~
-{}{jemdoctt}
+{}{jemdoc}
 You might need 2--3 different-sized dashes---they can be useful. Now we're done!
 ~~~
 ~~~

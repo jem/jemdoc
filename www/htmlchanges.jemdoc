@@ -1,0 +1,56 @@
+# jemdoc: menu{MENU}{htmlchanges.html}
+= jemdoc -- html changes
+
+jemdoc has a built-in default configuration. This configuration includes the
+particular html tags used when producing html. If you wish to adjust the html
+that jemdoc produces, you can provide a configuration file to override the
+built-in defaults.
+
+== Example html change
+Suppose you wanted to add [http://www.google.com/analytics/ Google
+Analytics] tracking to your website. That requires adding a short section of
+html before the +</body>+ tag.
+
+First, find out which block needs to be changed by using
+
+~~~
+{}{}
+jemdoc --show-config
+~~~
+
+This prints the default html configuration. From this, the relevant
+configuration block (the one which includes the +</body>+ tag) has a title
++\[bodyend\]+, and looks like
+
+~~~
+{}{}
+[bodyend]
+</body>
+</html>
+~~~
+
+Create a new file +mysite.conf+, say, and put a new +\[bodyend\]+ block
+inside it. The new file looks like this:
+
+~~~
+{}{}
+[bodyend]
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-0000000-0";
+urchinTracker();
+</script>
+</body>
+</html>
+~~~
+
+Include your new configuration file, with the +-c+ option ([using.html more
+details here]):
+~~~
+{}{}
+jemdoc -c mysite.conf index.jemdoc
+~~~
+
+This will pull in the new +\[bodyend\]+ block from +mysite.conf+, but otherwise
+work as before.

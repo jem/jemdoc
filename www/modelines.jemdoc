@@ -13,8 +13,10 @@ and start with the same string. The modeline can be omitted altogether.
 == Modeline options
 - +menu{MENUFILENAME}{CURRENTFILENAME}+\n
   Place a [menu.html menu] at the left of the page.
+- +notime+\n
+  Withhold the time from the `Page generated' footer.
 - +nodate+\n
-  Withhold the `Page generated' footer.
+  Withhold the date (and time) from the `Page generated' footer.
 - +showsource+\n
   Include a link to the jemdoc source.
 - +nodefaultcss+\n
