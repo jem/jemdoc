@@ -99,6 +99,12 @@ def standardconf():
     [windowtitle]
     # used in header for window title.
     <title>|</title>
+
+    [fwtitlestart]
+    <div id="fwtitle">
+
+    [fwtitleend]
+    </div>
     
     [doctitle]
     # used at top of document.
@@ -122,8 +128,7 @@ def standardconf():
     
     [menuend]
     </td>
-    <td>
-    <div id="layout-content">
+    <td id="layout-content">
     
     [menucategory]
     <div class="menu-category">|</div>
@@ -141,7 +146,6 @@ def standardconf():
     <div id="layout-content">
     
     [menulastbit]
-    </div>
     </td>
     </tr>
     </table>
@@ -268,12 +272,13 @@ def insertmenuitems(f, mname, current, prefix):
                 link = prefix + allreplace(link)
 
             # replace spaces with nbsps.
-            menuitem = re.sub(r'(?<!\\n) +', '~', r.group(1))
+            # no longer do this, use css instead.
+            #menuitem = re.sub(r'(?<!\\n) +', '~', r.group(1))
 
             if r.group(2) == current: 
-                hb(f.outf, f.conf['currentmenuitem'], link, br(menuitem))
+                hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1)))
             else:
-                hb(f.outf, f.conf['menuitem'], link, br(menuitem))
+                hb(f.outf, f.conf['menuitem'], link, br(r.group(1)))
 
         else: # menu category.
             hb(f.outf, f.conf['menucategory'], br(l))
@@ -787,6 +792,16 @@ def prependnbsps(l):
     g = re.search('(^ *)(.*)', l).groups()
     return g[0].replace(' ', '&nbsp;') + g[1]
 
+def inserttitle(f, t):
+    if t is not None:
+        hb(f.outf, f.conf['doctitle'], t)
+
+        # Look for a subtitle.
+        if pc(f) != '\n':
+            hb(f.outf, f.conf['subtitle'], br(np(f)))
+
+        hb(f.outf, f.conf['doctitleend'], t)
+
 def procfile(f):
     f.linenum = 0
 
@@ -795,6 +810,7 @@ def procfile(f):
     showlastupdated = True
     showlastupdatedtime = True
     nodefaultcss = False
+    fwtitle = False
     css = []
     title = None
     while pc(f, False) == '#':
@@ -825,6 +841,9 @@ def procfile(f):
 
                 elif b.startswith('notime'):
                     showlastupdatedtime = False
+
+                elif b.startswith('fwtitle'):
+                    fwtitle = True
 
                 elif b.startswith('showsource'):
                     showsourcelink = True
@@ -871,6 +890,11 @@ def procfile(f):
 
     out(f.outf, f.conf['bodystart'])
 
+    if fwtitle:
+        out(f.outf, f.conf['fwtitlestart'])
+        inserttitle(f, t)
+        out(f.outf, f.conf['fwtitleend'])
+
     if menu:
         out(f.outf, f.conf['menustart'])
         insertmenuitems(*menu)
@@ -878,14 +902,8 @@ def procfile(f):
     else:
         out(f.outf, f.conf['nomenu'])
 
-    if t is not None:
-        hb(f.outf, f.conf['doctitle'], t)
-
-        # Look for a subtitle.
-        if pc(f) != '\n':
-            hb(f.outf, f.conf['subtitle'], br(np(f)))
-
-        hb(f.outf, f.conf['doctitleend'], t)
+    if not fwtitle:
+        inserttitle(f, t)
 
     infoblock = False
     imgblock = False
