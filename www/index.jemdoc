@@ -1,4 +1,4 @@
-# jemdoc: menu{MENU}{index.html}, showsource, fwtitle, addcss{page}
+# jemdoc: menu{MENU}{index.html}, showsource
 = jemdoc -- light markup
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 

@@ -78,14 +78,6 @@ div#toptitle + h2, div#toptitle + h3 {
 	margin-top: -0.7em;
 }
 
-div#toptitle h1 {
-	margin-bottom: 0.0em;
-	padding-bottom: 0.1em;
-	padding-top: 0;
-	margin-top: 0.5em;
-	border-bottom: none;
-}
-
 div#subtitle {
 	margin-top: 0.0em;
 	margin-bottom: 0.0em;
@@ -296,10 +288,15 @@ span.comment, span.comment > *, span.string, span.string > * {
 	margin-bottom: 0.5em;
 }
 
-#layout-content h2:first-child {
-	margin-top: 5.7em;
-}
-
-#layout-content h2:first-child, #layout-content h3:first-child {
+#layout-content h1:first-child, #layout-content h2:first-child, #layout-content h3:first-child {
 	margin-top: -0.7em;
 }
+
+div#toptitle h1, #layout-content div#toptitle h1 {
+	margin-bottom: 0.0em;
+	padding-bottom: 0.1em;
+	padding-top: 0;
+	margin-top: 0.5em;
+	border-bottom: none;
+}
+

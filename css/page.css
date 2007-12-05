@@ -17,10 +17,10 @@ div#toptitle h1 {
 div#toptitle, div#toptitle h1, div#subtitle, div#subtitle a {
 	color: white;
 	font-weight: normal;
+	text-align: right;
 }
 
 #layout-menu {
-	background-color: white;
 	border: none;
 	border-right: 1px dashed #aaaaaa;
 	margin: 0;
@@ -36,17 +36,12 @@ div.menu-category {
 	border: none;
 	padding: 8px;
 	padding-left: 16px;
+	padding-right: 16px;
 	padding-bottom: 0;
 	margin: 0;
 }
 
 body {
 	padding: 0;
+	padding-bottom: 8px;
 }
-
-h1, h2, h3 {
-	border: none;
-	margin-bottom: 0.1em;
-	padding-bottom: 0.1em;
-}
-
