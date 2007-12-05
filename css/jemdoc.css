@@ -12,6 +12,7 @@ body {
 	padding-right: 8px;
 	font-size: 1.0em;
 	width: auto;
+	white-space: nowrap;
 }
 
 #layout-menu a {
@@ -286,3 +287,19 @@ span.comment, span.comment > *, span.string, span.string > * {
 	#layout-menu { display: none; }
 }
 
+#fwtitle {
+	margin: 2px;
+}
+
+#fwtitle #toptitle {
+	padding-left: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+#layout-content h2:first-child {
+	margin-top: 5.7em;
+}
+
+#layout-content h2:first-child, #layout-content h3:first-child {
+	margin-top: -0.7em;
+}
