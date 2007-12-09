@@ -23,6 +23,7 @@ import os
 import re
 import time
 import StringIO
+from latexmath2png import math2png
 
 def info():
     print __doc__
@@ -414,9 +415,27 @@ def replacepercents(b):
 
     return b
 
+def replaceequations(b):
+    # replace $sections$ as equations. Do not replace if within a link.
+
+    r = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S)
+    m = r.search(b)
+    while m:
+        eq = m.group(1)
+        print eq
+        fn = 'one.png'
+        math2png([eq], '/var/www/')
+
+        b = b[:m.start()] + \
+           ('<img class="eq" src="%s" alt="%s" />' % (fn, eq)) + b[m.end():]
+
+        m = r.search(b, m.start())
+
+    return b
+
 def replaceimages(b):
     # works with [img{width}{height}{alttext} location caption].
-    r = re.compile(r'(?<!\\)\[img((?:\{.*\}){,3})\s(.*?)(?:\s(.*?))?(?<!\\)\]',
+    r = re.compile(r'(?<!\\)\[img((?:\{.*?\}){,3})\s(.*?)(?:\s(.*?))?(?<!\\)\]',
                    re.M + re.S)
     m = r.search(b)
     s = re.compile(r'{(.*?)}', re.M + re.S)
@@ -456,7 +475,8 @@ def replacelinks(b):
     while m:
         m1 = m.group(1).strip()
 
-        if '@' in m1 and not m1.startswith('mailto:') and not m1.startswith('http://'):
+        if '@' in m1 and not m1.startswith('mailto:') and not \
+           m1.startswith('http://'):
             link = 'mailto:' + m1
         else:
             link = m1
@@ -491,6 +511,8 @@ def br(b):
     b = replacelinks(b)
 
     b = replacepercents(b)
+
+    b = replaceequations(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -658,6 +680,11 @@ def language(f, l, hl):
 
         out(f, l + '\n')
 
+def latexeq(f, e):
+    # assume e is an equation minus the dollar signs.
+    pass
+    
+    
 def dashlist(f):
     level = 0
 
@@ -806,6 +833,8 @@ def procfile(f):
     f.linenum = 0
 
     menu = None
+    # convert these to a dictionary.
+    showfooter = False
     showsourcelink = False
     showlastupdated = True
     showlastupdatedtime = True
@@ -835,6 +864,9 @@ def procfile(f):
                         menu = (f, g[0], g[1], '')
                     else:
                         menu = (f, g[0], g[1], g[2])
+
+                elif b.startswith('nofooter'):
+                    showfooter = False
 
                 elif b.startswith('nodate'):
                     showlastupdated = False
@@ -1008,7 +1040,7 @@ def procfile(f):
             if s:
                 hb(f.outf, '<p>|</p>\n', s)
 
-    if showlastupdated or showsourcelink:
+    if (not showfooter) and (showlastupdated or showsourcelink):
         out(f.outf, f.conf['footerstart'])
         if showlastupdated:
             if showlastupdatedtime:
