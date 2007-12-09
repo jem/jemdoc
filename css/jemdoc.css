@@ -106,7 +106,7 @@ strong {
 
 h1, h2, h3 {
 	color: #527bbd;
-	margin-top: 0.8em;
+	margin-top: 0.7em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
@@ -300,3 +300,6 @@ div#toptitle h1, #layout-content div#toptitle h1 {
 	border-bottom: none;
 }
 
+img#eq {
+	border: 1px solid red;
+}

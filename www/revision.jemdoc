@@ -11,8 +11,10 @@
 
 == Revision details
 === Changes from +v0.4.0+ to +v0.4.?+ (2007-?-?)
+. Support for inline images????
 . Added a +fwtitle+ for choosing /full-width/ title.
 . Tweaked CSS for various improvements.
+. Added a +nofooter+ option to more easily override the footer.
 
 === Changes from +v0.3.6+ to +v0.4.0+ (2007-12-02)
 . Added new syntax items +\#include{FILE}+ and +\#includeraw{FILE}+.

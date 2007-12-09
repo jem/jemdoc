@@ -16,13 +16,18 @@ and start with the same string. The modeline can be omitted altogether.
 - +notime+\n
   Withhold the time from the `Page generated' footer.
 - +nodate+\n
-  Withhold the date (and time) from the `Page generated' footer.
+  Withhold the date and the time from the `Page generated' footer.
 - +showsource+\n
   Include a link to the jemdoc source.
+- +nofooter+\n
+  Withhold the footer altogether (overrides the above options).
 - +nodefaultcss+\n
   Clear the list of CSS stylesheets included by the page.
 - +addcss{CSSSHEET}+\n
   Explicitly include an additional custom CSS stylesheet.
+- +fwtitle+\n
+  Makes the title /full width/ so the menu /and/ the body lie underneath the
+  title.
 
 == Examples
 ~~~
