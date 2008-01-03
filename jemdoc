@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.3.6XXXX (prerelease), 2007-11-28."""
+"""jemdoc version 0.3.6XXXX (prerelease), 2007-12-13."""
 
 # Copyright (C) 2007 Jacob Mattingley.
 #
@@ -290,6 +290,9 @@ def out(f, s):
     f.write(s)
 
 def hb(f, tag, content1, content2=None):
+    if content1 is None:
+        content1 = ""
+
     """Writes out a halfblock (hb)."""
     if content2 is None:
         out(f, re.sub(r'\|', content1, tag))
@@ -364,7 +367,7 @@ def nl(f, withcount=False, codemode=False):
 
         return s
 
-def np(f, withcount=False):
+def np(f, withcount=False, eatblanks=True):
     """Gets the next paragraph from the input file."""
     # New paragraph markers signalled by characters in following tuple.
     if withcount:
@@ -375,7 +378,7 @@ def np(f, withcount=False):
     while pc(f) not in ('\n', '-', '.', ':', '', '=', '~', '{'):
         s += nl(f)
 
-    while pc(f) == '\n':
+    while eatblanks and pc(f) == '\n':
         nl(f) # burn blank line.
 
     # in both cases, ditch the trailing \n.
@@ -685,58 +688,47 @@ def latexeq(f, e):
     pass
     
     
-def dashlist(f):
+def dashlist(f, ordered=False):
     level = 0
 
-    while pc(f) == '-':
-        (s, newlevel) = np(f, True)
+    if ordered:
+        char = '.'
+        ul = 'ol'
+    else:
+        char = '-'
+        ul = 'ul'
+
+    while pc(f) == char:
+        (s, newlevel) = np(f, True, False)
 
         # first adjust list number as appropriate.
         if newlevel > level:
             for i in range(newlevel - level):
                 if newlevel > 1:
                     out(f.outf, '\n')
-                out(f.outf, '<ul>\n<li>')
+                out(f.outf, '<%s>\n<li>' % ul)
         elif newlevel < level:
+            out(f.outf, '\n</li>')
             for i in range(level - newlevel):
-                out(f.outf, '</li>\n</ul>\n</li><li>')
+                #out(f.outf, '</li>\n</%s>\n</li><li>' % ul)
+                # demote means place '</ul></li>' in the file.
+                out(f.outf, '</%s>\n</li>' % ul)
+            #out(f.outf, '\n<li>')
+            out(f.outf, '\n<li>')
         else:
-            out(f.outf, '</li>\n<li>')
+            # same level, make a new list item.
+            out(f.outf, '\n</li>\n<li>')
 
         out(f.outf, '<p>' + br(s) + '</p>')
         level = newlevel
 
     for i in range(level):
-        out(f.outf, '</li>\n</ul>\n')
-
-def dotlist(f):
-    level = 0
-
-    while pc(f) == '.':
-        (s, newlevel) = np(f, True)
-
-        # first adjust list number as appropriate.
-        if newlevel > level:
-            for i in range(newlevel - level):
-                if newlevel > 1:
-                    out(f.outf, '\n')
-                out(f.outf, '<ol>\n<li>')
-        elif newlevel < level:
-            for i in range(level - newlevel):
-                out(f.outf, '</li>\n</ol>\n</li><li>')
-        else:
-            out(f.outf, '</li>\n<li>')
-
-        out(f.outf, '<p>' + br(s) + '</p>')
-        level = newlevel
-
-    for i in range(level):
-        out(f.outf, '</li>\n</ol>\n')
+        out(f.outf, '\n</li>\n</%s>\n' % ul)
 
 def colonlist(f):
     out(f.outf, '<dl>\n')
     while pc(f) == ':':
-        s = np(f)
+        s = np(f, eatblanks=False)
         r = re.compile(r'\s*{(.*?)(?<!\\)}(.*)', re.M + re.S)
         g = re.match(r, s)
 
@@ -834,7 +826,7 @@ def procfile(f):
 
     menu = None
     # convert these to a dictionary.
-    showfooter = False
+    showfooter = True
     showsourcelink = False
     showlastupdated = True
     showlastupdatedtime = True
@@ -917,8 +909,8 @@ def procfile(f):
     else:
         t = None
 
-    if title:
-        hb(f.outf, f.conf['windowtitle'], title)
+    #if title:
+    hb(f.outf, f.conf['windowtitle'], title)
 
     out(f.outf, f.conf['bodystart'])
 
@@ -947,10 +939,10 @@ def procfile(f):
 
         # look for lists.
         elif p == '-':
-            dashlist(f)
+            dashlist(f, False)
 
         elif p == '.':
-            dotlist(f)
+            dashlist(f, True)
 
         elif p == ':':
             colonlist(f)
@@ -1040,7 +1032,7 @@ def procfile(f):
             if s:
                 hb(f.outf, '<p>|</p>\n', s)
 
-    if (not showfooter) and (showlastupdated or showsourcelink):
+    if showfooter and (showlastupdated or showsourcelink):
         out(f.outf, f.conf['footerstart'])
         if showlastupdated:
             if showlastupdatedtime:
