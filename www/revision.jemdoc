@@ -4,6 +4,12 @@
 == Probable upcoming features
 - Support for LaTeX equations.
 
+== Fixing soon
+- Needing a line break at the end of a file for +{\{<\/asdasd>}\}+ to close
+  properly.
+- Headings have to have no whitespace - this is silly.
+- Change parse model to device which makes structured document?
+
 == Known bugs
 - Including +\#+ within a +{\{quoted block}}+ will fail. Use instead a +raw+
   block or place the +\#+ outside like in +{\{a~}}\\\#{\{2}}+ workaround.
@@ -15,6 +21,7 @@
 . Added a +fwtitle+ for choosing /full-width/ title.
 . Tweaked CSS for various improvements.
 . Added a +nofooter+ option to more easily override the footer.
+. Fixed a bug with lists not nesting properly.
 
 === Changes from +v0.3.6+ to +v0.4.0+ (2007-12-02)
 . Added new syntax items +\#include{FILE}+ and +\#includeraw{FILE}+.

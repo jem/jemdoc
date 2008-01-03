@@ -37,3 +37,7 @@ what happens if you nest blocks?
 --show-config with -c.
 
 half the functions should hang off the controlstruct class.
+
+errors for unrecognised jemdoc options?
+
+fix h1 not starting at the top.
