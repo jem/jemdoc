@@ -41,3 +41,5 @@ half the functions should hang off the controlstruct class.
 errors for unrecognised jemdoc options?
 
 fix h1 not starting at the top.
+
+hide latex output if no errors. otherwise package latex output, and perhaps indent?

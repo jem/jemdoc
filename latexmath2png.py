@@ -46,50 +46,58 @@ import os
 import sys
 import tempfile
 import getopt
+from StringIO import StringIO
+from subprocess import *
 
 # Default packages to use when generating output
 default_packages = [
-        'amsmath',
-        'amsthm',
-        'amssymb',
-        'bm'
+        #'amsmath',
+        #'amsthm',
+        #'amssymb',
         ]
 
 def __build_preamble(packages):
     preamble = '\documentclass{article}\n'
     for p in packages:
         preamble += "\usepackage{%s}\n" % p
+    #preamble += "\usepackage[active]{preview}\n"
     preamble += "\pagestyle{empty}\n\\begin{document}\n"
     return preamble
 
 def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
     try:
         # Generate the DVI file
-        latexcmd = 'latex -interaction=nonstopmode -output-directory %s %s'\
+        latexcmd = 'latex -file-line-error-style -interaction=nonstopmode -output-directory %s %s'\
                 % (workdir, infile)
-        print latexcmd
-        rc = os.system(latexcmd)
+        p = Popen(latexcmd, shell=True, stdout=PIPE)
+        rc = p.wait()
+
         # Something bad happened, abort
         if rc != 0:
+            print p.stdout.readlines()
             raise Exception('latex error')
+
 
         # Convert the DVI file to PNG's
         dvifile = infile.replace('.tex', '.dvi')
         outprefix = os.path.join(outdir, prefix)
-        dvicmd = "dvipng -T tight -x %i -z 9 -bg Transparent "\
-                "-o %s.png %s" % (size * 1000, outprefix, dvifile)
-        rc = os.system(dvicmd)
+        dvicmd = "dvipng --depth -q -T tight -D %i -z 3 -bg Transparent "\
+                "-o %s.png %s" % (130, outprefix, dvifile)
+        p = Popen(dvicmd, shell=True, stdout=PIPE)
+        rc = p.wait()
         if rc != 0:
             raise Exception('dvipng error')
+        depth = int(p.stdout.readlines()[-1].split('=')[-1])
     finally:
         # Cleanup temporaries
         basefile = infile.replace('.tex', '')
         tempext = [ '.aux', '.dvi', '.log' ]
         for te in tempext:
-            tempfile = basefile + te
-            if os.path.exists(tempfile):
-                os.remove(tempfile)
+            t = basefile + te
+            if os.path.exists(t):
+                os.remove(t)
 
+    return depth
 
 def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
     """
@@ -102,22 +110,28 @@ def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
         prefix      - Optional prefix for output files
         size        - Scale factor for output
     """
-    try:
-        # Set the working directory
-        workdir = tempfile.gettempdir()
+    #try:
 
-        # Get a temporary file
-        fd, texfile = tempfile.mkstemp('.tex', 'eq', workdir, True)
+    # Set the working directory
+    workdir = tempfile.gettempdir()
 
-        # Create the TeX document
-        #with os.fdopen(fd, 'w+') as f:
-        f = os.fdopen(fd, 'w+')
-        f.write(__build_preamble(packages))
-        for eq in eqs:
-            f.write("$%s$\n\\newpage\n" % eq)
-        f.write('\end{document}')
+    # Get a temporary file
+    fd, texfile = tempfile.mkstemp('.tex', '', workdir, True)
 
-        __write_output(texfile, outdir, workdir, prefix, size)
-    finally:
-        if os.path.exists(texfile):
-            os.remove(texfile)
+    # Create the TeX document
+    #with os.fdopen(fd, 'w+') as f:
+    f = os.fdopen(fd, 'w')
+    f.write(__build_preamble(packages))
+    for eq in eqs:
+        f.write("$%s$\n\\newpage\n" % eq)
+    f.write('\end{document}')
+    f.close()
+
+    depth = __write_output(texfile, outdir, workdir, prefix, size)
+
+    #finally:
+    #    pass
+    #    #if os.path.exists(texfile):
+    #    #    os.remove(texfile)
+
+    return depth
