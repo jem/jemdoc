@@ -425,16 +425,18 @@ def replaceequations(b):
     m = r.search(b)
     while m:
         eq = m.group(1)
-        print eq
-        fn = 'one.png'
-        math2png([eq], '/var/www/')
+        fn = str(abs(hash(eq)))
+        basedepth = math2png("0123456789", '', prefix=fn, dpi=130)
+
+
+        depth = math2png([eq], '', prefix=fn, dpi=1.2) - basedepth + 1
 
         b = b[:m.start()] + \
-           ('<img class="eq" src="%s" alt="%s" />' % (fn, eq)) + b[m.end():]
+                ('{{<img class="eq" src="%s.png" alt="%s" style="vertical-align: -%dpx" />}}' % (fn, eq, depth)) + b[m.end():]
 
         m = r.search(b, m.start())
 
-    return b
+    return replacequoted(b)
 
 def replaceimages(b):
     # works with [img{width}{height}{alttext} location caption].
@@ -686,7 +688,6 @@ def language(f, l, hl):
 def latexeq(f, e):
     # assume e is an equation minus the dollar signs.
     pass
-    
     
 def dashlist(f, ordered=False):
     level = 0
