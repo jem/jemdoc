@@ -64,7 +64,7 @@ def __build_preamble(packages):
     preamble += "\pagestyle{empty}\n\\begin{document}\n"
     return preamble
 
-def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
+def __write_output(infile, outdir, workdir = '.', prefix = '', dpi = 100):
     try:
         # Generate the DVI file
         latexcmd = 'latex -file-line-error-style -interaction=nonstopmode -output-directory %s %s'\
@@ -74,15 +74,15 @@ def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
 
         # Something bad happened, abort
         if rc != 0:
-            print p.stdout.readlines()
+            print p.stdout.read()
             raise Exception('latex error')
 
 
         # Convert the DVI file to PNG's
         dvifile = infile.replace('.tex', '.dvi')
         outprefix = os.path.join(outdir, prefix)
-        dvicmd = "dvipng --depth -q -T tight -D %i -z 3 -bg Transparent "\
-                "-o %s.png %s" % (130, outprefix, dvifile)
+        dvicmd = "dvipng --freetype0 -Q 8 --depth -q -T tight -D %i -z 3 -bg Transparent "\
+                "-o %s.png %s" % (dpi, outprefix, dvifile)
         p = Popen(dvicmd, shell=True, stdout=PIPE)
         rc = p.wait()
         if rc != 0:
@@ -99,17 +99,7 @@ def __write_output(infile, outdir, workdir = '.', prefix = '', size = 1):
 
     return depth
 
-def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
-    """
-    Generate png images from $...$ style math environment equations.
-
-    Parameters:
-        eqs         - A list of equations
-        outdir      - Output directory for PNG images
-        packages    - Optional list of packages to include in the LaTeX preamble
-        prefix      - Optional prefix for output files
-        size        - Scale factor for output
-    """
+def math2png(eq, outdir, packages = default_packages, prefix = '', dpi = 100):
     #try:
 
     # Set the working directory
@@ -122,12 +112,37 @@ def math2png(eqs, outdir, packages = default_packages, prefix = '', size = 1):
     #with os.fdopen(fd, 'w+') as f:
     f = os.fdopen(fd, 'w')
     f.write(__build_preamble(packages))
-    for eq in eqs:
-        f.write("$%s$\n\\newpage\n" % eq)
+    f.write("$%s$\n\\newpage\n" % eq)
     f.write('\end{document}')
     f.close()
 
-    depth = __write_output(texfile, outdir, workdir, prefix, size)
+    depth = __write_output(texfile, outdir, workdir, prefix, dpi)
+
+    #finally:
+    #    pass
+    #    #if os.path.exists(texfile):
+    #    #    os.remove(texfile)
+
+    return depth
+
+def math2pngwl(eq, outdir, packages = default_packages, prefix = '', dpi = 100):
+    #try:
+
+    # Set the working directory
+    workdir = tempfile.gettempdir()
+
+    # Get a temporary file
+    fd, texfile = tempfile.mkstemp('.tex', '', workdir, True)
+
+    # Create the TeX document
+    #with os.fdopen(fd, 'w+') as f:
+    f = os.fdopen(fd, 'w')
+    f.write(__build_preamble(packages))
+    f.write("\\[%s\\]\n\\newpage\n" % eq)
+    f.write('\end{document}')
+    f.close()
+
+    depth = __write_output(texfile, outdir, workdir, prefix, dpi)
 
     #finally:
     #    pass
