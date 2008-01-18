@@ -300,6 +300,9 @@ div#toptitle h1, #layout-content div#toptitle h1 {
 	border-bottom: none;
 }
 
-img#eq {
-	border: 1px solid red;
+img.eqwl {
+	padding-left: 2em;
+	padding-top: 0.5em;
+	padding-bottom: 0.1em;
+	margin: 0;
 }

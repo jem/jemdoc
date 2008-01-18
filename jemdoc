@@ -23,7 +23,7 @@ import os
 import re
 import time
 import StringIO
-from latexmath2png import math2png
+from subprocess import *
 
 def info():
     print __doc__
@@ -425,16 +425,47 @@ def replaceequations(b):
     m = r.search(b)
     while m:
         eq = m.group(1)
+        # jem: next two lines nastyish hack?
+        eq = eq.replace('&lt;', '<')
+        eq = eq.replace('&gt;', '>')
         fn = str(abs(hash(eq)))
-        basedepth = math2png("0123456789", '', prefix=fn, dpi=130)
+        dpi = 130
+        basedepth = math2png("0123456789", '', prefix=fn, dpi=dpi)
 
 
-        depth = math2png([eq], '', prefix=fn, dpi=1.2) - basedepth + 1
+        depth = math2png(eq, '', prefix=fn, dpi=dpi) - basedepth + 1
 
         b = b[:m.start()] + \
-                ('{{<img class="eq" src="%s.png" alt="%s" style="vertical-align: -%dpx" />}}' % (fn, eq, depth)) + b[m.end():]
+                ('{{<img class="eq" src="%s.png" alt="%s" style="vertical-align: -%dpx" />}}' % (fn, allreplace(eq), depth)) + b[m.end():]
 
         m = r.search(b, m.start())
+
+    return replacequoted(b)
+
+def replaceequations(b):
+    # replace $sections$ and \[sections\] as equations. Do not replace if
+    # within a link.  
+
+    rs = ((re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S), True),
+         (re.compile(r'(?<!\\)\\\[(.*?)(?<!\\)\\\]', re.M + re.S), False))
+    for (r, wl) in rs:
+        m = r.search(b)
+        while m:
+            eq = m.group(1)
+            # jem: next two lines nastyish hack?
+            eq = eq.replace('&lt;', '<')
+            eq = eq.replace('&gt;', '>')
+            fn = str(abs(hash(eq)))
+            dpi = 130
+            #basedepth = math2pngwl("0123456789", '', prefix=fn, dpi=dpi)
+
+
+            depth = mkeqpng(eq, '', prefix=fn, dpi=dpi, wl=wl)
+
+            b = b[:m.start()] + \
+                    ('\\n{{<img class="eqwl" src="%s.png" alt="%s" style="vertical-align: center" />}}\\n' % (fn, allreplace(eq))) + b[m.end():]
+
+            m = r.search(b, m.start())
 
     return replacequoted(b)
 
@@ -518,6 +549,7 @@ def br(b):
     b = replacepercents(b)
 
     b = replaceequations(b)
+    b = replaceequationswl(b)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -1118,5 +1150,66 @@ def main():
         procfile(f)
 
 #
+def geneq(eq, outdir, outname, packages=None, dpi=100, wl=False):
+    # Open tex file.
+    tempdir = tempfile.gettempdir()
+    fd, texfile = tempfile.mkstemp('.tex', '', tempdir, True)
+    basefile = texfile[:-4]
+    f = os.fdopen(fd, 'w')
+
+    if packages is None:
+        packages = []
+
+    # Add the default list here.
+    packages += []
+
+    preamble = '\documentclass{article}\n'
+    for p in packages:
+        preamble += '\usepackage{%s}\n' % p
+    preamble += '\pagestyle{empty}\n\\begin{document}\n'
+    f.write(preamble)
+    
+    # Write the equation itself.
+    if wholeline:
+        f.write('\\[%s\\]' % eq)
+    else:
+        f.write('$%s$' % eq)
+
+    # Finish off the tex file.
+    f.write('\n\\newpage\n\end{document}')
+    f.close()
+
+    try:
+        # Generate the DVI file
+        latexcmd = 'latex -file-line-error-style -interaction=nonstopmode ' + \
+               '-output-directory %s %s' % (workdir, texfile)
+        p = Popen(latexcmd, shell=True, stdout=PIPE)
+        rc = p.wait()
+        if rc != 0:
+            for l in p.stdout.readlines():
+                print '  ' + l
+            raise Exception('latex error')
+
+        dvifile = basefile + '.dvi'
+        outname = os.path.join(outdir, name) + '.png'
+        dvicmd = 'dvipng --freetype0 -Q8 --depth -q -Ttight -D%i -bgTransparent ' +\
+                 '-o %s %s' % (dpi, outname, dvifile)
+        p = Popen(dvicmd, shell=True, stdout=PIPE)
+        rc = p.wait()
+        if rc != 0:
+            raise Exception('dvipng error')
+
+        depth = int(p.stdout.readlines()[-1].split('=')[-1])
+    finally:
+        # Clean up.
+        exts = ['.tex', '.aux', '.dvi', '.log']
+        for ext in exts:
+            f = basefile + ext
+            if os.path.exists(f):
+                os.remove(f)
+
+    return depth
+
 if __name__ == '__main__':
     main()
+
