@@ -1,0 +1,56 @@
+# jemdoc: menu{MENU}{latex.html}, showsource
+= jemdoc -- latex equation support
+
+jemdoc includes support for LaTeX equations. LaTeX source embedded in jemdoc
+files is processed by calling [http://www.latex-project.org/ +latex+] and
+[http://www.nongnu.org/dvipng/ +dvipng+] (which must both be available for this
+feature). Resulting PNG images are then placed on the web page. The syntax is
+the same as LaTeX.
+
+== Inline equations
+The conjugate function $f^\star(y) = \inf_{x \in X}(y^Tx - f(x))$ appears here
+inline, as part of the paragraph, and is in the variable $y$. Dollar signs
+(+\$+) surround the LaTeX equation.
+
+~~~
+{Syntax}{}
+The sample function +\$f^\star(y) = \inf_{x \in X}(y^Tx - f(x))\$+ appears here
+inline, as part of the paragraph, and is in the variable +\$y\$+.
+~~~
+
+== Equations on separate lines
+To render an equation on its own line, use backslash-escaped square brackets
+(+\\\[+ and +\\\]+). For example, the identity
+\[
+(I + XY)^{-1} = I - X(I + YX)^{-1}Y
+\]
+is typeset on its own line.
+
+~~~
+{Syntax}{}
+The identity
+\[
+    (I \+ XY)^{-1} = I - X(I \+ YX)^{-1}Y
+\]
+is typeset on its own line.
+~~~
+
+Here, the line breaks (and other whitespace) are ignored. As always, the exact
+formatting details can be adjusted using CSS.
+
+== Notes
+- The baseline is carefully adjusted. The sequence m$m$m (actually +m\$m\$m+)
+  should look natural (modulo bad browsers).
+- Definition by cases will work as expected, for example, $f(x)$, where
+  \[
+  f(x) = \left\{
+  \begin{array}{ll}
+  3, & x \leq 0 \\
+  5, & x > 0. \\
+  \end{array}\right.
+  \]
+  (You can view the jemdoc source using the [latex.jemdoc source link] at the
+  bottom of the page.)
+- A random inequality might look like $3x + 2y^{4k + 6} \geq z$.
+- This page takes about 0.7 seconds to process on an average machine, including
+  making all the equations from scratch.

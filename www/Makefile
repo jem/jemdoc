@@ -1,4 +1,4 @@
-DOCS=index cheatsheet contact download revision using menu stuff extra example modelines  htmlchanges
+DOCS=index cheatsheet contact download revision using menu stuff extra example modelines  htmlchanges latex
 
 HDOCS=$(addsuffix .html, $(DOCS))
 PHDOCS=$(addprefix html/, $(HDOCS))
@@ -6,7 +6,7 @@ PHDOCS=$(addprefix html/, $(HDOCS))
 .PHONY : update
 update : $(PHDOCS)
 	@echo -n 'Copying to (hidden) server...'
-	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist /var/www/jemdoc/
+	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist eqs /var/www/jemdoc/
 	@echo ' done.'
 
 .PHONY : extra
