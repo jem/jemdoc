@@ -24,6 +24,7 @@ import re
 import time
 import StringIO
 from subprocess import *
+import tempfile
 
 def info():
     print __doc__
@@ -31,13 +32,20 @@ def info():
     print 'Using Python version %s, located at %s.' % (sys.version[:5], sys.executable)
 
 class controlstruct(object):
-    def __init__(self, infile, outfile=None, conf=None, inname=None):
+    def __init__(self, infile, outfile=None, conf=None, inname=None,
+                 eqdir='eqs/', eqdpi=130):
         self.inname = inname
         self.inf = infile
         self.outf = outfile
         self.conf = conf
         self.linenum = 0
         self.otherfiles = []
+        self.eqdir = eqdir
+        self.eqdpi = eqdpi
+        # next var used for equations.
+        self.eqpackages = []
+        self.eqbd = {} # equation base depth.
+        self.baseline = None
 
     def pushfile(self, newfile):
         self.otherfiles.insert(0, self.inf)
@@ -277,12 +285,12 @@ def insertmenuitems(f, mname, current, prefix):
             #menuitem = re.sub(r'(?<!\\n) +', '~', r.group(1))
 
             if r.group(2) == current: 
-                hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1)))
+                hb(f.outf, f.conf['currentmenuitem'], link, br(r.group(1), f))
             else:
-                hb(f.outf, f.conf['menuitem'], link, br(r.group(1)))
+                hb(f.outf, f.conf['menuitem'], link, br(r.group(1), f))
 
         else: # menu category.
-            hb(f.outf, f.conf['menucategory'], br(l))
+            hb(f.outf, f.conf['menucategory'], br(l, f))
 
     m.close()
 
@@ -418,53 +426,47 @@ def replacepercents(b):
 
     return b
 
-def replaceequations(b):
-    # replace $sections$ as equations. Do not replace if within a link.
+def replaceequations(b, f):
+    # replace $sections$ and \[sections\] as equations.
 
-    r = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S)
-    m = r.search(b)
-    while m:
-        eq = m.group(1)
-        # jem: next two lines nastyish hack?
-        eq = eq.replace('&lt;', '<')
-        eq = eq.replace('&gt;', '>')
-        fn = str(abs(hash(eq)))
-        dpi = 130
-        basedepth = math2png("0123456789", '', prefix=fn, dpi=dpi)
-
-
-        depth = math2png(eq, '', prefix=fn, dpi=dpi) - basedepth + 1
-
-        b = b[:m.start()] + \
-                ('{{<img class="eq" src="%s.png" alt="%s" style="vertical-align: -%dpx" />}}' % (fn, allreplace(eq), depth)) + b[m.end():]
-
-        m = r.search(b, m.start())
-
-    return replacequoted(b)
-
-def replaceequations(b):
-    # replace $sections$ and \[sections\] as equations. Do not replace if
-    # within a link.  
-
-    rs = ((re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S), True),
-         (re.compile(r'(?<!\\)\\\[(.*?)(?<!\\)\\\]', re.M + re.S), False))
+    rs = ((re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S), False),
+         (re.compile(r'(?<!\\)\\\[(.*?)(?<!\\)\\\]', re.M + re.S), True))
     for (r, wl) in rs:
         m = r.search(b)
         while m:
             eq = m.group(1)
-            # jem: next two lines nastyish hack?
+            # jem: next two lines nasty hack?
             eq = eq.replace('&lt;', '<')
             eq = eq.replace('&gt;', '>')
             fn = str(abs(hash(eq)))
-            dpi = 130
-            #basedepth = math2pngwl("0123456789", '', prefix=fn, dpi=dpi)
+
+            # Find out the baseline when we first encounter an equation (don't
+            # bother, otherwise).
+            # Other initialization stuff which we do once only when we have
+            # equations.
+            if f.baseline is None:
+                # See if the eqdir exists, and if not, create it.
+                if not os.path.isdir(f.eqdir):
+                    os.mkdir(f.eqdir)
+
+                # Calculate the baseline.
+                eqt = "0123456789xxxXXxX"
+                f.baseline = geneq(f, eqt, dpi=f.eqdpi, wl=False,
+                                   outname='deleteme')[0]
 
 
-            depth = mkeqpng(eq, '', prefix=fn, dpi=dpi, wl=wl)
+            (depth, fullfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
 
-            b = b[:m.start()] + \
-                    ('\\n{{<img class="eqwl" src="%s.png" alt="%s" style="vertical-align: center" />}}\\n' % (fn, allreplace(eq))) + b[m.end():]
+            offset = depth - f.baseline + 1
 
+            if wl:
+                b = b[:m.start()] + \
+                        ('{{<br />\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, allreplace(eq))) + b[m.end():]
+            else:
+                b = b[:m.start()] + \
+                    ('{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, quote(eq), offset)) + b[m.end():]
+
+            # jem: also clean out line breaks in the alttext?
             m = r.search(b, m.start())
 
     return replacequoted(b)
@@ -531,7 +533,7 @@ def replacelinks(b):
 
     return b
 
-def br(b):
+def br(b, f):
     """Does simple text replacements on a block of text. ('block replacements')"""
     # Deal with literal backspaces.
     b = re.sub(r'\\\\', 'jemLITerl33talBS', b)
@@ -548,8 +550,7 @@ def br(b):
 
     b = replacepercents(b)
 
-    b = replaceequations(b)
-    b = replaceequationswl(b)
+    b = replaceequations(b, f)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -717,10 +718,64 @@ def language(f, l, hl):
 
         out(f, l + '\n')
 
-def latexeq(f, e):
-    # assume e is an equation minus the dollar signs.
-    pass
+def geneq(f, eq, dpi, wl, outname, packages=None):
+    # Open tex file.
+    tempdir = tempfile.gettempdir()
+    fd, texfile = tempfile.mkstemp('.tex', '', tempdir, True)
+    basefile = texfile[:-4]
+    g = os.fdopen(fd, 'w')
+
+    if packages is None:
+        packages = []
+
+    # Add the default list here.
+    packages += []
+
+    preamble = '\documentclass{article}\n'
+    for p in packages:
+        preamble += '\usepackage{%s}\n' % p
+    preamble += '\pagestyle{empty}\n\\begin{document}\n'
+    g.write(preamble)
     
+    # Write the equation itself.
+    if wl:
+        g.write('\\[%s\\]' % eq)
+    else:
+        g.write('$%s$' % eq)
+
+    # Finish off the tex file.
+    g.write('\n\\newpage\n\end{document}')
+    g.close()
+
+    try:
+        # Generate the DVI file
+        latexcmd = 'latex -file-line-error-style -interaction=nonstopmode ' + \
+               '-output-directory %s %s' % (tempdir, texfile)
+        p = Popen(latexcmd, shell=True, stdout=PIPE)
+        rc = p.wait()
+        if rc != 0:
+            for l in p.stdout.readlines():
+                print '  ' + l
+            raise Exception('latex error')
+
+        dvifile = basefile + '.dvi'
+        eqname = os.path.join(f.eqdir, outname) + '-' + str(dpi) + '.png'
+        dvicmd = 'dvipng --freetype0 -Q 8 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
+        p = Popen(dvicmd, shell=True, stdout=PIPE)
+        rc = p.wait()
+        if rc != 0:
+            raise Exception('dvipng error')
+        depth = int(p.stdout.readlines()[-1].split('=')[-1])
+    finally:
+        # Clean up.
+        exts = ['.tex', '.aux', '.dvi', '.log']
+        for ext in exts:
+            g = basefile + ext
+            if os.path.exists(g):
+                os.remove(g)
+
+    return (depth, eqname)
+
 def dashlist(f, ordered=False):
     level = 0
 
@@ -752,7 +807,7 @@ def dashlist(f, ordered=False):
             # same level, make a new list item.
             out(f.outf, '\n</li>\n<li>')
 
-        out(f.outf, '<p>' + br(s) + '</p>')
+        out(f.outf, '<p>' + br(s, f) + '</p>')
         level = newlevel
 
     for i in range(level):
@@ -772,8 +827,8 @@ def colonlist(f):
         defpart = g.group(1)
         rest = g.group(2)
 
-        hb(f.outf, '<dt>|</dt>\n', br(defpart))
-        hb(f.outf, '<dd><p>|</p></dd>\n', br(rest))
+        hb(f.outf, '<dt>|</dt>\n', br(defpart, f))
+        hb(f.outf, '<dd><p>|</p></dd>\n', br(rest, f))
 
     out(f.outf, '</dl>\n')
 
@@ -850,7 +905,7 @@ def inserttitle(f, t):
 
         # Look for a subtitle.
         if pc(f) != '\n':
-            hb(f.outf, f.conf['subtitle'], br(np(f)))
+            hb(f.outf, f.conf['subtitle'], br(np(f), f))
 
         hb(f.outf, f.conf['doctitleend'], t)
 
@@ -936,7 +991,7 @@ def procfile(f):
 
     # Look for a title.
     if pc(f) == '=': # don't check exact number f.outf '=' here jem.
-        t = br(nl(f))[:-1]
+        t = br(nl(f), f)[:-1]
         if title is None:
             title = re.sub(' *(<br />)|(&nbsp;) *', ' ', t)
     else:
@@ -985,7 +1040,7 @@ def procfile(f):
             (s, c) = nl(f, True)
             # trim trailing \n.
             s = s[:-1]
-            hb(f.outf, '<h%d>|</h%d>\n' % (c, c), br(s))
+            hb(f.outf, '<h%d>|</h%d>\n' % (c, c), br(s, f))
 
         # look for comments.
         elif p == '#':
@@ -1017,7 +1072,7 @@ def procfile(f):
 
                 # process jemdoc markup in titles.
                 if len(g) >= 1:
-                    g[0] = br(g[0])
+                    g[0] = br(g[0], f)
 
                 if len(g) in (0, 1): # info block.
                     out(f.outf, f.conf['infoblock'])
@@ -1061,7 +1116,7 @@ def procfile(f):
                     raise JandalError("couldn't handle block", f.linenum)
 
         else:
-            s = br(np(f))
+            s = br(np(f), f)
             if s:
                 hb(f.outf, '<p>|</p>\n', s)
 
@@ -1150,66 +1205,6 @@ def main():
         procfile(f)
 
 #
-def geneq(eq, outdir, outname, packages=None, dpi=100, wl=False):
-    # Open tex file.
-    tempdir = tempfile.gettempdir()
-    fd, texfile = tempfile.mkstemp('.tex', '', tempdir, True)
-    basefile = texfile[:-4]
-    f = os.fdopen(fd, 'w')
-
-    if packages is None:
-        packages = []
-
-    # Add the default list here.
-    packages += []
-
-    preamble = '\documentclass{article}\n'
-    for p in packages:
-        preamble += '\usepackage{%s}\n' % p
-    preamble += '\pagestyle{empty}\n\\begin{document}\n'
-    f.write(preamble)
-    
-    # Write the equation itself.
-    if wholeline:
-        f.write('\\[%s\\]' % eq)
-    else:
-        f.write('$%s$' % eq)
-
-    # Finish off the tex file.
-    f.write('\n\\newpage\n\end{document}')
-    f.close()
-
-    try:
-        # Generate the DVI file
-        latexcmd = 'latex -file-line-error-style -interaction=nonstopmode ' + \
-               '-output-directory %s %s' % (workdir, texfile)
-        p = Popen(latexcmd, shell=True, stdout=PIPE)
-        rc = p.wait()
-        if rc != 0:
-            for l in p.stdout.readlines():
-                print '  ' + l
-            raise Exception('latex error')
-
-        dvifile = basefile + '.dvi'
-        outname = os.path.join(outdir, name) + '.png'
-        dvicmd = 'dvipng --freetype0 -Q8 --depth -q -Ttight -D%i -bgTransparent ' +\
-                 '-o %s %s' % (dpi, outname, dvifile)
-        p = Popen(dvicmd, shell=True, stdout=PIPE)
-        rc = p.wait()
-        if rc != 0:
-            raise Exception('dvipng error')
-
-        depth = int(p.stdout.readlines()[-1].split('=')[-1])
-    finally:
-        # Clean up.
-        exts = ['.tex', '.aux', '.dvi', '.log']
-        for ext in exts:
-            f = basefile + ext
-            if os.path.exists(f):
-                os.remove(f)
-
-    return depth
-
 if __name__ == '__main__':
     main()
 
