@@ -43,3 +43,7 @@ errors for unrecognised jemdoc options?
 fix h1 not starting at the top.
 
 hide latex output if no errors. otherwise package latex output, and perhaps indent?
+
+be able to set default directory for output equations. will create eqs/ directory by default.
+
+add testing of dvipng and latex to jemdoc --version call.

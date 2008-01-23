@@ -112,7 +112,7 @@ def math2png(eq, outdir, packages = default_packages, prefix = '', dpi = 100):
     #with os.fdopen(fd, 'w+') as f:
     f = os.fdopen(fd, 'w')
     f.write(__build_preamble(packages))
-    f.write("$%s$\n\\newpage\n" % eq)
+    f.write("$%s$\n" % eq)
     f.write('\end{document}')
     f.close()
 
