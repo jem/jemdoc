@@ -28,8 +28,21 @@ import tempfile
 
 def info():
     print __doc__
-    print 'Platform is ' + sys.platform + '.'
-    print 'Using Python version %s, located at %s.' % (sys.version[:5], sys.executable)
+    print 'Platform: ' + sys.platform + '.'
+    print 'Python: %s, located at %s.' % (sys.version[:5], sys.executable)
+    print 'Equation support:'
+    p = Popen('latex --version', shell=True, stdout=PIPE, stderr=PIPE)
+    rc = p.wait()
+    if rc != 0:
+        print '  latex: not found.'
+    else:
+        print '  latex: ' + p.stdout.readlines()[0].rstrip() + '.'
+    p = Popen('dvipng --version', shell=True, stdout=PIPE, stderr=PIPE)
+    rc = p.wait()
+    if rc != 0:
+        print '  dvipng: not found.'
+    else:
+        print '  dvipng: ' + p.stdout.readlines()[0].rstrip() + '.'
 
 class controlstruct(object):
     def __init__(self, infile, outfile=None, conf=None, inname=None,
@@ -435,9 +448,6 @@ def replaceequations(b, f):
         m = r.search(b)
         while m:
             eq = m.group(1)
-            # jem: next two lines nasty hack?
-            eq = eq.replace('&lt;', '<')
-            eq = eq.replace('&gt;', '>')
             fn = str(abs(hash(eq)))
 
             # Find out the baseline when we first encounter an equation (don't
@@ -449,22 +459,42 @@ def replaceequations(b, f):
                 if not os.path.isdir(f.eqdir):
                     os.mkdir(f.eqdir)
 
+                # later implement caching?
+                #try:
+                #    foffsets = open(os.path.join(f.eqdir, '.eqoffsets'), 'r')
+                #    for l in foffsets:
+                #        a = l.split()
+                #        offsetdict[a[0]] = a[1]
+                #    foffsets.close()
+                #except IOError:
+                #    offsetdict = {}
+
+                #try:
+                #    f.baseline = offsetdict['baseline-' + str(f.eqdpi)]
+                #except KeyError:
+
                 # Calculate the baseline.
                 eqt = "0123456789xxxXXxX"
-                f.baseline = geneq(f, eqt, dpi=f.eqdpi, wl=False,
-                                   outname='deleteme')[0]
+                (f.baseline, blfn) = geneq(f, eqt, dpi=f.eqdpi, wl=False,
+                                           outname='baseline-' + str(f.eqdpi))
+                if os.path.exists(blfn):
+                    os.remove(blfn)
 
-
+            fn = fn + '-' + str(f.eqdpi)
             (depth, fullfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
 
             offset = depth - f.baseline + 1
 
+            eqtext = allreplace(eq)
+            eqtext = eqtext.replace('\\', '')
+            eqtext = eqtext.replace('\n', ' ')
+
             if wl:
                 b = b[:m.start()] + \
-                        ('{{<br />\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, allreplace(eq))) + b[m.end():]
+                        '{{<br />\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, eqtext) + b[m.end():]
             else:
                 b = b[:m.start()] + \
-                    ('{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, quote(eq), offset)) + b[m.end():]
+                    '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
 
             # jem: also clean out line breaks in the alttext?
             m = r.search(b, m.start())
@@ -536,6 +566,7 @@ def replacelinks(b):
 def br(b, f):
     """Does simple text replacements on a block of text. ('block replacements')"""
     # Deal with literal backspaces.
+    b = replaceequations(b, f)
     b = re.sub(r'\\\\', 'jemLITerl33talBS', b)
 
     # Deal with {{html embedding}}.
@@ -550,7 +581,6 @@ def br(b, f):
 
     b = replacepercents(b)
 
-    b = replaceequations(b, f)
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
     # interfere.
@@ -755,11 +785,11 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
         rc = p.wait()
         if rc != 0:
             for l in p.stdout.readlines():
-                print '  ' + l
+                print '  ' + l.rstrip()
             raise Exception('latex error')
 
         dvifile = basefile + '.dvi'
-        eqname = os.path.join(f.eqdir, outname) + '-' + str(dpi) + '.png'
+        eqname = os.path.join(f.eqdir, outname) + '.png'
         dvicmd = 'dvipng --freetype0 -Q 8 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
         p = Popen(dvicmd, shell=True, stdout=PIPE)
         rc = p.wait()

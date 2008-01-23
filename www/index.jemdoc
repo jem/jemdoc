@@ -13,6 +13,10 @@ text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
+~~~
+*New on 2008-01-22:* jemdoc supports LaTeX equations. [latex.html Details here].
+~~~
+
 == Goals
 - Simple, consistent syntax.
 - Portability. The (single) jemdoc [http://www.python.org/ Python] file \+

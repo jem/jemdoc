@@ -302,12 +302,14 @@ div#toptitle h1, #layout-content div#toptitle h1 {
 
 img.eq {
 	padding: 0;
+	padding-left: 0.1em;
+	padding-right: 0.1em;
 	margin: 0;
 }
 
 img.eqwl {
-	padding-left: 0.2em;
-	padding-top: 0.5em;
-	padding-bottom: 0.1em;
+	padding-left: 2em;
+	padding-top: 0.6em;
+	padding-bottom: 0.2em;
 	margin: 0;
 }
