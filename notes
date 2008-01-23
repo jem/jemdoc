@@ -47,6 +47,7 @@ hide latex output if no errors. otherwise package latex output, and perhaps inde
 be able to set default directory for output equations. will create eqs/ directory by default.
 
 add testing of dvipng and latex to jemdoc --version call.
+--> done.
 
 noclean option for not removing tex file.
 call tex files after equation name, as well!

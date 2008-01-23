@@ -1,4 +1,4 @@
-DOCS=index cheatsheet contact download revision using menu stuff extra example modelines  htmlchanges latex
+DOCS=index cheatsheet contact download revision using menu stuff extra example modelines htmlchanges latex
 
 HDOCS=$(addsuffix .html, $(DOCS))
 PHDOCS=$(addprefix html/, $(HDOCS))
@@ -20,7 +20,7 @@ html/%.html : %.jemdoc MENU jemdoc.conf
 	~/jemdoc/jemdoc -o $@ -c jemdoc.conf $< 
 
 example.jemdoc : exampleIN.jemdoc procexample.py
-	echo 'making exampleIN'
+	@echo 'making exampleIN'
 	@./procexample.py
 
 .PHONY : realupdate

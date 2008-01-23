@@ -11,23 +11,36 @@ Multiple modelines can be included if they are all at the beginning of the file,
 and start with the same string. The modeline can be omitted altogether.
 
 == Modeline options
+=== General
 - +menu{MENUFILENAME}{CURRENTFILENAME}+\n
   Place a [menu.html menu] at the left of the page.
-- +notime+\n
-  Withhold the time from the `Page generated' footer.
-- +nodate+\n
-  Withhold the date and the time from the `Page generated' footer.
-- +showsource+\n
-  Include a link to the jemdoc source.
-- +nofooter+\n
-  Withhold the footer altogether (overrides the above options).
 - +nodefaultcss+\n
   Clear the list of CSS stylesheets included by the page.
 - +addcss{CSSSHEET}+\n
   Explicitly include an additional custom CSS stylesheet.
 - +fwtitle+\n
-  Makes the title /full width/ so the menu /and/ the body lie underneath the
-  title.
+  Makes the page title /full width/ so the menu /and/ the body lie underneath
+  the title.
+- +title{NEW TITLE}+\n
+  Manually sets the titlebar text to +NEW TITLE+.
+
+=== Footers
+- +notime+\n
+  Withhold the time from the `Page generated' footer.
+- +nodate+\n
+  Withhold the date and the time from the `Page generated' footer.
+- +showsource+\n
+  Include a link, in the footer, to the jemdoc source.
+- +nofooter+\n
+  Withhold the footer altogether (overrides the above options).
+
+=== Equations
+- +noeqs+\n
+  Disables LaTeX equation support.
+- +eqsize{SIZE}+\n
+  Adjusts the size of the equations (default +130+).
+- +eqdir{EQDIR}+\n
+  Adjust the equation directory (default +eqs+).
 
 == Examples
 ~~~

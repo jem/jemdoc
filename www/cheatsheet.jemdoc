@@ -18,6 +18,8 @@
 - jemdoc's apostrophes are converted automatically from +jemdoc\'s+ input
 - the sequence +\\n+ \n forces a manual line break
 - paragraphs are separated by blank lines
+- +\$inline LaTeX equation\$+
+- +\\( LaTeX equation on its own line \\)+
 
 == Blocks
 ~~~

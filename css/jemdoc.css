@@ -2,6 +2,7 @@ body {
 	background: white;
 	font-family: Georgia, serif;
 	padding-bottom: 8px;
+	margin: 0;
 }
 
 #layout-menu {
@@ -89,10 +90,6 @@ div#subtitle {
 	padding-top: 0.0em;
 	padding-left: 1.0em;
 	padding-right: 1.0em;
-}
-
-body {
-	margin: 0;
 }
 
 em {
@@ -197,7 +194,7 @@ ol {
 }
 
 li p, dd p {
-	margin-bottom: 0.4em;
+	margin-bottom: 0.3em;
 }
 
 
