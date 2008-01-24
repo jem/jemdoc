@@ -13,13 +13,13 @@ guarantees! Support may be limited.
 ~~~
 
 == Inline equations
-The conjugate function $f^\star(y) = \inf_{x \in X}(y^Tx - f(x))$ appears here
+The conjugate function $f^\star(y) = \sup_{x \in X}(y^Tx - f(x))$ appears here
 inline, and is in the variable $y$. Dollar signs (+\$+) surround the LaTeX
 equation in the jemdoc source.
 
 ~~~
 {Syntax}{}
-The sample function $f^\star(y) = \inf_{x \in X}(y^Tx - f(x))$
+The sample function $f^\star(y) = \sup_{x \in X}(y^Tx - f(x))$
 appears here inline, and is in the variable $y$.
 ~~~
 

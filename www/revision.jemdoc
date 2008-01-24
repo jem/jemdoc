@@ -9,7 +9,11 @@
   raw quoted section like +{\{<\/asdasd>}\}+.
 
 == Revision details
-=== Changes from +v0.4.0+ to +v0.5.1+ (2008-01-22)
+=== Changes from +v0.5.1+ to +v0.5.2+ (2008-01-24)
+. Fixed a bug with equation filenames colliding in edge cases.
+. Silenced unnecessary dvipng warnings.
+
+=== Changes from +v0.5.0+ to +v0.5.1+ (2008-01-23)
 . Forward slashes instead of backslashes on Windows for equations.
 
 === Changes from +v0.4.0+ to +v0.5.0+ (2008-01-22)

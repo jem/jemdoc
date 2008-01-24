@@ -1,1 +1,1 @@
-jemdoc.py-0.5.1
+jemdoc.py-0.5.2
