@@ -471,7 +471,10 @@ def replaceequations(b, f):
         m = r.search(b)
         while m:
             eq = m.group(1)
-            fn = str(abs(hash(eq)))
+            if wl:
+                fn = str(abs(hash(eq + 'wl120930alsdk')))
+            else:
+                fn = str(abs(hash(eq)))
 
             # Find out the baseline when we first encounter an equation (don't
             # bother, otherwise).
@@ -810,9 +813,11 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
         dvifile = basefile + '.dvi'
         eqname = f.eqdir + '/' + outname + '.png'
         dvicmd = 'dvipng --freetype0 -Q 8 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
-        p = Popen(dvicmd, shell=True, stdout=PIPE)
+        # discard warnings, as well.
+        p = Popen(dvicmd, shell=True, stdout=PIPE, stderr=PIPE)
         rc = p.wait()
         if rc != 0:
+            print p.stderr.readlines()
             raise Exception('dvipng error')
         depth = int(p.stdout.readlines()[-1].split('=')[-1])
     finally:
