@@ -17,7 +17,7 @@ div#toptitle h1 {
 div#toptitle, div#toptitle h1, div#subtitle, div#subtitle a {
 	color: white;
 	font-weight: normal;
-	text-align: right;
+	text-align: left;
 }
 
 #layout-menu {

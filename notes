@@ -52,3 +52,8 @@ add testing of dvipng and latex to jemdoc --version call.
 noclean option for not removing tex file.
 call tex files after equation name, as well!
 nocaching option?
+clean option!
+
+strip tags from title.
+
+mention punctuation + latex equations wrapping.
