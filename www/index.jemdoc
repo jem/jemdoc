@@ -2,7 +2,7 @@
 = jemdoc -- light markup
 [http://stanford.edu/~jacobm/ Jacob Mattingley] ([jacobm@stanford.edu])
 
-jemdoc is a light text-based markup language designed for creating simple
+jemdoc is a light text-based markup language designed for creating 
 websites. It takes a text file written with [example.html jemdoc markup], an
 optional configuration file and an optional menu file, and makes static websites
 that look something like this one, [http://cvxmod.net/ that one] or
@@ -14,7 +14,8 @@ copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
 ~~~
-*New on 2008-01-22:* jemdoc supports LaTeX equations. [latex.html Details here].
+*New on 2008-01-22:* jemdoc supports $\mbox{\LaTeX}$ equations. [latex.html
+Details here].
 ~~~
 
 == Goals
