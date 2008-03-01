@@ -57,3 +57,7 @@ clean option!
 strip tags from title.
 
 mention punctuation + latex equations wrapping.
+
+caching, i.e. .jemdoceqoffsets, or filename_offset.
+need tables as well (e.g. atoms page)
+

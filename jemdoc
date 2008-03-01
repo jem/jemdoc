@@ -599,9 +599,10 @@ def br(b, f):
     b = b.lstrip('-. \t') # remove leading spaces, tabs, dashes, dots.
     b = replaceimages(b) # jem not sure if this is still used.
 
+    b = replacepercents(b)
+
     b = replacelinks(b)
 
-    b = replacepercents(b)
 
 
     # Deal with /italics/ first because the '/' in other tags would otherwise
