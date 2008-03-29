@@ -143,10 +143,16 @@ pre {
 
 div#footer {
 	font-size: small;
-	border-top: 1px solid gray;
+	border-top: 1px solid #c0c0c0;
 	padding-top: 0.1em;
 	margin-top: 4.0em;
+	color: #c0c0c0;
 }
+
+div#footer a {
+	color: #80a0b0;
+}
+
 div#footer-text {
 	float: left;
 	padding-bottom: 8px;
@@ -295,6 +301,10 @@ div#toptitle h1, #layout-content div#toptitle h1 {
 	padding-top: 0;
 	margin-top: 0.5em;
 	border-bottom: none;
+}
+
+img {
+    border: none;
 }
 
 img.eq {
