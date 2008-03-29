@@ -71,7 +71,7 @@ for lists of definitions. Here is some code and the resulting list:
 ~~~
 
 == Preventing matches
-- a literal backspace (\\) is written +{{\\\\}}+ 
+- a literal backslash (\\) is written +{{\\\\}}+ 
 - the literal characters \/, \*, \+ and \~ and \# are written +\\/+, +\\*+,
   +\\\++, +\\\~+ and +\\\#+ to avoid the above formatting
 - +\\\...+ avoids an ellipsis

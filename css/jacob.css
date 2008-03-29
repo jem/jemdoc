@@ -26,15 +26,6 @@ h1, h2, h3 {
 	border-bottom: 1px solid #c0c0c0;
 }
 
-div#footer {
-	border-top: 1px solid #c0c0c0;
-	color: #c0c0c0;
-}
-
-div#footer a {
-	color: #80a0b0;
-}
-
 div#footer-text {
 	padding-bottom: 0;
 }
