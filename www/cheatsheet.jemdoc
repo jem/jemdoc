@@ -20,6 +20,7 @@
 - paragraphs are separated by blank lines
 - +\$inline LaTeX equation\$+
 - +\\( LaTeX equation on its own line \\)+
+- +\#+s (and only +\#+s) must be quoted in URLs
 
 == Blocks
 ~~~
