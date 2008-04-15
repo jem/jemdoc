@@ -14,8 +14,9 @@ copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
 ~~~
-*New on 2008-01-22:* jemdoc supports $\mbox{\LaTeX}$ equations. [latex.html
-Details here].
+*New on 2008-04-14:* As well as supporting $\mbox{\LaTeX}$ equations, jemdoc
+now caches them, regenerating only when required. This makes documents
+with even large numbers of equations fast to work with.
 ~~~
 
 == Goals
