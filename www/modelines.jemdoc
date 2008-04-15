@@ -41,6 +41,8 @@ and start with the same string. The modeline can be omitted altogether.
   Adjusts the size of the equations (default +130+).
 - +eqdir{EQDIR}+\n
   Adjust the equation directory (default +eqs+).
+- +noeqcache+\n
+  Disables equation caching.
 
 == Examples
 ~~~
