@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.5.XXX PRERELEASE, 2008-04-14."""
+"""jemdoc version 0.5.XXX PRERELEASE, 2008-05-04."""
 
 # Copyright (C) 2007-2008 Jacob Mattingley (jacobm@stanford.edu).
 #
@@ -183,7 +183,7 @@ def standardconf():
     <link rel="stylesheet" href="|" type="text/css" />
     
     [currentmenuitem]
-    <div><a href="|1" class="current">|2</a></div>
+    <div class="menu-item"><a href="|1" class="current">|2</a></div>
     
     [nomenu]
     <div id="layout-content">
@@ -593,7 +593,7 @@ def replacelinks(b):
 
     return b
 
-def br(b, f):
+def br(b, f, tableblock=False):
     """Does simple text replacements on a block of text. ('block replacements')"""
     # Deal with literal backspaces.
     if f.eqs and f.eqsupport:
@@ -643,7 +643,7 @@ def br(b, f):
 
     # Deal with em dash ---.
     r = re.compile(r"(?<!\\)---", re.M + re.S)
-    b = re.sub(r, r'&mdash;', b)
+    b = re.sub(r, r'&#8201;&mdash;&#8201;', b)
 
     # Deal with en dash --.
     r = re.compile(r"(?<!\\)--", re.M + re.S)
@@ -673,6 +673,21 @@ def br(b, f):
     # a paragraph.
     r = re.compile(r"(?<!\\)\\p", re.M + re.S)
     b = re.sub(r, r'</p><p>', b)
+
+    if tableblock:
+        # Deal with ||, meaning </td></tr><tr><td>
+        r = re.compile(r"(?<!\\)\|\|", re.M + re.S)
+        f.tablerow += 1
+        f.tablecol = 1
+        b = re.sub(r, r'</td></tr><tr class="r%d"><td class="c1">' % f.tablerow, b)
+
+        # jemjemjemjem
+        # Deal with |, meaning </td><td>
+        r = re.compile(r"(?<!\\)\|", re.M + re.S)
+        b = re.sub(r, r'</td><td class="c%d">' % f.tablecol, b)
+        #while re.search(r, b):
+            #f.tablecol += 1
+        #b = re.subn(r, r'</td><td class="c%d">' % f.tablecol, b, 1)
 
     ## Deal with zero width \_.
     #r = re.compile(r"(?<!\\)\\_", re.M + re.S)
@@ -1131,6 +1146,7 @@ def procfile(f):
 
     infoblock = False
     imgblock = False
+    tableblock = False
     while 1: # wait for EOF.
         p = pc(f)
 
@@ -1174,6 +1190,11 @@ def procfile(f):
                 imgblock = False
                 nl(f)
                 continue
+            elif tableblock:
+                out(f.outf, '</td></tr></table>\n')
+                tableblock = False
+                nl(f)
+                continue
             else:
                 if pc(f) == '{':
                     l = allreplace(nl(f))
@@ -1194,6 +1215,20 @@ def procfile(f):
                         hb(f.outf, f.conf['blocktitle'], g[0])
 
                     out(f.outf, f.conf['infoblockcontent'])
+
+                elif len(g) >= 2 and g[1] == 'table':
+                    # handles
+                    # {title}{table}{name}
+                    # one | two ||
+                    # three | four ||
+                    name = ''
+                    if len(g) >= 3 and g[2]:
+                        name += ' id="%s"' % g[2]
+                    out(f.outf, '<table%s><tr class="r1"><td class="c1">\n' % name)
+                    f.tablerow = 1
+                    f.tablecol = 1
+
+                    tableblock = True
 
                 elif len(g) == 2:
                     codeblock(f, g)
@@ -1228,9 +1263,12 @@ def procfile(f):
                     raise JandalError("couldn't handle block", f.linenum)
 
         else:
-            s = br(np(f), f)
+            s = br(np(f), f, tableblock)
             if s:
-                hb(f.outf, '<p>|</p>\n', s)
+                if tableblock:
+                    hb(f.outf, '|\n', s)
+                else:
+                    hb(f.outf, '<p>|</p>\n', s)
 
     if showfooter and (showlastupdated or showsourcelink):
         out(f.outf, f.conf['footerstart'])

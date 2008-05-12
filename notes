@@ -62,3 +62,7 @@ caching, i.e. .jemdoceqoffsets, or filename_offset.
 need tables as well (e.g. atoms page)
 
 definitions files for latex.
+
+possibly add package stuff etc to equation hashing.
+
+add hair space around em dashes? (&#8201;)

@@ -1,0 +1,121 @@
+body {
+    font: 80% Verdana;
+    margin-left: 2em;
+    margin-top: 1em;
+}
+
+pre, tt {
+    font-size: 110%;
+    background: #ffffdd;
+}
+
+tt {
+    color: #700000;
+}
+
+pre {
+    color: black;
+}
+
+a {
+    border-bottom: 1px solid #bbbbbb;
+    color: black;
+}
+
+h1 {
+    font-size: 150%;
+    border: none;
+}
+
+h2 {
+    font-size: 115%;
+    border: none;
+}
+
+h3 {
+    font-size: 100%;
+    border: none;
+}
+
+h1, h2, h3, div.blocktitle {
+    color: #990000;
+}
+
+div.blockcontent {
+    border: none;
+}
+
+div.infoblock > div.blockcontent {
+    background: #ffffdd;
+}
+
+div.codeblock > div.blockcontent, div.blockcontent pre {
+	background: #f8f8f8;
+}
+
+body, p {
+    line-height: 1.5em;
+	margin-bottom: 1.2em;
+}
+
+#layout-menu {
+    padding-left: 20px;
+    padding-right: 20px;
+    background: none;
+    text-align: right;
+    border: none;
+    padding-top: 3.0em;
+}
+
+#layout-content {
+    padding-left: 25px;
+    padding-top: 1em;
+    width: 600px;
+}
+
+b {
+    font-weight: normal;
+}
+
+p b {
+    font-style: italic;
+}
+
+div.menu-category {
+    border: none;
+    border-bottom: 1px solid 
+    margin-top: 1.0em;
+    padding-bottom: 0;
+}
+
+div.menu-item {
+    padding-left: 0;
+    text-indent: 0;
+    padding-bottom: 2px;
+}
+
+#layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
+    color: black;
+	border-bottom: 1px gray solid;
+}
+
+#layout-menu a.current:link, #layout-menu a.current:visited {
+	color: #900000;
+	border-bottom: 1px gray solid;
+}
+
+div#footer {
+	border-top: 1px solid #e0e0e0;
+    font-size: 80%;
+    padding-bottom: none;
+}
+
+div#footer a {
+	color: #bbbbbb;
+    border-bottom: 1px solid #cccccc;
+}
+
+
+div#toptitle {
+    border: none;
+}

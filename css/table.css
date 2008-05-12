@@ -1,0 +1,40 @@
+td {
+    padding: 2px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+table + table {
+    margin-top: 1em;
+}
+
+table {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid gray;
+}
+
+
+tr.heading {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+}
+
+#t1 td {
+    background: #eeeeff;
+    width: 120px;
+}
+
+#t1 tr.r1 {
+    border-bottom: 2px solid black;
+    font-weight: bold;
+}
+
+#t2 td.c2 {
+    background: red;
+}

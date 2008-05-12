@@ -36,13 +36,13 @@ and start with the same string. The modeline can be omitted altogether.
 
 === Equations
 - +noeqs+\n
-  Disables LaTeX equation support.
+  Disable LaTeX equation support.
 - +eqsize{SIZE}+\n
-  Adjusts the size of the equations (default +130+).
+  Adjust the size of the equations (default +130+).
 - +eqdir{EQDIR}+\n
   Adjust the equation directory (default +eqs+).
 - +noeqcache+\n
-  Disables equation caching.
+  Disable equation caching.
 
 == Examples
 ~~~
