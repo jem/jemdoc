@@ -14,7 +14,7 @@ div#toptitle h1 {
 	margin-top: 0.1em;
 }
 
-div#toptitle, div#toptitle h1, div#subtitle, div#subtitle a {
+#fwtitle div#toptitle h1, div#subtitle, div#subtitle a {
 	color: white;
 	font-weight: normal;
 	text-align: left;

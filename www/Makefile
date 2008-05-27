@@ -1,4 +1,4 @@
-DOCS=index cheatsheet contact download revision using menu stuff extra example modelines htmlchanges latex
+DOCS=index cheatsheet contact download revision using menu stuff extra example modelines htmlchanges latex tables
 
 HDOCS=$(addsuffix .html, $(DOCS))
 PHDOCS=$(addprefix html/, $(HDOCS))

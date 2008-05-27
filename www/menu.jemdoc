@@ -33,6 +33,14 @@ comment like this one:
 This will add a menu from the file called +MENU+, and underline and darken the
 menu entry corresponding to +index.html+.
 
+== Relative paths
+Optionally, include a +prefix+ which instructs jemdoc where the root of the menu
+is located relative to a particular page.
+~~~
+{}{}
+# jemdoc: menu{MENU}{pageinsubdir.html}{prefix}
+~~~
+
 == A note on menu widths
 jemdoc will create menu entries that do not wrap. If you have a particularly
 long title, or menu item, insert manual linebreaks using +\\++n+ in your

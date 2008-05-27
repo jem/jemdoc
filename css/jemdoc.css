@@ -1,3 +1,12 @@
+table#tlayout {
+    border: none;
+    border-collapse: separate;
+    background: white;
+}
+
+table#tlayout td {
+}
+
 body {
 	background: white;
 	font-family: Georgia, serif;
@@ -6,7 +15,6 @@ body {
 }
 
 #layout-menu {
-	background: #f4f4f4;
 	border: 1px solid #dddddd;
 	padding-top: 0.5em;
 	padding-left: 8px;
@@ -14,6 +22,23 @@ body {
 	font-size: 1.0em;
 	width: auto;
 	white-space: nowrap;
+    text-align: left;
+    vertical-align: top;
+}
+
+#layout-menu td {
+	background: #f4f4f4;
+    vertical-align: top;
+}
+
+#layout-content {
+	padding-top: 0.0em;
+	padding-left: 1.0em;
+	padding-right: 1.0em;
+    border: none;
+    background: white;
+    text-align: left;
+    vertical-align: top;
 }
 
 #layout-menu a {
@@ -22,12 +47,9 @@ body {
 }
 
 tt {
-	color: green;
+    background: #ffffdd;
 }
 
-tt.tthl {
-	color: black;
-}
 
 pre, tt {
 	font-size: 90%;
@@ -84,12 +106,6 @@ div#subtitle {
 	margin-bottom: 0.0em;
 	padding-top: 0em;
 	padding-bottom: 0.1em;
-}
-
-#layout-content {
-	padding-top: 0.0em;
-	padding-left: 1.0em;
-	padding-right: 1.0em;
 }
 
 em {
@@ -268,6 +284,9 @@ span.statement {
 span.builtin {
 	color: #000088;
 }
+span.special {
+	color: #990000;
+}
 span.operator {
 	color: #880000;
 }
@@ -319,4 +338,26 @@ img.eqwl {
 	padding-top: 0.6em;
 	padding-bottom: 0.2em;
 	margin: 0;
+}
+
+table {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 2px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align: center;
+    border: 1px solid gray;
+}
+
+table + table {
+    margin-top: 1em;
+}
+
+tr.heading {
+    font-weight: bold;
+    border-bottom: 2px solid black;
 }
