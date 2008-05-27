@@ -1,14 +1,16 @@
 body {
-    font: 80% Verdana, sans-serif;
+    font: 80% Verdana;
+    margin-left: 2em;
+    margin-top: 1em;
 }
 
 pre, tt {
     font-size: 110%;
+    background: #ffffdd;
 }
 
 tt {
-    background: #ffffdd;
-    color: #000050;
+    color: #700000;
 }
 
 pre {
@@ -17,10 +19,7 @@ pre {
 
 a {
     border-bottom: 1px solid #bbbbbb;
-}
-
-a:hover {
-    border-bottom: 1px solid #bbbbbb;
+    color: black;
 }
 
 h1 {
@@ -38,28 +37,40 @@ h3 {
     border: none;
 }
 
+h1, h2, h3, div.blocktitle {
+    color: #990000;
+}
+
+div.blockcontent {
+    border: none;
+}
 
 div.infoblock > div.blockcontent {
     background: #ffffdd;
 }
 
-div.blockcontent {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 6px;
-    padding-bottom: 7px;
+div.codeblock > div.blockcontent, div.blockcontent pre {
+	background: #f8f8f8;
 }
 
-p {
+body, p {
     line-height: 1.5em;
 	margin-bottom: 1.2em;
 }
 
 #layout-menu {
-    padding-left: 15px;
-    line-height: 1.7em;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: none;
     text-align: right;
-    padding-top: 0.5em;
+    border: none;
+    padding-top: 3.0em;
+}
+
+#layout-content {
+    padding-left: 25px;
+    padding-top: 1em;
+    width: 600px;
 }
 
 b {
@@ -70,6 +81,12 @@ p b {
     font-style: italic;
 }
 
+div.menu-category {
+    border: none;
+    border-bottom: 1px solid 
+    margin-top: 1.0em;
+    padding-bottom: 0;
+}
 
 div.menu-item {
     padding-left: 0;
@@ -83,27 +100,22 @@ div.menu-item {
 }
 
 #layout-menu a.current:link, #layout-menu a.current:visited {
-	border-bottom: none;
+	color: #900000;
+	border-bottom: 1px gray solid;
 }
 
 div#footer {
 	border-top: 1px solid #e0e0e0;
     font-size: 80%;
-    padding-bottom: 0;
+    padding-bottom: none;
 }
 
 div#footer a {
-	color: #aaaaaa;
+	color: #bbbbbb;
     border-bottom: 1px solid #cccccc;
 }
 
-#fwtitle div#toptitle {
-	padding: 1.3em;
-}
 
-
-#layout-content {
-    padding-top: 1.3em;
-    padding-left: 30px;
-    padding-right: 30px;
+div#toptitle {
+    border: none;
 }

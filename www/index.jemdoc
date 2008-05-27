@@ -14,13 +14,12 @@ copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
 ~~~
-*New on 2008-04-14:* As well as supporting $\mbox{\LaTeX}$ equations, jemdoc
-now caches them, regenerating only when required. This makes documents
-with even large numbers of equations fast to work with.
+*New on 2008-05-26:* Support for [tables.html tables].
 ~~~
 
 == Goals
 - Simple, consistent syntax.
+- $\mbox{\LaTeX}$ equation support.
 - Portability. The (single) jemdoc [http://www.python.org/ Python] file \+
   single css file \+ your input file {{&rarr;}} html.
 - Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are

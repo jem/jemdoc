@@ -1,0 +1,42 @@
+# jemdoc: menu{MENU}{tables.html}, showsource, addcss{table}
+= jemdoc -- tables
+
+jemdoc includes preliminary support for tables.
+
+~~~
+{Table syntax}{}
+\~~~
+{}{table}{TABLENAME}
+first entry  | another entry ||
+as many rows | as you like   ||
+bottom row   | last entry
+\~~~
+~~~
+
++TABLENAME+ should either be replaced with a name---which becomes the table's
++css+ +id+---or be omitted.
+
+
+== Notes
+- There is no need to line up the +|+ symbols. Extra whitespace is ignored.
+- The last row does not need a terminating +||+.
+- Individual tables can be customised by replacing +TABLENAME+ with a unique
+  name, and using custom css. For example, within
+  a css file, +\#countries { background: gray; }+ will make the background of
+  the +countries+ table gray.
+- Rows in a table are numbered sequentially for easy formatting with css. For
+  example, to make the entries in the first row of a table called +countries+
+  bold, use +\#countries tr.r1 { font-weight: bold; }+.
+
+== Example
+
+~~~
+{}{table}{countries}
+country | population | people per square km ||
+Canada | 33 million | 3.2 ||
+{{<span lang="zh-Hans">中华人民共和国</span>}}\n | 
+1300 million | 140 ||
+Kingdom of Denmark | 5.5 million | 130 ||
+New Zealand | 4.3 million | 15 ||
+United States of America | 300 million | 31
+~~~

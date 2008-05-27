@@ -18,6 +18,7 @@ configuration
 goodies
     vim, make           [stuff.html]
     latex equations     [latex.html]
+    tables              [tables.html]
 
 
 # vim: et

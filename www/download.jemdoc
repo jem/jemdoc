@@ -3,7 +3,7 @@
 
 Here is {{<a href="dist/jemdoc.py"
 onclick="javascript:urchinTracker('/downloads/jemdoc.py');">jemdoc.py</a>}}
-(+v0.5.4+, 2008-04-14). You can also download this [dist/jemdoc.css example css
+(+v0.6.0+, 2008-05-26). You can also download this [dist/jemdoc.css example css
 file] to get you started. You can easily modify the css to adjust colours, fonts
 and general layout elements to your taste. 
 
