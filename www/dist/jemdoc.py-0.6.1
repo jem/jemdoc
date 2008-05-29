@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.6.0, 2008-05-26."""
+"""jemdoc version 0.6.1, 2008-05-28."""
 
 # Copyright (C) 2007-2008 Jacob Mattingley (jacobm@stanford.edu).
 #
@@ -760,7 +760,7 @@ def gethl(lang):
     elif lang == 'sh':
         d['statement'] = putbsbs(['cd', 'ls', 'sudo'])
         d['operator'] = ['&gt;']
-        d['builtin'] = putbsbs(['curl', 'wget', '(?<!\.)tar(?!\.)'])
+        d['builtin'] = putbsbs(['python', 'curl', 'wget', '(?<!\.)tar(?!\.)'])
         d['commentuntilend'] = '#'
         d['strings'] = True
     elif lang == 'commented':
@@ -1270,7 +1270,7 @@ def procfile(f):
                     if g[5].isdigit():
                         g[5] += 'px'
 
-                    out(f.outf, '<table><tr><td>\n')
+                    out(f.outf, '<table class=imgtable><tr><td>\n')
                     if g[6]:
                         out(f.outf, '<a href="%s">' % g[6])
                     out(f.outf, '<img src="%s"' % g[2])

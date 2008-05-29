@@ -4,9 +4,6 @@ table#tlayout {
     background: white;
 }
 
-table#tlayout td {
-}
-
 body {
 	background: white;
 	font-family: Georgia, serif;
@@ -322,10 +319,6 @@ div#toptitle h1, #layout-content div#toptitle h1 {
 	border-bottom: none;
 }
 
-img {
-    border: none;
-}
-
 img.eq {
 	padding: 0;
 	padding-left: 0.1em;
@@ -360,4 +353,12 @@ table + table {
 tr.heading {
     font-weight: bold;
     border-bottom: 2px solid black;
+}
+
+img {
+    border: none;
+}
+
+table.imgtable, table.imgtable td {
+    border: none;
 }
