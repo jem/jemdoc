@@ -30,8 +30,9 @@ comment like this one:
 # jemdoc: menu{MENU}{index.html}
 ~~~
 
-This will add a menu from the file called +MENU+, and underline and darken the
-menu entry corresponding to +index.html+.
+(Replace +index.html+ with the name of the relevant html page.) This will add a
+menu from the file called +MENU+, and underline and darken the menu entry
+corresponding to +index.html+.
 
 == Relative paths
 Optionally, include a +prefix+ which instructs jemdoc where the root of the menu
