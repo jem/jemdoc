@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.6.3, 2008-06-18."""
+"""jemdoc version 0.6.2, 2008-06-08."""
 
 # Copyright (C) 2007-2008 Jacob Mattingley (jacobm@stanford.edu).
 #
@@ -518,10 +518,6 @@ def replaceequations(b, f):
             eqtext = eqtext.replace('\\', '')
             eqtext = eqtext.replace('\n', ' ')
 
-            # Double braces will cause problems with escaping of image tag.
-            eqtext = eqtext.replace('{{', 'DOUBLEOPENBRACE')
-            eqtext = eqtext.replace('}}', 'DOUBLECLOSEBRACE')
-
             if wl:
                 b = b[:m.start()] + \
                         '{{<br />\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, eqtext) + b[m.end():]
@@ -563,7 +559,7 @@ def replaceimages(b):
         if m1[2]:
             bits.append(r'alt=\"%s\"' % quote(m1[2]))
 
-        b = b[:m.start()] + r'<img %s /\\>' % " ".join(bits) + b[m.end():]
+        b = b[:m.start()] + r'<img %s />' % " ".join(bits) + b[m.end():]
 
         m = r.search(b, m.start())
 
@@ -707,10 +703,6 @@ def br(b, f, tableblock=False):
 
     # Deal with literal backspaces.
     b = re.sub('jemLITerl33talBS', r'\\', b)
-
-    # Also fix up DOUBLEOPEN and DOUBLECLOSEBRACES.
-    b = re.sub('DOUBLEOPENBRACE', '{{', b)
-    b = re.sub('DOUBLECLOSEBRACE', '}}', b)
 
     return b
 

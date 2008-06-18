@@ -47,7 +47,6 @@ tt {
     background: #ffffdd;
 }
 
-
 pre, tt {
 	font-size: 90%;
 	font-family: monaco, monospace;
@@ -361,4 +360,5 @@ img {
 
 table.imgtable, table.imgtable td {
     border: none;
+    text-align: left;
 }

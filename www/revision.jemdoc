@@ -11,6 +11,13 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+=== Changes from +v0.6.2+ to +v0.6.3+ (2008-06-18)
+. Fixed a bug where double braces in equations caused strange pieces of html to
+  appear.
+
+=== Changes from +v0.6.1+ to +v0.6.2+ (2008-06-08)
+. Fixed a few bugs, including fixing invalid html for +imgtable+s.
+
 === Changes from +v0.6.0+ to +v0.6.1+ (2008-05-28)
 . Fixed minor regression with +img_left+ blocks having borders by accident.
 

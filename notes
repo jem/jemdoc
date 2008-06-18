@@ -66,3 +66,10 @@ definitions files for latex.
 possibly add package stuff etc to equation hashing.
 
 add hair space around em dashes? (&#8201;)
+--> done, for better or for worse.
+
+errors should say what file was being processed?
+
+easy way to add latex packages.
+
+allow || on last line of tables.
