@@ -13,13 +13,10 @@ text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
-~~~
-*New on 2008-05-26:* Support for [tables.html tables].
-~~~
-
 == Goals
 - Simple, consistent syntax.
-- $\mbox{\LaTeX}$ equation support.
+- $\mbox{\LaTeX}$ [latex.html equation support].
+- [tables.html Table support].
 - Portability. The (single) jemdoc [http://www.python.org/ Python] file \+
   single css file \+ your input file {{&rarr;}} html.
 - Based on [http://www.w3.org/Style/CSS/ CSS] so formatting specifics are
