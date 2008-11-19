@@ -11,6 +11,10 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+=== Changes from +v0.6.4+ to +v0.6.5+ (2008-11-19)
+. Added some more syntax highlighting elements for Python (+py+).
+. Fixed some small bugs.
+
 === Changes from +v0.6.3+ to +v0.6.4+ (2008-08-06)
 . Added more syntax highlighting support.
 . Other minor program changes.
