@@ -78,6 +78,7 @@ class controlstruct(object):
         self.eqsupport = True
         self.eqcache = True
         self.eqpackages = []
+        self.texlines = []
         self.eqbd = {} # equation base depth.
         self.baseline = None
 
@@ -359,6 +360,9 @@ def pc(f, ditchcomments=True):
         if c in ' \t':
             return pc(f)
 
+        if c == '\\':
+            c += pc(f)
+
         f.inf.seek(-1, 1)
     elif f.otherfiles:
         f.nextfile()
@@ -425,7 +429,7 @@ def np(f, withcount=False, eatblanks=True):
     else:
         s = nl(f)
 
-    while pc(f) not in ('\n', '-', '.', ':', '', '=', '~', '{'):
+    while pc(f) not in ('\n', '-', '.', ':', '', '=', '~', '{', '\\(', '\\)'):
         s += nl(f)
 
     while eatblanks and pc(f) == '\n':
@@ -472,8 +476,7 @@ def replacepercents(b):
     return b
 
 def replaceequations(b, f):
-    # replace $sections$ and \[sections\] as equations.
-
+    # replace $sections$ and \(sections\) as equations.
     rs = ((re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$', re.M + re.S), False),
          (re.compile(r'(?<!\\)\\\((.*?)(?<!\\)\\\)', re.M + re.S), True))
     for (r, wl) in rs:
@@ -524,7 +527,7 @@ def replaceequations(b, f):
 
             if wl:
                 b = b[:m.start()] + \
-                        '{{<br />\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, eqtext) + b[m.end():]
+                        '{{\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, eqtext) + b[m.end():]
             else:
                 b = b[:m.start()] + \
                     '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
@@ -562,8 +565,10 @@ def replaceimages(b):
             bits.append(r'height=\"%s\"' % quote(s))
         if m1[2]:
             bits.append(r'alt=\"%s\"' % quote(m1[2]))
+        else:
+            bits.append(r'alt=\"\"')
 
-        b = b[:m.start()] + r'<img %s /\\>' % " ".join(bits) + b[m.end():]
+        b = b[:m.start()] + r'<img %s />' % " ".join(bits) + b[m.end():]
 
         m = r.search(b, m.start())
 
@@ -687,20 +692,13 @@ def br(b, f, tableblock=False):
         # Deal with ||, meaning </td></tr><tr><td>
         r = re.compile(r"(?<!\\)\|\|", re.M + re.S)
         f.tablerow += 1
-        f.tablecol = 1
-        b = re.sub(r, r'</td></tr>\n<tr class="r%d"><td>' % f.tablerow, b)
+        f.tablecol = 2
+        b = re.sub(r, r'</td></tr>\n<tr class="r%d"><td class="c1">' % f.tablerow, b)
 
         # jemjemjemjem
         # Deal with |, meaning </td><td>
         r = re.compile(r"(?<!\\)\|", re.M + re.S)
         b = re.sub(r, r'</td><td class="c%d">' % f.tablecol, b)
-        #while re.search(r, b):
-            #f.tablecol += 1
-        #b = re.subn(r, r'</td><td class="c%d">' % f.tablecol, b, 1)
-
-    ## Deal with zero width \_.
-    #r = re.compile(r"(?<!\\)\\_", re.M + re.S)
-    #b = re.sub(r, '', b)
 
     # Second to last, remove any remaining quoting backslashes.
     b = re.sub(r'\\(?!\\)', '', b)
@@ -753,7 +751,8 @@ def gethl(lang):
                                  'finally', 'pass', 'print', 'raise', 'return',
                                  'try', 'with', 'global', 'assert', 'lambda',
                                  'yield', 'def', 'class', 'for', 'while', 'if',
-                                 'elif', 'else', 'import', 'from', 'as'])
+                                 'elif', 'else', 'import', 'from', 'as',
+                                  'assert'])
         d['operator'] = putbsbs(['and', 'in', 'is', 'not', 'or'])
         d['builtin'] = putbsbs(['True', 'False', 'set', 'open', 'frozenset',
                                'enumerate', 'object', 'hasattr', 'getattr',
@@ -765,21 +764,23 @@ def gethl(lang):
         d['error'] = putbsbs(['\w*Error',])
         d['commentuntilend'] = '#'
         d['strings'] = True
-    elif lang in ('c', 'C'):
-        d['statement'] = putbsbs(['if', 'else', 'printf', 'return'])
+    elif lang == 'c':
+        d['statement'] = putbsbs(['if', 'else', 'printf', 'return', 'for'])
         d['builtin'] = putbsbs(['static', 'typedef', 'int', 'float', 'double',
                                 'void', 'clock_t', 'struct', 'long'])
-        d['special'] = (['#include.*', '#define'])
+        d['special'] = (['#include.*', '#define', '@pyval{', '}@', '@pyif{',
+                         '@py{'])
         d['error'] = putbsbs(['\w*Error',])
         d['commentuntilend'] = ['//', '/*', ' * ', ' */']
         d['strings'] = True
     elif lang == 'sh':
-        d['statement'] = putbsbs(['cd', 'ls', 'sudo', 'cat', 'alias', 'grep',
-                                  'killall', 'find', 'sed', 'gs',
-                                  'tee', 'gzip'])
-        d['operator'] = ['&gt;', r'\\', r'\|', '2&gt;', 'monolith&gt;']
+        d['statement'] = putbsbs(['cd', 'ls', 'sudo', 'cat', 'alias',
+                                  'for', 'do', 'done', 'in',
+                                  ])
+        d['operator'] = ['&gt;', r'\\', r'\|', ';', '2&gt;', 'monolith&gt;']
         d['builtin'] = putbsbs(['gcc', 'python', 'curl', 'wget', 'ssh',
-                                'latex',
+                                'latex', 'find', 'sed', 'gs', 'grep', 'tee',
+                                'gzip', 'killall', 'echo', 'touch',
                                 'ifconfig', 'git', '(?<!\.)tar(?!\.)'])
         d['commentuntilend'] = '#'
         d['strings'] = True
@@ -841,7 +842,7 @@ def language(f, l, hl):
 
     out(f, l + '\n')
 
-def geneq(f, eq, dpi, wl, outname, packages=None):
+def geneq(f, eq, dpi, wl, outname):
     # First check if there is an existing file.
     eqname = os.path.join(f.eqdir, outname + '.png')
 
@@ -865,15 +866,13 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
     basefile = texfile[:-4]
     g = os.fdopen(fd, 'w')
 
-    if packages is None:
-        packages = []
-
-    # Add the default list here.
-    packages += []
-
     preamble = '\documentclass{article}\n'
-    for p in packages:
+    for p in f.eqpackages:
         preamble += '\usepackage{%s}\n' % p
+    for p in f.texlines:
+        # Replace \{ and \} in p with { and }.
+        # XXX hack.
+        preamble += re.sub(r'\\(?=[{}])', '', p + '\n')
     preamble += '\pagestyle{empty}\n\\begin{document}\n'
     g.write(preamble)
     
@@ -887,6 +886,7 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
     g.write('\n\\newpage\n\end{document}')
     g.close()
 
+    exts = ['.tex', '.aux', '.dvi', '.log']
     try:
         # Generate the DVI file
         latexcmd = 'latex -file-line-error-style -interaction=nonstopmode ' + \
@@ -896,6 +896,7 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
         if rc != 0:
             for l in p.stdout.readlines():
                 print '  ' + l.rstrip()
+            exts.remove('.tex')
             raise Exception('latex error')
 
         dvifile = basefile + '.dvi'
@@ -909,7 +910,6 @@ def geneq(f, eq, dpi, wl, outname, packages=None):
         depth = int(p.stdout.readlines()[-1].split('=')[-1])
     finally:
         # Clean up.
-        exts = ['.tex', '.aux', '.dvi', '.log']
         for ext in exts:
             g = basefile + ext
             if os.path.exists(g):
@@ -1127,6 +1127,14 @@ def procfile(f):
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     css += re.findall(r, b)
 
+                elif b.startswith('addpackage'):
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    f.eqpackages += re.findall(r, b)
+
+                elif b.startswith('addtex'):
+                    r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+                    f.texlines += re.findall(r, b)
+
                 elif b.startswith('title'):
                     r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
                     g = re.findall(r, b)
@@ -1208,6 +1216,22 @@ def procfile(f):
         if p == '':
             break
 
+        elif p == '\\(':
+            if not (f.eqs and f.eqsupport):
+                break
+
+            s = nl(f)
+            # Quickly pull out the equation here.
+            while True:
+                l = nl(f, codemode=True)
+                if not l:
+                    break
+                s += l
+                if l.strip() == '\)':
+                    break
+            out(f.outf, br(s.strip(), f))
+
+
         # look for lists.
         elif p == '-':
             dashlist(f, False)
@@ -1279,7 +1303,7 @@ def procfile(f):
                     name = ''
                     if len(g) >= 3 and g[2]:
                         name += ' id="%s"' % g[2]
-                    out(f.outf, '<table%s><tr class="r1"><td>\n' % name)
+                    out(f.outf, '<table%s><tr class="r1"><td class="c1">\n' % name)
                     f.tablerow = 1
                     f.tablecol = 1
 
