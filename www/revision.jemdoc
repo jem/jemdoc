@@ -11,6 +11,10 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+=== Changes from +v0.6.5+ to +v0.6.6+ (2009-07-11)
+. Fixed the labelling of table rows and columns.
+. Added some more syntax highlighing elements (mostly for +sh+).
+
 === Changes from +v0.6.4+ to +v0.6.5+ (2008-11-19)
 . Added some more syntax highlighting elements for Python (+py+).
 . Fixed some small bugs.

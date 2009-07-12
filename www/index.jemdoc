@@ -27,7 +27,7 @@ deliberately feature poor) and has more consistent syntax.
 - Minimal bells and whistles, but simple fallback to raw html if required.
 
 == License
-Copyright \C 2007--2008 Jacob Mattingley.
+Copyright \C 2007--2009 Jacob Mattingley.
 
 jemdoc is free software; you can redistribute it and\/or modify it under the
 terms of the [http://www.gnu.org/licenses/gpl-3.0.html GNU General Public
