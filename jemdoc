@@ -691,14 +691,24 @@ def br(b, f, tableblock=False):
     if tableblock:
         # Deal with ||, meaning </td></tr><tr><td>
         r = re.compile(r"(?<!\\)\|\|", re.M + re.S)
-        f.tablerow += 1
         f.tablecol = 2
-        b = re.sub(r, r'</td></tr>\n<tr class="r%d"><td class="c1">' % f.tablerow, b)
+        bcopy = b
+        b = ""
+        r2 = re.compile(r"(?<!\\)\|", re.M + re.S)
+        for l in bcopy.splitlines():
+            f.tablerow += 1
+            l = re.sub(r, r'</td></tr>\n<tr class="r%d"><td class="c1">' \
+                        % f.tablerow, l)
 
-        # jemjemjemjem
-        # Deal with |, meaning </td><td>
-        r = re.compile(r"(?<!\\)\|", re.M + re.S)
-        b = re.sub(r, r'</td><td class="c%d">' % f.tablecol, b)
+            l2 = ''
+            col = 2
+            r2s = r2.split(l)
+            for x in r2s[:-1]:
+                l2 += x + ('</td><td class="c%d">' % col)
+                col += 1
+            l2 += r2s[-1]
+
+            b += l2
 
     # Second to last, remove any remaining quoting backslashes.
     b = re.sub(r'\\(?!\\)', '', b)
@@ -1303,7 +1313,7 @@ def procfile(f):
                     name = ''
                     if len(g) >= 3 and g[2]:
                         name += ' id="%s"' % g[2]
-                    out(f.outf, '<table%s><tr class="r1"><td class="c1">\n' % name)
+                    out(f.outf, '<table%s>\n<tr class="r1"><td class="c1">' % name)
                     f.tablerow = 1
                     f.tablecol = 1
 
