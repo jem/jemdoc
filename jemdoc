@@ -679,6 +679,10 @@ def br(b, f, tableblock=False):
     r = re.compile(r"(?<!\\)\\C", re.M + re.S)
     b = re.sub(r, r'&copy;', b)
 
+    # Deal with middot \M.
+    r = re.compile(r"(?<!\\)\\M", re.M + re.S)
+    b = re.sub(r, r'&middot;', b)
+
     # Deal with line break.
     r = re.compile(r"(?<!\\)\\n", re.M + re.S)
     b = re.sub(r, r'<br />', b)
