@@ -336,10 +336,10 @@ def out(f, s):
     f.write(s)
 
 def hb(f, tag, content1, content2=None):
+    """Writes out a halfblock (hb)."""
     if content1 is None:
         content1 = ""
 
-    """Writes out a halfblock (hb)."""
     if content2 is None:
         out(f, re.sub(r'\|', content1, tag))
     else:
@@ -385,7 +385,7 @@ def doincludes(f, l):
     return True
 
 def nl(f, withcount=False, codemode=False):
-    """Get input file line."""
+    """Get next input file line."""
     s = f.inf.readline()
     if not s and f.otherfiles:
         f.nextfile()
@@ -679,6 +679,10 @@ def br(b, f, tableblock=False):
     r = re.compile(r"(?<!\\)\\C", re.M + re.S)
     b = re.sub(r, r'&copy;', b)
 
+    # Deal with middot \MD.
+    r = re.compile(r"(?<!\\)\\M", re.M + re.S)
+    b = re.sub(r, r'&middot;', b)
+
     # Deal with line break.
     r = re.compile(r"(?<!\\)\\n", re.M + re.S)
     b = re.sub(r, r'<br />', b)
@@ -910,7 +914,7 @@ def geneq(f, eq, dpi, wl, outname):
             raise Exception('latex error')
 
         dvifile = basefile + '.dvi'
-        dvicmd = 'dvipng --freetype0 -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
+        dvicmd = 'dvipng -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
         # discard warnings, as well.
         p = Popen(dvicmd, shell=True, stdout=PIPE, stderr=PIPE)
         rc = p.wait()
