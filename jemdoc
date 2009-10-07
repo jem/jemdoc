@@ -336,10 +336,10 @@ def out(f, s):
     f.write(s)
 
 def hb(f, tag, content1, content2=None):
-    """Writes out a halfblock (hb)."""
     if content1 is None:
         content1 = ""
 
+    """Writes out a halfblock (hb)."""
     if content2 is None:
         out(f, re.sub(r'\|', content1, tag))
     else:
@@ -385,7 +385,7 @@ def doincludes(f, l):
     return True
 
 def nl(f, withcount=False, codemode=False):
-    """Get next input file line."""
+    """Get input file line."""
     s = f.inf.readline()
     if not s and f.otherfiles:
         f.nextfile()
@@ -778,6 +778,16 @@ def gethl(lang):
         d['error'] = putbsbs(['\w*Error',])
         d['commentuntilend'] = '#'
         d['strings'] = True
+    elif lang in ('rb', 'ruby'):
+        d['statement'] = putbsbs(['while', 'until', 'unless', 'if', 'elsif',
+                                  'when', 'then', 'else', 'end', 'begin',
+                                  'rescue'])
+        d['operator'] = putbsbs(['and', 'not', 'or'])
+        d['builtin'] = putbsbs(['true', 'false', 'require', 'warn'])
+        d['special'] = putbsbs(['IO'])
+        d['error'] = putbsbs(['\w*Error',])
+        d['commentuntilend'] = '#'
+        d['strings'] = True
     elif lang == 'c':
         d['statement'] = putbsbs(['if', 'else', 'printf', 'return', 'for'])
         d['builtin'] = putbsbs(['static', 'typedef', 'int', 'float', 'double',
@@ -792,7 +802,7 @@ def gethl(lang):
                                   'for', 'do', 'done', 'in',
                                   ])
         d['operator'] = ['&gt;', r'\\', r'\|', ';', '2&gt;', 'monolith&gt;']
-        d['builtin'] = putbsbs(['gcc', 'python', 'curl', 'wget', 'ssh',
+        d['builtin'] = putbsbs(['gem', 'gcc', 'python', 'curl', 'wget', 'ssh',
                                 'latex', 'find', 'sed', 'gs', 'grep', 'tee',
                                 'gzip', 'killall', 'echo', 'touch',
                                 'ifconfig', 'git', '(?<!\.)tar(?!\.)'])
@@ -817,10 +827,10 @@ def language(f, l, hl):
         cue = hl['commentuntilend']
         if isinstance(cue, (list, tuple)):
             for x in cue:
-                if l.startswith(x):
+                if l.strip().startswith(x):
                     hb(f, '<span class="comment">|</span>\n', allreplace(l))
                     return
-        elif l.startswith(cue):
+        elif l.strip().startswith(cue):
             hb(f, '<span class="comment">|</span>\n', allreplace(l))
             return
 
@@ -914,7 +924,7 @@ def geneq(f, eq, dpi, wl, outname):
             raise Exception('latex error')
 
         dvifile = basefile + '.dvi'
-        dvicmd = 'dvipng -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
+        dvicmd = 'dvipng --freetype0 -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
         # discard warnings, as well.
         p = Popen(dvicmd, shell=True, stdout=PIPE, stderr=PIPE)
         rc = p.wait()
