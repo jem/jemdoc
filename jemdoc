@@ -831,20 +831,6 @@ def gethl(lang):
 
 def language(f, l, hl):
     l = l.rstrip()
-<<<<<<< HEAD:jemdoc
-    if 'commentuntilend' in hl:
-        cue = hl['commentuntilend']
-        if isinstance(cue, (list, tuple)):
-            for x in cue:
-                if l.strip().startswith(x):
-                    hb(f, '<span class="comment">|</span>\n', allreplace(l))
-                    return
-        elif l.startswith(cue):
-            hb(f, '<span class="comment">|</span>\n', allreplace(l))
-            return
-
-=======
->>>>>>> 3b95b120677c0d5671a0f4b3fa4bbbe56066c3f5:jemdoc
     l = allreplace(l)
     # handle strings.
     if hl['strings']:
