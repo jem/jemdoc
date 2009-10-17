@@ -13,6 +13,7 @@
 - +\#+ begins a comment, for the remainder of the line
 - +\\C+ is \C
 - +\\R+ is \R
+- +\\M+ is \M
 - `singly quoted text' is written +\`singly quoted text\'+
 - "doubly quoted text" is written +\"doubly quoted text\"+
 - jemdoc's apostrophes are converted automatically from +jemdoc\'s+ input

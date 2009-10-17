@@ -336,10 +336,10 @@ def out(f, s):
     f.write(s)
 
 def hb(f, tag, content1, content2=None):
-    """Writes out a halfblock (hb)."""
     if content1 is None:
         content1 = ""
 
+    """Writes out a halfblock (hb)."""
     if content2 is None:
         out(f, re.sub(r'\|', content1, tag))
     else:
@@ -385,7 +385,7 @@ def doincludes(f, l):
     return True
 
 def nl(f, withcount=False, codemode=False):
-    """Get next input file line."""
+    """Get input file line."""
     s = f.inf.readline()
     if not s and f.otherfiles:
         f.nextfile()
@@ -652,7 +652,9 @@ def br(b, f, tableblock=False):
     b = re.sub(r, r'&lsquo;', b)
 
     # Deal with apostrophe '.
-    r = re.compile(r"(?<!\\)'", re.M + re.S)
+    # Add an assertion that the next character's not a letter, to deal with
+    # apostrophes properly.
+    r = re.compile(r"(?<!\\)'(?![a-zA-Z])", re.M + re.S)
     b = re.sub(r, r'&rsquo;', b)
 
     # Deal with em dash ---.
@@ -785,6 +787,16 @@ def gethl(lang):
                          '@py{']
         d['error'] = ['\w*Error',]
         d['commentuntilend'] = ['//', '/*', ' * ', '*/']
+    elif lang in ('rb', 'ruby'):
+        d['statement'] = putbsbs(['while', 'until', 'unless', 'if', 'elsif',
+                                  'when', 'then', 'else', 'end', 'begin',
+                                  'rescue', 'class', 'def'])
+        d['operator'] = putbsbs(['and', 'not', 'or'])
+        d['builtin'] = putbsbs(['true', 'false', 'require', 'warn'])
+        d['special'] = putbsbs(['IO'])
+        d['error'] = putbsbs(['\w*Error',])
+        d['commentuntilend'] = '#'
+        d['strings'] = True
         d['strings'] = True
         if lang in ['c++', 'cpp']:
             d['builtin'] += ['bool', 'virtual']
@@ -796,9 +808,10 @@ def gethl(lang):
         d['statement'] = ['cd', 'ls', 'sudo', 'cat', 'alias', 'for', 'do',
                           'done', 'in', ]
         d['operator'] = ['&gt;', r'\\', r'\|', ';', '2&gt;', 'monolith&gt;']
-        d['builtin'] = ['gcc', 'python', 'curl', 'wget', 'ssh', 'latex',
-                        'find', 'sed', 'gs', 'grep', 'tee', 'gzip', 'killall',
-                        'echo', 'touch', 'ifconfig', 'git', '(?<!\.)tar(?!\.)']
+        d['builtin'] = putbsbs(['gem', 'gcc', 'python', 'curl', 'wget', 'ssh',
+                                'latex', 'find', 'sed', 'gs', 'grep', 'tee',
+                                'gzip', 'killall', 'echo', 'touch',
+                                'ifconfig', 'git', '(?<!\.)tar(?!\.)'])
         d['commentuntilend'] = '#'
         d['strings'] = True
     elif lang == 'matlab':
@@ -817,9 +830,8 @@ def gethl(lang):
     return d
 
 def language(f, l, hl):
-    # class is capitalized to avoid matching the class keyword.
-    # also handle strings and comments.
     l = l.rstrip()
+<<<<<<< HEAD:jemdoc
     if 'commentuntilend' in hl:
         cue = hl['commentuntilend']
         if isinstance(cue, (list, tuple)):
@@ -831,6 +843,8 @@ def language(f, l, hl):
             hb(f, '<span class="comment">|</span>\n', allreplace(l))
             return
 
+=======
+>>>>>>> 3b95b120677c0d5671a0f4b3fa4bbbe56066c3f5:jemdoc
     l = allreplace(l)
     # handle strings.
     if hl['strings']:
@@ -860,6 +874,20 @@ def language(f, l, hl):
         l = r.sub(r'<span class="error">\1</span>', l)
 
     l = re.sub('CLCLclass', 'class', l)
+
+    if 'commentuntilend' in hl:
+        cue = hl['commentuntilend']
+        if isinstance(cue, (list, tuple)):
+            for x in cue:
+                if l.strip().startswith(x):
+                    hb(f, '<span class="comment">|</span>\n', allreplace(l))
+                    return
+        elif cue == '#': # Handle this separately.
+            r = re.compile(r'#.*')
+            l = r.sub(r'<span class="comment">\g<0></span>', l)
+        elif l.strip().startswith(cue):
+            hb(f, '<span class="comment">|</span>\n', allreplace(l))
+            return
 
     out(f, l + '\n')
 
@@ -921,7 +949,7 @@ def geneq(f, eq, dpi, wl, outname):
             raise Exception('latex error')
 
         dvifile = basefile + '.dvi'
-        dvicmd = 'dvipng -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
+        dvicmd = 'dvipng --freetype0 -Q 9 -z 3 --depth -q -T tight -D %i -bg Transparent -o %s %s' % (dpi, eqname, dvifile)
         # discard warnings, as well.
         p = Popen(dvicmd, shell=True, stdout=PIPE, stderr=PIPE)
         rc = p.wait()
