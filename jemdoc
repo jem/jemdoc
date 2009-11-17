@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.6.5, 2008-11-19."""
+"""jemdoc version 0.6.7, 2009-11-17."""
 
-# Copyright (C) 2007-2008 Jacob Mattingley (jacobm@stanford.edu).
+# Copyright (C) 2007-2009 Jacob Mattingley (jacobm@stanford.edu).
 #
 # This file is part of jemdoc.
 #
@@ -609,6 +609,17 @@ def replacelinks(b):
 
 def br(b, f, tableblock=False):
     """Does simple text replacements on a block of text. ('block replacements')"""
+
+    # Deal with environment variables (say, for Michael Grant).
+    r = re.compile(r"!\$(\w{2,})\$!", re.M + re.S)
+
+    for m in r.findall(b):
+      repl = os.environ.get(m)
+      if repl == None:
+        b = re.sub("!\$%s\$!" % m, 'FAILED_MATCH_' + m, b)
+      else:
+        b = re.sub("!\$%s\$!" % m, repl, b)
+
     # Deal with literal backspaces.
     if f.eqs and f.eqsupport:
         b = replaceequations(b, f)
