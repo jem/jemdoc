@@ -13,6 +13,10 @@ text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
+~~~
+Version +0.6.7+ was released on 2009-11-17. [revision.html See changes].
+~~~
+
 == Goals
 - Simple, consistent syntax.
 - $\mbox{\LaTeX}$ [latex.html equation support].
