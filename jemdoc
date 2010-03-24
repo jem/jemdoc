@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.6.7, 2009-11-17."""
+"""jemdoc version 0.6.8, 2010-03-22."""
 
-# Copyright (C) 2007-2009 Jacob Mattingley (jacobm@stanford.edu).
+# Copyright (C) 2007-2010 Jacob Mattingley (jacobm@stanford.edu).
 #
 # This file is part of jemdoc.
 #
@@ -84,7 +84,7 @@ class controlstruct(object):
 
     def pushfile(self, newfile):
         self.otherfiles.insert(0, self.inf)
-        self.inf = open(newfile)
+        self.inf = open(newfile, 'rb')
 
     def nextfile(self):
         self.inf.close()
@@ -280,7 +280,7 @@ def parseconf(cns):
     # manually add the defaults as a file handle.
     fs = [StringIO.StringIO(standardconf())]
     for sname in cns:
-        fs.append(open(sname))
+        fs.append(open(sname, 'rb'))
 
     for f in fs:
         while pc(controlstruct(f)) != '':
@@ -303,7 +303,7 @@ def parseconf(cns):
     return syntax
 
 def insertmenuitems(f, mname, current, prefix):
-    m = open(mname)
+    m = open(mname, 'rb')
     while pc(controlstruct(m)) != '':
         l = readnoncomment(m)
         l = l.strip()
@@ -374,7 +374,7 @@ def doincludes(f, l):
     ir = 'includeraw{'
     i = 'include{'
     if l.startswith(ir):
-        nf = open(l[len(ir):-2])
+        nf = open(l[len(ir):-2], 'rb')
         f.outf.write(nf.read())
         nf.close()
     elif l.startswith(i):
@@ -818,7 +818,8 @@ def gethl(lang):
     elif lang == 'sh':
         d['statement'] = ['cd', 'ls', 'sudo', 'cat', 'alias', 'for', 'do',
                           'done', 'in', ]
-        d['operator'] = ['&gt;', r'\\', r'\|', ';', '2&gt;', 'monolith&gt;']
+        d['operator'] = ['&gt;', r'\\', r'\|', ';', '2&gt;', 'monolith&gt;',
+                         'kiwi&gt;', 'ant&gt;', 'kakapo&gt;', 'client&gt;']
         d['builtin'] = putbsbs(['gem', 'gcc', 'python', 'curl', 'wget', 'ssh',
                                 'latex', 'find', 'sed', 'gs', 'grep', 'tee',
                                 'gzip', 'killall', 'echo', 'touch',
@@ -895,7 +896,7 @@ def geneq(f, eq, dpi, wl, outname):
     eqdepths = {}
     if f.eqcache:
         try:
-            dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'r')
+            dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'rb')
             for l in dc:
                 a = l.split()
                 eqdepths[a[0]] = int(a[1])
@@ -910,7 +911,7 @@ def geneq(f, eq, dpi, wl, outname):
     tempdir = tempfile.gettempdir()
     fd, texfile = tempfile.mkstemp('.tex', '', tempdir, True)
     basefile = texfile[:-4]
-    g = os.fdopen(fd, 'w')
+    g = os.fdopen(fd, 'wb')
 
     preamble = '\documentclass{article}\n'
     for p in f.eqpackages:
@@ -964,7 +965,7 @@ def geneq(f, eq, dpi, wl, outname):
     # Update the cache if we're using it.
     if f.eqcache and eqname not in eqdepths:
         try:
-            dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'a')
+            dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'ab')
             dc.write(eqname + ' ' + str(depth) + '\n')
             dc.close()
         except IOError:
@@ -1473,8 +1474,8 @@ def main():
         else:
             thisout = outname
 
-        infile = open(inname)
-        outfile = open(thisout, 'w')
+        infile = open(inname, 'rb')
+        outfile = open(thisout, 'wb')
 
         f = controlstruct(infile, outfile, conf, inname)
         procfile(f)
