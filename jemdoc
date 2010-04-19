@@ -246,7 +246,7 @@ def standardconf():
   b = ''
   for l in a.splitlines(True):
     if l.startswith('  '):
-      b += l[4:]
+      b += l[2:]
     else:
       b += l
 
@@ -616,9 +616,9 @@ def br(b, f, tableblock=False):
   for m in r.findall(b):
     repl = os.environ.get(m)
     if repl == None:
-    b = re.sub("!\$%s\$!" % m, 'FAILED_MATCH_' + m, b)
+      b = re.sub("!\$%s\$!" % m, 'FAILED_MATCH_' + m, b)
     else:
-    b = re.sub("!\$%s\$!" % m, repl, b)
+      b = re.sub("!\$%s\$!" % m, repl, b)
 
   # Deal with literal backspaces.
   if f.eqs and f.eqsupport:
@@ -1031,7 +1031,14 @@ def colonlist(f):
 def codeblock(f, g):
   if g[1] == 'raw':
     raw = True
+    ext_prog = None
+  elif g[0] == 'filter_through':
+    # Filter through external program.
+    raw = False
+    ext_prog = g[1]
+    buff = ""
   else:
+    ext_prog = None
     raw = False
     out(f.outf, f.conf['codeblock'])
     if g[0]:
@@ -1054,6 +1061,9 @@ def codeblock(f, g):
       l = l[1:]
     elif l.startswith('\\{'):
       l = l[1:]
+    elif ext_prog:
+      buff += l
+      continue
     elif stringmode:
       if l.rstrip().endswith('"""'):
         out(f.outf, l + '</span>')
@@ -1096,7 +1106,12 @@ def codeblock(f, g):
         else:
           language(f.outf, l, gethl(g[1]))
 
-  if not raw:
+  if raw:
+    return
+  elif ext_prog:
+    print 'filtering through %s...' % ext_prog
+    print buff
+  else:
     if g[1] == 'jemdoc':
       out(f.outf, f.conf['codeblockendtt'])
     else:
