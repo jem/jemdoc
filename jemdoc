@@ -527,7 +527,7 @@ def replaceequations(b, f):
 
       if wl:
         b = b[:m.start()] + \
-            '{{\n<img class="eqwl" src="%s" alt="%s" />\n<br />}}' % (fullfn, eqtext) + b[m.end():]
+            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
       else:
         b = b[:m.start()] + \
           '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
@@ -1110,7 +1110,10 @@ def codeblock(f, g):
     return
   elif ext_prog:
     print 'filtering through %s...' % ext_prog
-    print buff
+
+    output,_ = Popen(ext_prog, shell=True, stdin=PIPE,
+                     stdout=PIPE).communicate(buff)
+    out(f.outf, output)
   else:
     if g[1] == 'jemdoc':
       out(f.outf, f.conf['codeblockendtt'])
