@@ -14,7 +14,7 @@ copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
 ~~~
-Version +0.6.7+ was released on 2009-11-17. [revision.html See changes].
+Version +0.6.8+ was released on 2010-03-22. [revision.html See changes].
 ~~~
 
 == Goals
@@ -31,7 +31,7 @@ Version +0.6.7+ was released on 2009-11-17. [revision.html See changes].
 - Minimal bells and whistles, but simple fallback to raw html if required.
 
 == License
-Copyright \C 2007--2009 Jacob Mattingley.
+Copyright \C 2007--2010 Jacob Mattingley.
 
 jemdoc is free software; you can redistribute it and\/or modify it under the
 terms of the [http://www.gnu.org/licenses/gpl-3.0.html GNU General Public
