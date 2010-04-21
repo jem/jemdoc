@@ -11,6 +11,10 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+#=== Changes from .... to ....
+#. Added +filter_through+ option for code blocks.
+#. +img.eqwl+s from full-line tex equations are now enclosed in a +div.eqwl+.
+
 === Changes from +v0.6.6+ to +v0.6.8+ (2010-03-22)
 . Added binary file identifiers to attempt a Windows fix for +IOError+s.
 
