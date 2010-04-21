@@ -182,6 +182,9 @@ def standardconf():
 
   [specificcss]
   <link rel="stylesheet" href="|" type="text/css" />
+
+  [specificjs]
+  <script src="|.js" type="text/javascript"></script>
   
   [currentmenuitem]
   <div class="menu-item"><a href="|1" class="current">|2</a></div>
@@ -1146,6 +1149,7 @@ def procfile(f):
   nodefaultcss = False
   fwtitle = False
   css = []
+  js = []
   title = None
   while pc(f, False) == '#':
     l = f.inf.readline()
@@ -1191,6 +1195,10 @@ def procfile(f):
         elif b.startswith('addcss'):
           r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
           css += re.findall(r, b)
+
+        elif b.startswith('addjs'):
+          r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
+          js += re.findall(r, b)
 
         elif b.startswith('addpackage'):
           r = re.compile(r'(?<!\\){(.*?)(?<!\\)}', re.M + re.S)
@@ -1243,6 +1251,9 @@ def procfile(f):
 
   for x in css:
     hb(f.outf, f.conf['specificcss'], x)
+
+  for x in js:
+    hb(f.outf, f.conf['specificjs'], x)
 
   # Look for a title.
   if pc(f) == '=': # don't check exact number f.outf '=' here jem.
