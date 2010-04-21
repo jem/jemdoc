@@ -63,6 +63,9 @@ will copy the contents of +otherfile.html+ verbatim to the current position in
 the output file (that is, without any jemdoc substitutions).
 
 == Other packages
+- [http://www.polytekniker.dk/about.html Jacob Grunnet] has written
+  [http://bibover.polytekniker.dk Bibover], a bibtex reference extension for
+  jemdoc.
 - [http://www.seas.upenn.edu/~nghiem/ Truong Nghiem] has written a
   [http://www.seas.upenn.edu/~nghiem/software.html filter for exporting
   references from JabRef to
