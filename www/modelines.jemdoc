@@ -1,4 +1,4 @@
-# jemdoc: menu{MENU}{modelines.html}, showsource
+# jemdoc: menu{MENU}{modelines.html}, showsource, analytics{UA-2725246-3}
 = jemdoc -- modelines
 
 jemdoc includes a mechanism for specifying options inside a source file. It is
@@ -23,6 +23,12 @@ and start with the same string. The modeline can be omitted altogether.
   the title.
 - +title{NEW TITLE}+\n
   Manually sets the titlebar text to +NEW TITLE+.
+
+=== Extras
+- +analytics{ANALYTICS KEY}+\n
+  Adds Google Analytics support. The key is typically in the form
+  %UA-0000000-0%. Sign up for Google Analytics
+  [http://www.google.com/analytics/ here].
 
 === Footers
 - +notime+\n

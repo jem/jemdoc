@@ -14,6 +14,7 @@
 #=== Changes from .... to ....
 #. Added +filter_through+ option for code blocks.
 #. +img.eqwl+s from full-line tex equations are now enclosed in a +div.eqwl+.
+#. Added an [modelines.html +analytics+] modeline for use with Google Analytics.
 
 === Changes from +v0.6.6+ to +v0.6.8+ (2010-03-22)
 . Added binary file identifiers to attempt a Windows fix for +IOError+s.
