@@ -842,8 +842,10 @@ def gethl(lang):
     d['commentuntilend'] = '#'
     d['strings'] = True
   elif lang == 'matlab':
-    d['statement'] = ['max', 'min', 'find', 'rand', 'cumsum']
-    d['operator'] = ['&gt;', 'ans =', '>>']
+    d['statement'] = putbsbs(['max', 'min', 'find', 'rand', 'cumsum', 'randn', 'help',
+                     'error', 'if', 'end', 'for'])
+    d['operator'] = ['&gt;', 'ans =', '>>', '~', '\.\.\.']
+    d['builtin'] = putbsbs(['csolve'])
     d['commentuntilend'] = '%'
     d['strings'] = True
   elif lang == 'commented':
@@ -897,6 +899,9 @@ def language(f, l, hl):
           return
     elif cue == '#': # Handle this separately.
       r = re.compile(r'#.*')
+      l = r.sub(r'<span class="comment">\g<0></span>', l)
+    elif cue == '%': # Handle this separately.
+      r = re.compile(r'%.*')
       l = r.sub(r'<span class="comment">\g<0></span>', l)
     elif l.strip().startswith(cue):
       hb(f, '<span class="comment">|</span>\n', allreplace(l))
