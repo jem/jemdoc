@@ -897,6 +897,9 @@ def language(f, l, hl):
         if l.strip().startswith(x):
           hb(f, '<span class="comment">|</span>\n', allreplace(l))
           return
+        if '//' in cue: # Handle this separately.
+          r = re.compile(r'\/\/.*')
+          l = r.sub(r'<span class="comment">\g<0></span>', l)
     elif cue == '#': # Handle this separately.
       r = re.compile(r'#.*')
       l = r.sub(r'<span class="comment">\g<0></span>', l)
