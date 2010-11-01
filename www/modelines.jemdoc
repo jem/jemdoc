@@ -49,6 +49,8 @@ and start with the same string. The modeline can be omitted altogether.
   Adjust the equation directory (default +eqs+).
 - +noeqcache+\n
   Disable equation caching.
+- +addpackage{LATEX_PACKAGE_NAME}+\n
+  Includes support for +LATEX_PACKAGE_NAME+ when compiling the equations.
 
 == Examples
 ~~~

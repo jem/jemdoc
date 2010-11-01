@@ -1,0 +1,58 @@
+table.dual-mode {
+    padding: 0;
+    margin-top, margin-bottom: 0.5em;
+	border-width: 0;
+}
+
+table.dual-mode tr {
+    vertical-align: top;
+}
+
+table.dual-mode h1, tr h2{
+    padding-top: 0em;
+	margin-top: 0;
+}
+
+td {
+    text-align: left;
+    border: none;
+}
+
+td.rightcell tt {
+    background: none;
+}
+
+td.rightcell div.blockcontent {
+	padding: 0;
+	border: 0;
+}
+
+td.rightcell div.codeblock {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+
+td.leftcell {
+	padding-right: 10px;
+    padding-top: 10px;
+	width: 50%;
+}
+
+td.rightcell {
+	background-color: #f6f6f6;
+	padding-left: 5px;
+	vertical-align: top;
+	padding-right: 10px;
+	width: 50%;
+	padding-bottom: 1em;
+}
+
+td.sepcell {
+	padding-left: 0px;
+}
+
+td.leftcell div.infoblock {
+	margin-top: 0;
+	margin-bottom: 0;
+}

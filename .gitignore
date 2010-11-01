@@ -8,3 +8,5 @@ matlab
 build
 MANIFEST
 jo
+*.html
+stage/
