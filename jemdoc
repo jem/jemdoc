@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.6.8, 2010-03-22."""
+"""jemdoc version 0.7.0, 2011-03-17."""
 
-# Copyright (C) 2007-2010 Jacob Mattingley (jacobm@stanford.edu).
+# Copyright (C) 2007-2011 Jacob Mattingley (jacobm@stanford.edu).
 #
 # This file is part of jemdoc.
 #
@@ -351,10 +351,11 @@ def out(f, s):
   f.write(s)
 
 def hb(f, tag, content1, content2=None):
+  """Writes out a halfblock (hb)."""
+
   if content1 is None:
     content1 = ""
 
-  """Writes out a halfblock (hb)."""
   if content2 is None:
     out(f, re.sub(r'\|', content1, tag))
   else:
@@ -370,7 +371,7 @@ def pc(f, ditchcomments=True):
     if ditchcomments and c == '#':
       l = nl(f)
       if doincludes(f, l):
-        return pc(f)
+        return "#"
 
     if c in ' \t':
       return pc(f)
@@ -529,6 +530,7 @@ def replaceequations(b, f):
 
       fn = fn + '-' + str(f.eqdpi)
       (depth, fullfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
+      fullfn = fullfn.replace('\\', '/')
 
       offset = depth - f.baseline + 1
 
@@ -1124,8 +1126,8 @@ def codeblock(f, g):
         elif l.startswith('#') and doincludes(f, l[1:]):
           continue
         elif g[1] in ('python', 'py') and l.strip().startswith('"""'):
-            out(f.outf, '<span class="string">' + l)
-            stringmode = True
+          out(f.outf, '<span class="string">' + l)
+          stringmode = True
         else:
           language(f.outf, l, gethl(g[1]))
 
