@@ -11,10 +11,17 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
-#=== Changes from .... to ....
-#. Added +filter_through+ option for code blocks.
-#. +img.eqwl+s from full-line tex equations are now enclosed in a +div.eqwl+.
-#. Added an [modelines.html +analytics+] modeline for use with Google Analytics.
+=== Changes from +v0.6.8+ to +v0.7.0+ (2011-03-17)
+. Added +{filter_through}{external_prog}+ option for code blocks to filter
+  through an external program. This can be used to customize syntax
+  highlighting.
+. +img.eqwl+s from full-line tex equations are now enclosed in a +div.eqwl+.
+  This permits alternative CSS styling for full-size tex equations.
+. Added an [modelines.html +analytics+] modeline for use with Google Analytics.
+. Improved C syntax highlighting.
+. Improved Matlab syntax highlighting.
+. Various bug fixes, especially for Windows. Thanks to Danilo Silva for helpful
+  bug reports and fixes.
 
 === Changes from +v0.6.7+ to +v0.6.8+ (2010-03-22)
 . Added binary file identifiers to attempt a Windows fix for +IOError+s.

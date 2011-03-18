@@ -14,7 +14,8 @@ copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
 ~~~
-Version +0.6.8+ was released on 2010-03-22. [revision.html See changes].
+Version +0.7.0+ was released on 2011-03-17, with a few new features, and several
+improved features and bug fixes. See the [revision.html release notes].
 ~~~
 
 == Goals
