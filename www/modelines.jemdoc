@@ -18,6 +18,8 @@ and start with the same string. The modeline can be omitted altogether.
   Clear the list of CSS stylesheets included by the page.
 - +addcss{CSSSHEET}+\n
   Explicitly include an additional custom CSS stylesheet.
+- +addjs{scriptname}+\n
+  Explicitly include the javascript file %scriptname.js%.
 - +fwtitle+\n
   Makes the page title /full width/ so the menu /and/ the body lie underneath
   the title.
