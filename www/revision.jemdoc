@@ -11,6 +11,10 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+=== Changes from +v0.7.0+ to +v0.7.1+ (2011-06-14)
+. Changed file opening mode to avoid Windows bugs where blank lines failed to
+  separate sections properly.
+
 === Changes from +v0.6.8+ to +v0.7.0+ (2011-03-17)
 . Added +{filter_through}{external_prog}+ option for code blocks to filter
   through an external program. This can be used to customize syntax

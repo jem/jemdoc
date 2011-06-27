@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.7.1, 2011-06-14."""
+"""jemdoc version 0.7.0, 2011-03-17."""
 
 # Copyright (C) 2007-2011 Jacob Mattingley (jacobm@stanford.edu).
 #
@@ -1535,7 +1535,7 @@ def main():
     else:
       thisout = outname
 
-    infile = open(inname, 'rUb')
+    infile = open(inname, 'rb')
     outfile = open(thisout, 'w')
 
     f = controlstruct(infile, outfile, conf, inname)
