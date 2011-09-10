@@ -6,7 +6,7 @@ PHDOCS=$(addprefix html/, $(HDOCS))
 .PHONY : update
 update : $(PHDOCS)
 	@echo -n 'Copying to (hidden) server...'
-	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist eqs ~/jemdoc/stage/
+	@rsync -a --delete --copy-unsafe-links *.jemdoc html/* dist ~/jemdoc/stage/
 	@echo ' done.'
 
 .PHONY : extra
