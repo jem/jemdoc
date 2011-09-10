@@ -73,7 +73,7 @@ class controlstruct(object):
     self.otherfiles = []
     self.eqs = eqs
     self.eqdirlink = eqdirlink
-    self.eqdirfile = eqdirfilebase + eqdirlink
+    self.eqdirfile = os.path.join(eqdirfilebase, eqdirlink)
     self.eqdpi = eqdpi
     # Default to supporting equations until we know otherwise.
     self.eqsupport = True
