@@ -1535,13 +1535,15 @@ def main():
     elif os.path.isdir(outname):
       # if directory, prepend directory to automatically generated name.
       thisout = outname + re.sub(r'.jemdoc$', '', inname) + '.html'
+      outdir = outname
     else:
       thisout = outname
+      outdir = os.path.split(outname)[0]
 
     infile = open(inname, 'rUb')
     outfile = open(thisout, 'w')
 
-    f = controlstruct(infile, outfile, conf, inname, eqdirfilebase=outname )
+    f = controlstruct(infile, outfile, conf, inname, eqdirfilebase=outdir )
     procfile(f)
 
 #
