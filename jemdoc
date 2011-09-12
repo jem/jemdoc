@@ -64,7 +64,7 @@ def testeqsupport():
 
 class controlstruct(object):
   def __init__(self, infile, outfile=None, conf=None, inname=None, eqs=True,
-         eqdir='eqs', eqdpi=130):
+         eqdirlink='eqs', eqdirfilebase='', eqdpi=130):
     self.inname = inname
     self.inf = infile
     self.outf = outfile
@@ -72,7 +72,8 @@ class controlstruct(object):
     self.linenum = 0
     self.otherfiles = []
     self.eqs = eqs
-    self.eqdir = eqdir
+    self.eqdirlink = eqdirlink
+    self.eqdirfile = os.path.join(eqdirfilebase, eqdirlink)
     self.eqdpi = eqdpi
     # Default to supporting equations until we know otherwise.
     self.eqsupport = True
@@ -510,8 +511,8 @@ def replaceequations(b, f):
       # equations.
       if f.baseline is None:
         # See if the eqdir exists, and if not, create it.
-        if not os.path.isdir(f.eqdir):
-          os.mkdir(f.eqdir)
+        if not os.path.isdir(f.eqdirfile):
+          os.mkdir(f.eqdirfile)
 
         # Check that the tools we need exist.
         (supported, message) = testeqsupport()
@@ -523,14 +524,15 @@ def replaceequations(b, f):
 
         # Calculate the baseline.
         eqt = "0123456789xxxXXxX"
-        (f.baseline, blfn) = geneq(f, eqt, dpi=f.eqdpi, wl=False,
+        (f.baseline, blfn, linkfn) = geneq(f, eqt, dpi=f.eqdpi, wl=False,
                        outname='baseline-' + str(f.eqdpi))
         if os.path.exists(blfn):
           os.remove(blfn)
 
       fn = fn + '-' + str(f.eqdpi)
-      (depth, fullfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
+      (depth, fullfn, linkfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
       fullfn = fullfn.replace('\\', '/')
+      linkfn = linkfn.replace('\\', '/')
 
       offset = depth - f.baseline + 1
 
@@ -544,10 +546,10 @@ def replaceequations(b, f):
 
       if wl:
         b = b[:m.start()] + \
-            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
+            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (linkfn, eqtext) + b[m.end():]
       else:
         b = b[:m.start()] + \
-          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
+          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (linkfn, eqtext, offset) + b[m.end():]
 
       # jem: also clean out line breaks in the alttext?
       m = r.search(b, m.start())
@@ -916,19 +918,20 @@ def language(f, l, hl):
 
 def geneq(f, eq, dpi, wl, outname):
   # First check if there is an existing file.
-  eqname = os.path.join(f.eqdir, outname + '.png')
+  eqname = os.path.join(f.eqdirfile, outname + '.png')
+  linkname = os.path.join(f.eqdirlink, outname + '.png')
 
   eqdepths = {}
   if f.eqcache:
     try:
-      dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'rb')
+      dc = open(os.path.join(f.eqdirfile, '.eqdepthcache'), 'rb')
       for l in dc:
         a = l.split()
         eqdepths[a[0]] = int(a[1])
       dc.close()
 
       if os.path.exists(eqname) and eqname in eqdepths:
-        return (eqdepths[eqname], eqname)
+        return (eqdepths[eqname], eqname, linkname)
     except IOError:
       print 'eqdepthcache read failed.'
 
@@ -990,12 +993,12 @@ def geneq(f, eq, dpi, wl, outname):
   # Update the cache if we're using it.
   if f.eqcache and eqname not in eqdepths:
     try:
-      dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'ab')
+      dc = open(os.path.join(f.eqdirfile, '.eqdepthcache'), 'ab')
       dc.write(eqname + ' ' + str(depth) + '\n')
       dc.close()
     except IOError:
       print 'eqdepthcache update failed.'
-  return (depth, eqname)
+  return (depth, eqname, linkname)
 
 def dashlist(f, ordered=False):
   level = 0
@@ -1262,7 +1265,7 @@ def procfile(f):
           if len(g) != 1:
             raise SyntaxError('eqdir error on line %d' % f.linenum)
 
-          f.eqdir = g[0]
+          f.eqdirlink = g[0]
 
   # Get the file started with the firstbit.
   out(f.outf, f.conf['firstbit'])
@@ -1532,13 +1535,15 @@ def main():
     elif os.path.isdir(outname):
       # if directory, prepend directory to automatically generated name.
       thisout = outname + re.sub(r'.jemdoc$', '', inname) + '.html'
+      outdir = outname
     else:
       thisout = outname
+      outdir = os.path.split(outname)[0]
 
     infile = open(inname, 'rUb')
     outfile = open(thisout, 'w')
 
-    f = controlstruct(infile, outfile, conf, inname)
+    f = controlstruct(infile, outfile, conf, inname, eqdirfilebase=outdir )
     procfile(f)
 
 #
