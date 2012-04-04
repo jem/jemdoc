@@ -335,12 +335,27 @@ def insertmenuitems(f, mname, current, prefix):
 
       # replace spaces with nbsps.
       # do do this, even though css would make it work - ie ignores.
-      menuitem = re.sub(r'(?<!\\n) +', '~', r.group(1))
+      # only replace spaces that aren't in {{ blocks.
+      in_quote = False
+      menuitem = ""
+      for group in re.split(r'({{|}})', r.group(1)):
+        if in_quote:
+          if group == '}}':
+            in_quote = False
+            next
+          else:
+            menuitem += group
+        else:
+          if group == '{{':
+            in_quote = True
+            next
+          else:
+            menuitem += br(re.sub(r'(?<!\\n) +', '~', group), f)
 
-      if r.group(2) == current: 
-        hb(f.outf, f.conf['currentmenuitem'], link, br(menuitem, f))
+      if link == current:
+        hb(f.outf, f.conf['currentmenuitem'], link, menuitem)
       else:
-        hb(f.outf, f.conf['menuitem'], link, br(menuitem, f))
+        hb(f.outf, f.conf['menuitem'], link, menuitem)
 
     else: # menu category.
       hb(f.outf, f.conf['menucategory'], br(l, f))
