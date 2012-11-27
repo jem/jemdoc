@@ -11,7 +11,7 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
-=== Changes from +v0.7.1+ to +v0.7.2+ (2012-11-27)
+=== Changes from +v0.7.2+ to +v0.7.3+ (2012-11-27)
 . Repaired the handling of whole-line equations written on a single line.
 . Enhanced the handling of the current menu link so it works across
   subdirectories.
