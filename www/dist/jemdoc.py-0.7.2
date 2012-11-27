@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""jemdoc version 0.7.3, 2012-11-27."""
+"""jemdoc version 0.7.2, 2012-04-03."""
 
 # Copyright (C) 2007-2012 Jacob Mattingley (jacobm@stanford.edu).
 #
@@ -352,7 +352,7 @@ def insertmenuitems(f, mname, current, prefix):
           else:
             menuitem += br(re.sub(r'(?<!\\n) +', '~', group), f)
 
-      if link[-len(current):] == current:
+      if link == current:
         hb(f.outf, f.conf['currentmenuitem'], link, menuitem)
       else:
         hb(f.outf, f.conf['menuitem'], link, menuitem)
@@ -1342,18 +1342,16 @@ def procfile(f):
         break
 
       s = nl(f)
-      # Quickly pull out the equation here:
-      # Check we don't already have the terminating character in a whole-line
-      # equation without linebreaks, eg \( Ax=b \):
-      if not s.strip().endswith('\)'):
-        while True:
-          l = nl(f, codemode=True)
-          if not l:
-            break
-          s += l
-          if l.strip() == '\)':
-            break
+      # Quickly pull out the equation here.
+      while True:
+        l = nl(f, codemode=True)
+        if not l:
+          break
+        s += l
+        if l.strip() == '\)':
+          break
       out(f.outf, br(s.strip(), f))
+
 
     # look for lists.
     elif p == '-':

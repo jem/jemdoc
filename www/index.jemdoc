@@ -16,9 +16,11 @@ deliberately feature poor) and has more consistent syntax.
 [download.html Download jemdoc.]
 
 ~~~
-Version +0.7.2+ was released on 2012-04-03, with a minor fix that allows
-HTML-escaped sequences in menu items. See the [revision.html release notes].
+Version +0.7.3+ was released on 2012-11-27 with some small bug fixes.
+See the [revision.html release notes].
 ~~~
+
+[https://github.com/jem/jemdoc Contribute to jemdoc on github.]
 
 == Goals
 - Simple, consistent syntax.
