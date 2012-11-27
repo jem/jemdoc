@@ -353,7 +353,7 @@ def insertmenuitems(f, mname, current, prefix):
             menuitem += br(re.sub(r'(?<!\\n) +', '~', group), f)
       print menuitem
 
-      if link == current:
+      if link[-len(current):] == current:
         hb(f.outf, f.conf['currentmenuitem'], link, menuitem)
       else:
         hb(f.outf, f.conf['menuitem'], link, menuitem)
