@@ -11,6 +11,9 @@
   with an equation. (And perhaps only on Windows.)
 
 == Revision details
+=== Changes from +v0.7.1+ to +v0.7.2+ (2012-04-03)
+. Allowed HTML-escaped sequences in menu items.
+
 === Changes from +v0.7.0+ to +v0.7.1+ (2011-06-14)
 . Changed file opening mode to avoid Windows bugs where blank lines failed to
   separate sections properly.

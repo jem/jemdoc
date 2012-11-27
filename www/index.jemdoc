@@ -13,9 +13,11 @@ text document format. AsciiDoc is great, and lots of the ideas from AsciiDoc are
 copied in jemdoc. The main differences are that jemdoc is simpler (you could say
 deliberately feature poor) and has more consistent syntax.
 
+[download.html Download jemdoc.]
+
 ~~~
-Version +0.7.1+ was released on 2011-06-14, with a minor but important fix for
-Windows users. See the [revision.html release notes].
+Version +0.7.2+ was released on 2012-04-03, with a minor fix that allows
+HTML-escaped sequences in menu items. See the [revision.html release notes].
 ~~~
 
 == Goals
@@ -32,7 +34,7 @@ Windows users. See the [revision.html release notes].
 - Minimal bells and whistles, but simple fallback to raw html if required.
 
 == License
-Copyright \C 2007--2011 Jacob Mattingley.
+Copyright \C 2007--2012 Jacob Mattingley.
 
 jemdoc is free software; you can redistribute it and\/or modify it under the
 terms of the [http://www.gnu.org/licenses/gpl-3.0.html GNU General Public
