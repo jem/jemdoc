@@ -1343,16 +1343,18 @@ def procfile(f):
         break
 
       s = nl(f)
-      # Quickly pull out the equation here.
-      while True:
-        l = nl(f, codemode=True)
-        if not l:
-          break
-        s += l
-        if l.strip() == '\)':
-          break
+      # Quickly pull out the equation here:
+      # Check we don't already have the terminating character in a whole-line
+      # equation without linebreaks, eg \( Ax=b \):
+      if not s.strip().endswith('\)'):
+        while True:
+          l = nl(f, codemode=True)
+          if not l:
+            break
+          s += l
+          if l.strip() == '\)':
+            break
       out(f.outf, br(s.strip(), f))
-
 
     # look for lists.
     elif p == '-':
