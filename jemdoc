@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+# vim: ts=2 sw=2 expandtab
 
 """jemdoc version 0.7.3, 2012-11-27."""
 
@@ -819,6 +820,18 @@ def gethl(lang):
     d['special'] = ['cols', 'optvar', 'param', 'problem', 'norm2', 'norm1',
             'value', 'minimize', 'maximize', 'rows', 'rand',
             'randn', 'printval', 'matrix']
+    d['error'] = ['\w*Error',]
+    d['commentuntilend'] = '#'
+    d['strings'] = True
+  elif lang in ['perl']:
+    d['statement'] = ['if', 'unless', 'while', 'until', 'for', 
+            'foreach', 'when']
+    d['builtin'] = ['my','our','local','state',
+            'return','last','next','redo','goto','break',
+            'open', 'close', 'print', 'sprintf', 'glob',
+            'use', 'no', 'my', 'local', 'our', 'system']
+    d['special'] = ['abs','atan2','cos','exp','hex',
+            'int','log','oct','rand', 'sin','sqrt','sran']
     d['error'] = ['\w*Error',]
     d['commentuntilend'] = '#'
     d['strings'] = True
