@@ -825,7 +825,7 @@ def gethl(lang):
     d['strings'] = True
   elif lang in ['perl']:
     d['statement'] = ['if', 'unless', 'while', 'until', 'for', 
-            'foreach', 'when']
+            'foreach', 'when', 'elsif', 'else']
     d['builtin'] = ['my','our','local','state',
             'return','last','next','redo','goto','break',
             'open', 'close', 'print', 'sprintf', 'glob',
