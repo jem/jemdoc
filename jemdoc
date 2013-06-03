@@ -822,6 +822,18 @@ def gethl(lang):
     d['error'] = ['\w*Error',]
     d['commentuntilend'] = '#'
     d['strings'] = True
+  elif lang in ['perl']:
+    d['statement'] = ['if', 'unless', 'while', 'until', 'for', 
+            'foreach', 'when', 'elsif', 'else']
+    d['builtin'] = ['my','our','local','state',
+            'return','last','next','redo','goto','break',
+            'open', 'close', 'print', 'sprintf', 'glob',
+            'use', 'no', 'my', 'local', 'our', 'system']
+    d['special'] = ['abs','atan2','cos','exp','hex',
+            'int','log','oct','rand', 'sin','sqrt','sran']
+    d['error'] = ['\w*Error',]
+    d['commentuntilend'] = '#'
+    d['strings'] = True
   elif lang in ['c', 'c++', 'cpp']:
     d['statement'] = ['if', 'else', 'printf', 'return', 'for']
     d['builtin'] = ['static', 'typedef', 'int', 'float', 'double', 'void',
