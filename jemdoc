@@ -365,6 +365,26 @@ def insertmenuitems(f, mname, current, prefix):
 def out(f, s):
   f.write(s)
 
+def myeqsub(eqtext):
+  eqtext = eqtext.replace('\\', 'BACKSLASH')
+  eqtext = eqtext.replace('+', 'PLUS')
+  eqtext = eqtext.replace('&', 'AMPERSAND')
+  eqtext = eqtext.replace('<', 'LESSTHAN')
+  eqtext = eqtext.replace('>', 'GREATERTHAN')
+  eqtext = eqtext.replace('\n', ' ')
+
+  return eqtext
+
+def myeqresub(r):
+  r = re.sub('BACKSLASH', r'\\', r)
+  r = re.sub('PLUS', '+', r)
+  r = re.sub('AMPERSAND', '&', r)
+  r = re.sub('LESSTHAN', '<', r)
+  r = re.sub('GREATERTHAN', '>', r)
+  r = re.sub('QUOTATION', '"', r)
+
+  return r
+
 def hb(f, tag, content1, content2=None):
   """Writes out a halfblock (hb)."""
 
@@ -372,10 +392,14 @@ def hb(f, tag, content1, content2=None):
     content1 = ""
 
   if content2 is None:
-    out(f, re.sub(r'\|', content1, tag))
+#    out(f, re.sub(r'\|', content1, tag))
+    r = re.sub(r'\|', content1, tag)
+    r = myeqresub(r)
+    out(f, r)
   else:
     r = re.sub(r'\|1', content1, tag)
     r = re.sub(r'\|2', content2, r)
+    r = myeqresub(r)
     out(f, r)
 
 def pc(f, ditchcomments=True):
@@ -519,50 +543,26 @@ def replaceequations(b, f):
       else:
         fn = str(abs(hash(eq)))
 
-      # Find out the baseline when we first encounter an equation (don't
-      # bother, otherwise).
-      # Other initialization stuff which we do only once we know we have
-      # equations.
-      if f.baseline is None:
-        # See if the eqdir exists, and if not, create it.
-        if not os.path.isdir(f.eqdir):
-          os.mkdir(f.eqdir)
-
-        # Check that the tools we need exist.
-        (supported, message) = testeqsupport()
-        if not supported:
-          print 'WARNING: equation support disabled.'
-          print message
-          f.eqsupport = False
-          return b
-
-        # Calculate the baseline.
-        eqt = "0123456789xxxXXxX"
-        (f.baseline, blfn) = geneq(f, eqt, dpi=f.eqdpi, wl=False,
-                       outname='baseline-' + str(f.eqdpi))
-        if os.path.exists(blfn):
-          os.remove(blfn)
-
-      fn = fn + '-' + str(f.eqdpi)
-      (depth, fullfn) = geneq(f, eq, dpi=f.eqdpi, wl=wl, outname=fn)
-      fullfn = fullfn.replace('\\', '/')
-
-      offset = depth - f.baseline + 1
-
       eqtext = allreplace(eq)
-      eqtext = eqtext.replace('\\', '')
-      eqtext = eqtext.replace('\n', ' ')
+#      print eqtext
+#      eqtext = eqtext.replace('\\', '')
+      eqtext = myeqsub(eqtext)
 
       # Double braces will cause problems with escaping of image tag.
       eqtext = eqtext.replace('{{', 'DOUBLEOPENBRACE')
       eqtext = eqtext.replace('}}', 'DOUBLECLOSEBRACE')
 
       if wl:
-        b = b[:m.start()] + \
-            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
+#        b = b[:m.start()] + \
+#            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
+        b = b[:m.start()] + 'BACKSLASH(\n' + eqtext + '\nBACKSLASH)'+ b[m.end():]
+        #b = b[:m.start()] + 'BACKSLASH(BACKSLASHbegin{equation}\n' + eqtext + '\nBACKSLASHend{equation}BACKSLASH)'+ b[m.end():]
+        b = '<p style=QUOTATIONtext-align:centerQUOTATION>' + b + '</p>'
+        b = myeqsub(b)
       else:
-        b = b[:m.start()] + \
-          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
+#        b = b[:m.start()] + \
+#          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
+        b = b[:m.start()] + '{{BACKSLASH(' + eqtext + 'BACKSLASH)}}' + b[m.end():]
 
       # jem: also clean out line breaks in the alttext?
       m = r.search(b, m.start())
@@ -715,6 +715,7 @@ def br(b, f, tableblock=False):
   # Deal with non-breaking space ~.
   r = re.compile(r"(?<!\\)~", re.M + re.S)
   b = re.sub(r, r'&nbsp;', b)
+  b = re.sub('TILDE', '~', b)
 
   # Deal with registered trademark \R.
   r = re.compile(r"(?<!\\)\\R", re.M + re.S)
@@ -819,18 +820,6 @@ def gethl(lang):
     d['special'] = ['cols', 'optvar', 'param', 'problem', 'norm2', 'norm1',
             'value', 'minimize', 'maximize', 'rows', 'rand',
             'randn', 'printval', 'matrix']
-    d['error'] = ['\w*Error',]
-    d['commentuntilend'] = '#'
-    d['strings'] = True
-  elif lang in ['perl']:
-    d['statement'] = ['if', 'unless', 'while', 'until', 'for', 
-            'foreach', 'when', 'elsif', 'else']
-    d['builtin'] = ['my','our','local','state',
-            'return','last','next','redo','goto','break',
-            'open', 'close', 'print', 'sprintf', 'glob',
-            'use', 'no', 'my', 'local', 'our', 'system']
-    d['special'] = ['abs','atan2','cos','exp','hex',
-            'int','log','oct','rand', 'sin','sqrt','sran']
     d['error'] = ['\w*Error',]
     d['commentuntilend'] = '#'
     d['strings'] = True
@@ -1365,7 +1354,9 @@ def procfile(f):
           s += l
           if l.strip() == '\)':
             break
-      out(f.outf, br(s.strip(), f))
+      r = br(s.strip(), f)
+      r = myeqresub(r)
+      out(f.outf, r)
 
     # look for lists.
     elif p == '-':
