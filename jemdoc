@@ -1048,7 +1048,7 @@ def dashlist(f, ordered=False):
       # same level, make a new list item.
       out(f.outf, '\n</li>\n<li>')
 
-    out(f.outf, '<p>' + br(s, f) + '</p>')
+    out(f.outf, '<p>' + myeqresub(br(s, f)) + '</p>')
     level = newlevel
 
   for i in range(level):
