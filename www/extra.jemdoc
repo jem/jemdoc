@@ -20,6 +20,19 @@ and alt text should be descriptive for reasons like
 [http://en.wikipedia.org/wiki/Wikipedia:Alternative_text_for_images those given
 by Wikipedia].
 
+== Centered image blocks
+It is likewise possible to use the following syntax, to obtain a
+centered image with a figure text below.
+~~~
+{Centered image block syntax}{}
+\~~~
+\{}{img_center}{FILENAME.IMG}{alt text}{WIDTHpx}{HEIGHTpx}{IMGLINKTARGET}
+Ordinary jemdoc markup goes here.
+\~~~
+~~~
+
+Arguments follow the same rules as for left aligned image blocks.
+
 == Raw blocks
 When placing large amounts of raw html, you should use a raw block instead of
 +\{\{inline html escaping\}\}+. As well as cleaner syntax, raw blocks will avoid
