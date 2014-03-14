@@ -626,11 +626,11 @@ def replacelinks(b):
   while m:
     m1 = m.group(1).strip()
 
-    if m1[0] == '\\':
-        option = ' target="blank"'
+    if m1[0] == '/':
+        option = ''
         m1 = m1[1:]
     else:
-        option = ''
+        option = ' target="blank"'
 
     if '@' in m1 and not m1.startswith('mailto:') and not \
        m1.startswith('http://'):
