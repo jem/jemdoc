@@ -372,6 +372,7 @@ def myeqsub(eqtext):
   eqtext = eqtext.replace('<', 'LESSTHAN')
   eqtext = eqtext.replace('>', 'GREATERTHAN')
   eqtext = eqtext.replace('\n', ' ')
+  eqtext = eqtext.replace('_', 'UNDERSCORE')
 
   return eqtext
 
@@ -382,6 +383,7 @@ def myeqresub(r):
   r = re.sub('LESSTHAN', '<', r)
   r = re.sub('GREATERTHAN', '>', r)
   r = re.sub('QUOTATION', '"', r)
+  r = re.sub('UNDERSCORE', '_', r)
 
   return r
 
