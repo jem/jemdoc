@@ -1,0 +1,7 @@
+This example/ directory contains jemdoc source files that create an example website that demonstrates the additional features that I implemented in the original jemdoc.  To build the website, execute the following command in this example/ directory:
+
+../jemdoc -c mysite.conf *.jemdoc
+
+I implemented those features only for my convenience, and just focused on "making them work" rather than spending too much time to figure out how to implement them in an elegant way.  Therefore, the modification is messy and probably contains many errors.  Hopefully in the future the original jemdoc developer will agree on the usefulness of those features and adopt them in the official jemdoc release.
+
+- Wonseok Shin
