@@ -371,6 +371,16 @@ def insertmenuitems(f, mname, current, prefix):
 def out(f, s):
   f.write(s)
 
+def myussub(link):
+  link = link.replace('_', 'UNDERSCORE65358')
+
+  return link
+
+def myusresub(r):
+  r = re.sub('UNDERSCORE65358', '_', r)
+
+  return r
+
 def myeqsub(eqtext):
   eqtext = eqtext.replace('\\', 'BACKSLASH65358')
   eqtext = eqtext.replace('[', 'OPENBRACKET65358')
@@ -649,6 +659,7 @@ def replacelinks(b):
     link = re.sub(r'(\+\{\{|\}\}\+)', r'%', link)
 
     link = quote(link)
+    link = myussub(link)  # to prevent _ in address from changing
 
     if m.group(2):
       linkname = m.group(2).strip()
@@ -705,9 +716,10 @@ def br(b, f, tableblock=False):
   r = re.compile(r'(?<!\\)\*(.*?)(?<!\\)\*', re.M + re.S)
   b = re.sub(r, r'<b>\1</b>', b)
  
-  # Deal with _underline_.
+  # Deal with _underscore_.
   r = re.compile(r'(?<!\\)_(.*?)(?<!\\)_', re.M + re.S)
   b = re.sub(r, r'<u>\1</u>', b)
+  b = myusresub(b)
  
   # Deal with +monospace+.
   r = re.compile(r'(?<!\\)\+(.*?)(?<!\\)\+', re.M + re.S)
