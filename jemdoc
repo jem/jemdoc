@@ -373,6 +373,8 @@ def out(f, s):
 
 def myeqsub(eqtext):
   eqtext = eqtext.replace('\\', 'BACKSLASH')
+  eqtext = eqtext.replace('[', 'OPENBRACKET')
+  eqtext = eqtext.replace(']', 'CLOSEBRACKET')
   eqtext = eqtext.replace('+', 'PLUS')
   eqtext = eqtext.replace('&', 'AMPERSAND')
   eqtext = eqtext.replace('<', 'LESSTHAN')
@@ -384,6 +386,8 @@ def myeqsub(eqtext):
 
 def myeqresub(r):
   r = re.sub('BACKSLASH', r'\\', r)
+  r = re.sub('OPENBRACKET', '[', r)
+  r = re.sub('CLOSEBRACKET', ']', r)
   r = re.sub('PLUS', '+', r)
   r = re.sub('AMPERSAND', '&', r)
   r = re.sub('LESSTHAN', '<', r)
@@ -568,14 +572,14 @@ def replaceequations(b, f):
       if wl:
 #        b = b[:m.start()] + \
 #            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
-        b = b[:m.start()] + 'BACKSLASH(\n' + eqtext + '\nBACKSLASH)'+ b[m.end():]
+        b = b[:m.start()] + 'BACKSLASHOPENBRACKET\n' + eqtext + '\nBACKSLASHCLOSEBRACKET'+ b[m.end():]
         #b = b[:m.start()] + 'BACKSLASH(BACKSLASHbegin{equation}\n' + eqtext + '\nBACKSLASHend{equation}BACKSLASH)'+ b[m.end():]
         b = '<p style=QUOTATIONtext-align:centerQUOTATION>' + b + '</p>'
         b = myeqsub(b)
       else:
 #        b = b[:m.start()] + \
 #          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
-        b = b[:m.start()] + '{{BACKSLASH(' + eqtext + 'BACKSLASH)}}' + b[m.end():]
+        b = b[:m.start()] + 'BACKSLASH(' + eqtext + 'BACKSLASH)' + b[m.end():]
 
       # jem: also clean out line breaks in the alttext?
       m = r.search(b, m.start())
