@@ -389,7 +389,7 @@ def myeqsub(eqtext):
   eqtext = eqtext.replace('&', 'AMPERSAND65358')
   eqtext = eqtext.replace('<', 'LESSTHAN65358')
   eqtext = eqtext.replace('>', 'GREATERTHAN65358')
-  eqtext = eqtext.replace('\n', ' ')
+#  eqtext = eqtext.replace('\n', ' ')
   eqtext = eqtext.replace('_', 'UNDERSCORE65358')
 
   return eqtext
@@ -582,9 +582,10 @@ def replaceequations(b, f):
       if wl:
 #        b = b[:m.start()] + \
 #            '{{\n<div class="eqwl"><img class="eqwl" src="%s" alt="%s" />\n<br /></div>}}' % (fullfn, eqtext) + b[m.end():]
-        b = b[:m.start()] + 'BACKSLASH65358OPENBRACKET65358\n' + eqtext + '\nBACKSLASH65358CLOSEBRACKET65358'+ b[m.end():]
+        #b = b[:m.start()] + 'BACKSLASH65358OPENBRACKET65358\n' + eqtext + '\nBACKSLASH65358CLOSEBRACKET65358'+ b[m.end():]
+        b = b[:m.start()] + 'BACKSLASH65358OPENBRACKET65358' + eqtext + 'BACKSLASH65358CLOSEBRACKET65358'+ b[m.end():]
         #b = b[:m.start()] + 'BACKSLASH(BACKSLASHbegin{equation}\n' + eqtext + '\nBACKSLASHend{equation}BACKSLASH)'+ b[m.end():]
-        b = '<p style=QUOTATION65358text-align:centerQUOTATION65358>' + b + '</p>'
+        b = '<p style=QUOTATION65358text-align:centerQUOTATION65358>\n' + b + '\n</p>'
         b = myeqsub(b)
       else:
 #        b = b[:m.start()] + \
