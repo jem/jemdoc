@@ -6,9 +6,9 @@ jemdoc+MathJax adds the MathJax support to jemdoc.  You can use the same jemdoc 
 
 Additional features
 -------------------
-	* MathJax support
-	* _Underscore_
-	* Control of the behavior of links: open in the current web broswer tab or in a new tab
+* MathJax support
+* _Underscore_
+* Control of the behavior of links: open in the current web broswer tab or in a new tab
 
 How to use jemdoc+MathJax
 -------------------------
@@ -28,7 +28,7 @@ Disclaimer
 ----------
 I implemented the new features in jemdoc+MathJax only for my convenience, so in the development I focused on "making them just work".  Therefore, the modification is messy and probably contains lots of errors.  Hopefully in the future the original jemdoc developer will agree on the usefulness of those features and spend some time himself to figure out how to adopt them in the official jemdoc release in an elegant way :-)
 
-- Wonseok Shin
+Wonseok Shin
 
 README of the original jemdoc
 -----------------------------
