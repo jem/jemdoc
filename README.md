@@ -16,9 +16,7 @@ Once you download jemdoc+MathJax, you can install and use it like the original j
 
 The usage of the additional features implemented in jemdoc+MathJax can be found in example/ directory in this package.  The directory contains jemdoc source files that create an example website that demonstrates the additional features.  To build the website, execute the following command in this example/ directory:
 
-```
-../jemdoc -c mysite.conf *.jemdoc
-```
+	../jemdoc -c mysite.conf *.jemdoc
 
 This generates a few HTML files, which you can open in any web browser to see the results.  
 
