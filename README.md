@@ -24,7 +24,7 @@ MathJax configuration is done in mysite.conf.  Change mysite.conf to control the
 
 Disclaimer
 ----------
-In implementing the new features in jemdoc+MathJax, I focused on "making them just work", so I should admit that my implementations are not the most elegant ones.  Also, even though several users and I find jemdoc+MathJax is quite stable, it may contain some errors.
+While implementing the new features in jemdoc+MathJax, I focused on "making them just work", so I should admit that my implementations are not the most elegant ones.  Also, even though several users and I find jemdoc+MathJax is quite stable, it may contain some errors.
 
 Wonseok Shin
 
