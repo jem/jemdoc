@@ -2,7 +2,7 @@ jemdoc+MathJax
 ==============
 jemdoc is a light text-based markup language designed for creating websites.  See http://jemdoc.jaboc.net/ for more information and the detailed usage of jemdoc.
 
-jemdoc+MathJax adds the MathJax support to jemdoc.  You can use the same jemdoc syntax, but the equations will be rendered by MathJax.  See http://www.stanford.edu/~wsshin/jemdoc+mathjax.html for more information and examples. 
+jemdoc+MathJax adds the MathJax support to jemdoc.  You can use the same jemdoc syntax, but the equations will be rendered by MathJax.  See http://web.stanford.edu/~wsshin/jemdoc+mathjax.html for more information and examples. 
 
 What's new in jemdoc+MathJax
 --------------------------------------
