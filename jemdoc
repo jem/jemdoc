@@ -392,6 +392,7 @@ def myeqsub(eqtext):
   eqtext = eqtext.replace('>', 'GREATERTHAN65358')
 #  eqtext = eqtext.replace('\n', ' ')
   eqtext = eqtext.replace('_', 'UNDERSCORE65358')
+  eqtext = eqtext.replace('/', 'SLASH65358')
 
   return eqtext
 
@@ -406,6 +407,7 @@ def myeqresub(r):
   r = re.sub('GREATERTHAN65358', '>', r)
   r = re.sub('QUOTATION65358', '"', r)
   r = re.sub('UNDERSCORE65358', '_', r)
+  r = re.sub('SLASH65358', '/', r)
 
   return r
 
