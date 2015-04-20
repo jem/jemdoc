@@ -371,17 +371,17 @@ def insertmenuitems(f, mname, current, prefix):
 def out(f, s):
   f.write(s)
 
-def myussub(link):
+def mathjaxussub(link):
   link = link.replace('_', 'UNDERSCORE65358')
 
   return link
 
-def myusresub(r):
+def mathjaxusresub(r):
   r = re.sub('UNDERSCORE65358', '_', r)
 
   return r
 
-def myeqsub(eqtext):
+def mathjaxeqsub(eqtext):
   eqtext = eqtext.replace('\\', 'BACKSLASH65358')
   eqtext = eqtext.replace('[', 'OPENBRACKET65358')
   eqtext = eqtext.replace(']', 'CLOSEBRACKET65358')
@@ -396,7 +396,7 @@ def myeqsub(eqtext):
 
   return eqtext
 
-def myeqresub(r):
+def mathjaxeqresub(r):
   r = re.sub('BACKSLASH65358', r'\\', r)
   r = re.sub('OPENBRACKET65358', '[', r)
   r = re.sub('CLOSEBRACKET65358', ']', r)
@@ -424,13 +424,13 @@ def hb(f, tag, content1, content2=None, content3=None):
 #    out(f, re.sub(r'\|', content1, tag))
     r = re.sub(r'\|', content1, tag)
     r = re.sub(r'\|3', content3, r)
-    r = myeqresub(r)
+    r = mathjaxeqresub(r)
     out(f, r)
   else:
     r = re.sub(r'\|1', content1, tag)
     r = re.sub(r'\|3', content3, r)
     r = re.sub(r'\|2', content2, r)
-    r = myeqresub(r)
+    r = mathjaxeqresub(r)
     out(f, r)
 
 def pc(f, ditchcomments=True):
@@ -577,7 +577,7 @@ def replaceequations(b, f):
       eqtext = allreplace(eq)
 #      print eqtext
 #      eqtext = eqtext.replace('\\', '')
-      eqtext = myeqsub(eqtext)
+      eqtext = mathjaxeqsub(eqtext)
 
       # Double braces will cause problems with escaping of image tag.
       eqtext = eqtext.replace('{{', 'DOUBLEOPENBRACE')
@@ -590,7 +590,7 @@ def replaceequations(b, f):
         b = b[:m.start()] + 'BACKSLASH65358OPENBRACKET65358' + eqtext + 'BACKSLASH65358CLOSEBRACKET65358'+ b[m.end():]
         #b = b[:m.start()] + 'BACKSLASH(BACKSLASHbegin{equation}\n' + eqtext + '\nBACKSLASHend{equation}BACKSLASH)'+ b[m.end():]
         b = '<p style=QUOTATION65358text-align:centerQUOTATION65358>\n' + b + '\n</p>'
-        b = myeqsub(b)
+        b = mathjaxeqsub(b)
       else:
 #        b = b[:m.start()] + \
 #          '{{<img class="eq" src="%s" alt="%s" style="vertical-align: -%dpx" />}}' % (fullfn, eqtext, offset) + b[m.end():]
@@ -664,7 +664,7 @@ def replacelinks(b):
     link = re.sub(r'(\+\{\{|\}\}\+)', r'%', link)
 
     link = quote(link)
-    link = myussub(link)  # to prevent _ in address from changing
+    link = mathjaxussub(link)  # to prevent _ in address from changing
 
     if m.group(2):
       linkname = m.group(2).strip()
@@ -724,7 +724,7 @@ def br(b, f, tableblock=False):
   # Deal with _underscore_.
   r = re.compile(r'(?<!\\)_(.*?)(?<!\\)_', re.M + re.S)
   b = re.sub(r, r'<u>\1</u>', b)
-  b = myusresub(b)
+  b = mathjaxusresub(b)
  
   # Deal with +monospace+.
   r = re.compile(r'(?<!\\)\+(.*?)(?<!\\)\+', re.M + re.S)
@@ -1088,7 +1088,7 @@ def dashlist(f, ordered=False):
       # same level, make a new list item.
       out(f.outf, '\n</li>\n<li>')
 
-    out(f.outf, '<p>' + myeqresub(br(s, f)) + '</p>')
+    out(f.outf, '<p>' + mathjaxeqresub(br(s, f)) + '</p>')
     level = newlevel
 
   for i in range(level):
@@ -1399,7 +1399,7 @@ def procfile(f):
           if l.strip() == '\)':
             break
       r = br(s.strip(), f)
-      r = myeqresub(r)
+      r = mathjaxeqresub(r)
       out(f.outf, r)
 
     # look for lists.
