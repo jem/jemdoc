@@ -1,84 +1,84 @@
 body {
-    font: 80% Verdana, sans-serif;
+	font: 80% Verdana, sans-serif;
 }
 
 pre, tt {
-    font-size: 110%;
+	font-size: 110%;
 }
 
 tt {
-    background: #ffffdd;
-    color: #000050;
+	background: #ffffdd;
+	color: #000050;
 }
 
 pre {
-    color: black;
+	color: black;
 }
 
 a {
-    border-bottom: 1px solid #bbbbbb;
+	border-bottom: 1px solid #bbbbbb;
 }
 
 a:hover {
-    border-bottom: 1px solid #bbbbbb;
+	border-bottom: 1px solid #bbbbbb;
 }
 
 h1 {
-    font-size: 150%;
-    border: none;
+	font-size: 150%;
+	border: none;
 }
 
 h2 {
-    font-size: 115%;
-    border: none;
+	font-size: 115%;
+	border: none;
 }
 
 h3 {
-    font-size: 100%;
-    border: none;
+	font-size: 100%;
+	border: none;
 }
 
 
 div.infoblock > div.blockcontent {
-    background: #ffffdd;
+	background: #ffffdd;
 }
 
 div.blockcontent {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 6px;
-    padding-bottom: 7px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 6px;
+	padding-bottom: 7px;
 }
 
 p {
-    line-height: 1.5em;
+	line-height: 1.5em;
 	margin-bottom: 1.2em;
 }
 
 #layout-menu {
-    padding-left: 15px;
-    line-height: 1.7em;
-    text-align: right;
-    padding-top: 0.5em;
+	padding-left: 15px;
+	line-height: 1.7em;
+	text-align: right;
+	padding-top: 0.5em;
 }
 
 b {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 p b {
-    font-style: italic;
+	font-style: italic;
 }
 
 
 div.menu-item {
-    padding-left: 0;
-    text-indent: 0;
-    padding-bottom: 2px;
+	padding-left: 0;
+	text-indent: 0;
+	padding-bottom: 2px;
 }
 
 #layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
-    color: black;
+	color: black;
 	border-bottom: 1px gray solid;
 }
 
@@ -88,13 +88,13 @@ div.menu-item {
 
 div#footer {
 	border-top: 1px solid #e0e0e0;
-    font-size: 80%;
-    padding-bottom: 0;
+	font-size: 80%;
+	padding-bottom: 0;
 }
 
 div#footer a {
 	color: #aaaaaa;
-    border-bottom: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
 }
 
 #fwtitle div#toptitle {
@@ -103,7 +103,7 @@ div#footer a {
 
 
 #layout-content {
-    padding-top: 1.3em;
-    padding-left: 30px;
-    padding-right: 30px;
+	padding-top: 1.3em;
+	padding-left: 30px;
+	padding-right: 30px;
 }

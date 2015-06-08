@@ -1,56 +1,56 @@
 div.codeblock pre {
-    font-size: 0.2em;
+	font-size: 0.2em;
 }
 
 p b {
-    font-style: normal;
-    font-weight: bold;
+	font-style: normal;
+	font-weight: bold;
 }
 
 td.c1 {
-    text-align: right;
+	text-align: right;
 }
 
 td.c2 {
-    text-align: left;
-    font-weight: bold;
+	text-align: left;
+	font-weight: bold;
 }
 
 table {
-    border: 1px solid black;
-    margin-top: 0.5em;
-    margin-bottom: 1em;
+	border: 1px solid black;
+	margin-top: 0.5em;
+	margin-bottom: 1em;
 }
 
 p + table {
-    margin-top: -0.3em;
+	margin-top: -0.3em;
 }
 
 a.imglink {
-    border: none;
+	border: none;
 }
 
 /* Exceedingly lame hack to eliminate borders with figure images. */
 a.imglink > img {
-    margin-left: -55px;
+	margin-left: -55px;
 }
 
 .red {
-    color: red;
+	color: red;
 }
 
 .green {
-    color: green;
+	color: green;
 }
 
 h1 {
-    padding-top: 1em;
+	padding-top: 1em;
 }
 
 table#allprobs td {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 table#allprobs td.c1, table#allprobs tr.r1 td, table#allprobs tr.r1 td.c1 {
-    font-weight: bold;
+	font-weight: bold;
 }
