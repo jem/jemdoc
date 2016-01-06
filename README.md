@@ -7,6 +7,7 @@ jemdoc+MathJax adds the MathJax support to jemdoc.  You can use the same jemdoc 
 System requirements
 -------------------
 Python 2 or Python 3
+
 (Many thanks to [Ganesh Ajjanagadde](http://www.mit.edu/~gajjanag/), who made most of the changes to support Python 3.)
 
 What's new in jemdoc+MathJax
