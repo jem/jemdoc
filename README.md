@@ -4,11 +4,16 @@ jemdoc is a light text-based markup language designed for creating websites.  Se
 
 jemdoc+MathJax adds the MathJax support to jemdoc.  You can use the same jemdoc syntax, but the equations will be rendered by MathJax.  See http://web.stanford.edu/~wsshin/jemdoc+mathjax.html for more information and examples. 
 
+System requirements
+-------------------
+Python 2 or Python 3.  (Many thanks to [Ganesh Ajjanagadde](http://www.mit.edu/~gajjanag/), who made most of the changes to support Python 3.)
+
 What's new in jemdoc+MathJax
---------------------------------------
+----------------------------
 - MathJax support
 - Underscore
 - Control of the behavior of links: open in the current web broswer tab or in a new tab
+- Works on both Python 2 and 3
 
 How to use jemdoc+MathJax
 -------------------------
