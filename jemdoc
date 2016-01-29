@@ -29,6 +29,7 @@ import re
 import time
 import io
 from subprocess import *
+from types import *
 import tempfile
 
 def info():
@@ -86,7 +87,7 @@ class controlstruct(object):
 
   def pushfile(self, newfile):
     self.otherfiles.insert(0, self.inf)
-    self.inf = open(newfile, 'rb')
+    self.inf = io.open(newfile, 'rb')
 
   def nextfile(self):
     self.inf.close()
@@ -284,21 +285,21 @@ def raisejandal(msg, line=0):
   raise JandalError(s)
 
 def readnoncomment(f):
-  l = f.readline()
+  l = f.readline().decode('utf-8')
   if l == '':
     return l
   elif l[0] == '#': # jem: be a little more generous with the comments we accept?
     return readnoncomment(f)
   else:
-    return l.rstrip().decode() + '\n' # leave just one \n and no spaces etc.
+    return l.rstrip() + '\n' # leave just one \n and no spaces etc.
 
 def parseconf(cns):
   syntax = {}
   warn = False # jem. make configurable?
   # manually add the defaults as a file handle.
-  fs = [io.BytesIO(standardconf().encode())]
+  fs = [io.BytesIO(standardconf().encode('utf-8'))]
   for sname in cns:
-    fs.append(open(sname, 'rb'))
+    fs.append(io.open(sname, 'rb'))
 
   for f in fs:
     while pc(controlstruct(f)) != '':
@@ -321,7 +322,7 @@ def parseconf(cns):
   return syntax
 
 def insertmenuitems(f, mname, current, prefix):
-  m = open(mname, 'rb')
+  m = io.open(mname, 'rb')
   while pc(controlstruct(m)) != '':
     l = readnoncomment(m)
     l = l.strip()
@@ -372,7 +373,11 @@ def insertmenuitems(f, mname, current, prefix):
   m.close()
 
 def out(f, s):
-  f.write(s.encode('utf-8'))
+#  print(type(s))
+  if sys.version_info[0] == 2 and type(s) is StringType:
+    f.write(s.decode('utf-8'))
+  else:
+    f.write(s)
 
 def mathjaxussub(link):
   link = link.replace('_', 'UNDERSCORE65358')
@@ -463,7 +468,7 @@ def doincludes(f, l):
   ir = 'includeraw{'
   i = 'include{'
   if l.startswith(ir):
-    nf = open(l[len(ir):-2], 'rb')
+    nf = io.open(l[len(ir):-2], 'rb')
     f.outf.write(nf.read())
     nf.close()
   elif l.startswith(i):
@@ -984,7 +989,7 @@ def geneq(f, eq, dpi, wl, outname):
   eqdepths = {}
   if f.eqcache:
     try:
-      dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'rb')
+      dc = io.open(os.path.join(f.eqdir, '.eqdepthcache'), 'rb')
       for l in dc:
         a = l.split()
         eqdepths[a[0]] = int(a[1])
@@ -1053,7 +1058,7 @@ def geneq(f, eq, dpi, wl, outname):
   # Update the cache if we're using it.
   if f.eqcache and eqname not in eqdepths:
     try:
-      dc = open(os.path.join(f.eqdir, '.eqdepthcache'), 'ab')
+      dc = io.open(os.path.join(f.eqdir, '.eqdepthcache'), 'ab')
       dc.write(eqname + ' ' + str(depth) + '\n')
       dc.close()
     except IOError:
@@ -1602,8 +1607,8 @@ def main():
     else:
       thisout = outname
 
-    infile = open(inname, 'rUb')
-    outfile = open(thisout, 'w')
+    infile = io.open(inname, 'rUb')
+    outfile = io.open(thisout, 'w')
 
     f = controlstruct(infile, outfile, conf, inname)
     procfile(f)
