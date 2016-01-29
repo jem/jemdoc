@@ -1242,7 +1242,7 @@ def procfile(f):
   js = []
   title = None
   while pc(f, False) == '#':
-    l = f.inf.readline().decode()
+    l = f.inf.readline().decode('utf-8')
     f.linenum += 1
     if doincludes(f, l[1:]):
       continue
