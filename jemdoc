@@ -523,8 +523,26 @@ def np(f, withcount=False, eatblanks=True):
   else:
     s = nl(f)
 
-  while pc(f) not in ('\n', '-', '.', ':', '', '=', '~', '{', '\\(', '\\)'):
-    s += nl(f)
+  # Determine if the current line has an open inline equation block or not.
+  r = re.compile(r'(?<!\\)\$')
+  m = r.findall(s)
+  lm = len(m) % 2
+  isopeneq = lm == 1
+
+  # The followings characters signal a new paragraph when appeared right after '\n'.
+  # The original list included '-', which should not signal a new paragraph when used as the first character of a matrix row inside inline equation blocks.  Therefore, '-' is handled separately.
+  nl_signals = ('\n', '.', ':', '', '=', '~', '{', '\\(', '\\)')
+
+  pcf = pc(f)
+  while (not isopeneq and pcf != '-' and pcf not in nl_signals) or (isopeneq and pcf not in nl_signals):
+    if isopeneq and pcf == '-':
+      s += '-'
+    ns = nl(f)
+    m = r.findall(ns)
+    lm = (lm + len(m)) % 2
+    isopeneq = lm == 1
+    s += ns
+    pcf = pc(f)
 
   while eatblanks and pc(f) == '\n':
     nl(f) # burn blank line.
@@ -826,6 +844,7 @@ def br(b, f, tableblock=False):
 
 def allreplace(b):
   """Replacements that should be done on everything."""
+  # The following replace &, >, < in LaTeX code with &amp;, &gt;, &lt;.  Is this necessary?
   r = re.compile(r"(?<!\\)&", re.M + re.S)
   b = re.sub(r, r'&amp;', b)
 
@@ -1610,6 +1629,7 @@ def main():
     infile = io.open(inname, 'rUb')
     outfile = io.open(thisout, 'w')
 
+#    print(infile.read())
     f = controlstruct(infile, outfile, conf, inname)
     procfile(f)
 
