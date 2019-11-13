@@ -1342,6 +1342,7 @@ def procfile(f):
 
   infoblock = False
   imgblock = False
+  imgcenterblock = False
   tableblock = False
   while 1: # wait for EOF.
     p = pc(f)
@@ -1402,6 +1403,11 @@ def procfile(f):
       elif imgblock:
         out(f.outf, '</td></tr></table>\n')
         imgblock = False
+        nl(f)
+        continue
+      elif imgcenterblock:
+        out(f.outf, '</center>\n</td></tr></table></center>\n')
+        imgcenterblock = False
         nl(f)
         continue
       elif tableblock:
@@ -1472,6 +1478,32 @@ def procfile(f):
             out(f.outf, '</a>')
           out(f.outf, '&nbsp;</td>\n<td align="left">')
           imgblock = True
+
+        elif len(g) >= 4 and g[1] == 'img_center':
+          # handles
+          # {}{img_center}{source}{alttext}{width}{height}{linktarget}.
+          g += ['']*(7 - len(g))
+          
+          if g[4].isdigit():
+            g[4] += 'px'
+
+          if g[5].isdigit():
+            g[5] += 'px'
+
+          out(f.outf, '<center><table class="imgtable"><tr><td>\n')
+          if g[6]:
+            out(f.outf, '<a href="%s">' % g[6])
+          out(f.outf, '<img src="%s"' % g[2])
+          out(f.outf, ' alt="%s"' % g[3])
+          if g[4]:
+            out(f.outf, ' width="%s"' % g[4])
+          if g[5]:
+            out(f.outf, ' height="%s"' % g[5])
+          out(f.outf, ' />')
+          if g[6]:
+            out(f.outf, '</a>')
+          out(f.outf, '&nbsp;</td><tr/>\n<tr><td><center>')
+          imgcenterblock = True
 
         else:
           raise JandalError("couldn't handle block", f.linenum)
