@@ -467,12 +467,13 @@ def pc(f, ditchcomments=True):
 def doincludes(f, l):
   ir = 'includeraw{'
   i = 'include{'
+  l = l.rstrip()
   if l.startswith(ir):
-    nf = io.open(l[len(ir):-2], 'rb')
+    nf = io.open(l[len(ir):-1], 'rb')
     f.outf.write(nf.read())
     nf.close()
   elif l.startswith(i):
-    f.pushfile(l[len(i):-2])
+    f.pushfile(l[len(i):-1])
   else:
     return False
 
