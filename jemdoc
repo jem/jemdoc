@@ -549,9 +549,9 @@ def np(f, withcount=False, eatblanks=True):
 
   # in both cases, ditch the trailing \n.
   if withcount:
-    return (s[:-1], c)
+    return (s, c)
   else:
-    return s[:-1]
+    return s
 
 def quote(s):
   return re.sub(r"""[\\*/+"'<>&$%\.~[\]-]""", r'\\\g<0>', s)
