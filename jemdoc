@@ -470,7 +470,7 @@ def doincludes(f, l):
   l = l.rstrip()
   if l.startswith(ir):
     nf = io.open(l[len(ir):-1], 'rb')
-    f.outf.write(nf.read())
+    f.outf.write(nf.read().decode('utf-8'))
     nf.close()
   elif l.startswith(i):
     f.pushfile(l[len(i):-1])
