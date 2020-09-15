@@ -1,47 +1,47 @@
-#fwtitle {	
-    margin: 0;
-    padding: 0;
+#fwtitle {
+	margin: 0;
+	padding: 0;
 }
 
 #fwtitle div#toptitle {
-    background-color: #303050;
-    padding: 1em;
-    margin: 0;
-    border: none;
+	background-color: #303050;
+	padding: 1em;
+	margin: 0;
+	border: none;
 }
 
 div#toptitle h1 {
-    margin-top: 0.1em;
+	margin-top: 0.1em;
 }
 
 #fwtitle div#toptitle h1, div#subtitle, div#subtitle a {
-    color: white;
-    font-weight: normal;
-    text-align: left;
+	color: white;
+	font-weight: normal;
+	text-align: left;
 }
 
 #layout-menu {
-    border: none;
-    border-right: 1px dashed #aaaaaa;
-    margin: 0;
-    padding-top: 0;
+	border: none;
+	border-right: 1px dashed #aaaaaa;
+	margin: 0;
+	padding-top: 0;
 }
 
 div.menu-category {
-    border-bottom: none;
-    padding-bottom: 0;
+	border-bottom: none;
+	padding-bottom: 0;
 }
 
 #layout-content {
-    border: none;
-    padding: 8px;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-bottom: 0;
-    margin: 0;
+	border: none;
+	padding: 8px;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-bottom: 0;
+	margin: 0;
 }
 
 body {
-    padding: 0;
-    padding-bottom: 8px;
+	padding: 0;
+	padding-bottom: 8px;
 }

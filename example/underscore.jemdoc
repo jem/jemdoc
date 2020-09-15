@@ -1,0 +1,7 @@
+# jemdoc: menu{MENU}{underscore.html}, nofooter
+== Underscore Example
+
+Like *bold* and /italic/, _underscore_ can be used for emphasis in this modified version of +jemdoc+.  Useful for highlighting different parts of a bibliography item as:
+
+1. _First Author_, Second Author, and *Corresponding Author*, "Amazing Paper," /High-impact Journal/, vol.~1, pp.~1--10 (2014).
+

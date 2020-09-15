@@ -1,25 +1,25 @@
 table.dual-mode {
-    padding: 0;
-    margin-top, margin-bottom: 0.5em;
+	padding: 0;
+	margin-top, margin-bottom: 0.5em;
 	border-width: 0;
 }
 
 table.dual-mode tr {
-    vertical-align: top;
+	vertical-align: top;
 }
 
-table.dual-mode h1, tr h2{
-    padding-top: 0em;
+table.dual-mode h1, tr h2 {
+	padding-top: 0em;
 	margin-top: 0;
 }
 
 td {
-    text-align: left;
-    border: none;
+	text-align: left;
+	border: none;
 }
 
 td.rightcell tt {
-    background: none;
+	background: none;
 }
 
 td.rightcell div.blockcontent {
@@ -35,7 +35,7 @@ td.rightcell div.codeblock {
 
 td.leftcell {
 	padding-right: 10px;
-    padding-top: 10px;
+	padding-top: 10px;
 	width: 50%;
 }
 

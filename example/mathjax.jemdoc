@@ -1,0 +1,46 @@
+# jemdoc: menu{MENU}{mathjax.html}, nofooter
+== MathJax Example
+
+In this modified version of +jemdoc+, a LaTeX equation block can be typed in as
+\(
+\nabla \cdot \mathbf{D} = \rho_f\\
+\nabla \cdot \mathbf{B} = 0,\\
+\nabla \times \mathbf{E} = -\frac{\partial\mathbf{B}}{\partial t}\\
+\nabla \times \mathbf{H} = \mathbf{J}_f - \frac{\partial\mathbf{D}}{\partial t}.
+\)
+
+You can also align equations using LaTeX's +aligned+ block:
+\(
+\begin{aligned}
+\nabla \cdot \mathbf{D} &= \rho_f\\
+\nabla \cdot \mathbf{B} &= 0\\
+\nabla \times \mathbf{E} &= -\frac{\partial\mathbf{B}}{\partial t}\\
+\nabla \times \mathbf{H} &= \mathbf{J}_f - \frac{\partial\mathbf{D}}{\partial t}.
+\end{aligned}
+\)
+
+To number the equation block, wrap the equations with LaTeX's +equation+ block:
+\(
+\begin{equation}
+\begin{aligned}
+\nabla \cdot \mathbf{D} &= \rho_f\\
+\nabla \cdot \mathbf{B} &= 0\\
+\nabla \times \mathbf{E} &= -\frac{\partial\mathbf{B}}{\partial t}\\
+\nabla \times \mathbf{H} &= \mathbf{J}_f - \frac{\partial\mathbf{D}}{\partial t}.
+\end{aligned}
+\end{equation}
+\)
+
+Instead, you can use LaTeX's +align+ (not +aligned+) block to number the individual equations:
+\(
+\begin{align}
+\nabla \cdot \mathbf{D} &= \rho_f\label{eq:D}\\
+\nabla \cdot \mathbf{B} &= 0\label{eq:B}\\
+\nabla \times \mathbf{E} &= -\frac{\partial\mathbf{B}}{\partial t}\label{eq:E}\\
+\nabla \times \mathbf{H} &= \mathbf{J}_f - \frac{\partial\mathbf{D}}{\partial t}\label{eq:H}
+\end{align}
+\)
+
+You can also type inline equations as $A x = b$.  Referencing equations is done as Eqs.~$\eqref{eq:E}$ and $\eqref{eq:H}$.
+
+
